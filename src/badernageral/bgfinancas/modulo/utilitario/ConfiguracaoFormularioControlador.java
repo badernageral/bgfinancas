@@ -67,6 +67,7 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
     
     public void setPrimeiroAcesso(){
         primeiroAcesso = true;
+        mudarIdioma();
     }
     
     public void mudarIdioma(){
