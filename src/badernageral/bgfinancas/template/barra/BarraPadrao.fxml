@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2015 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.template.barra.BarraPadrao">
+   <children>
+      <GridPane hgap="10.0">
+        <children>
+           <fx:include fx:id="filtro" source="Filtro.fxml" GridPane.columnIndex="2" />
+           <fx:include fx:id="botao" source="../botao/BotaoPadrao.fxml" />
+        </children>
+        <columnConstraints>
+           <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
+        </columnConstraints>
+        <rowConstraints>
+           <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+        <padding>
+           <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+        </padding>
+     </GridPane>
+   </children>
+</StackPane>

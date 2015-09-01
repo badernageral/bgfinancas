@@ -1,0 +1,39 @@
+/*
+Copyright 2015 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+.Tooltip{
+    -fx-text-fill: #000000;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: left 10 center;
+    -fx-padding: 10 10 10 30;
+}
+
+.TooltipErro{
+    -fx-background-color: linear-gradient(#e7939e, #e7928d);
+    -fx-background-image: url("../imagem/acao/erro.jpg");
+}
+.TooltipSucesso{
+    -fx-background-color: linear-gradient(#cce3A8, #cce297);
+    -fx-background-image: url("../imagem/acao/sucesso.jpg");
+}
+.TooltipAdvertencia{
+    -fx-background-color: linear-gradient(#ffffdd, #fffecc);
+    -fx-background-image: url("../imagem/acao/advertencia.jpg");
+}

@@ -1,0 +1,49 @@
+<project name="bgfinancas" basedir="." default="main">
+
+    <property name="dir.src" value="src"/>
+    <property name="dir.build" value="build"/>
+    <property name="dir.lib" value="lib"/>
+    <property name="dir.dist" value="dist"/>
+
+    <path id="classpath">
+        <fileset dir="${dir.lib}" includes="**/*.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${dir.build}"/>
+        <delete dir="${dir.dist}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="${dir.build}"/>
+        <javac target="1.8" source="1.8" srcdir="${dir.src}" destdir="${dir.build}" classpathref="classpath" includeantruntime="true"/>
+	<copy todir="${dir.build}">
+            <fileset dir="${dir.src}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="${dir.dist}"/>
+	<copy todir="${dir.dist}/lib">
+            <fileset dir="${dir.lib}"/>
+        </copy>
+        <jar destfile="${dir.dist}/bgfinancas.jar" basedir="${dir.build}">
+            <manifest>
+                <attribute name="Main-Class" value="badernageral.bgfinancas.principal.Main"/>
+                <attribute name="Class-Path" value="lib/hsqldb-2.3.3.jar"/>
+	    </manifest>
+        </jar>
+    </target>
+
+    <target name="run">
+        <java fork="true" classname="badernageral.bgfinancas.principal.Main">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${dir.dist}/bgfinancas.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="main" depends="compile,jar"/>
+
+</project>

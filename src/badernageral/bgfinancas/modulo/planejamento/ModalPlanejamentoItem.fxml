@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2015 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.planejamento.ModalPlanejamentoItemControlador">
+    <content>
+        <VBox alignment="CENTER">
+           <children>
+              <GridPane hgap="10.0">
+                <columnConstraints>
+                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                </columnConstraints>
+                <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                 <padding>
+                    <Insets bottom="5.0" />
+                 </padding>
+                 <children>
+                    <Text fx:id="campo" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensagem" wrappingWidth="150.0" />
+                    <TextField fx:id="entrada" onAction="#acaoFinalizar" GridPane.rowIndex="1" />
+                 </children>
+              </GridPane>
+              <GridPane hgap="5.0" layoutX="10.0" layoutY="67.0" vgap="5.0">
+                 <children>
+                    <Button fx:id="ok" mnemonicParsing="false" onAction="#acaoFinalizar" text="OK" GridPane.rowIndex="1" />
+                    <Button fx:id="cancelar" mnemonicParsing="false" onAction="#acaoCancelar" text="Cancelar" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                 </children>
+                 <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+                 </columnConstraints>
+                 <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints vgrow="SOMETIMES" />
+                 </rowConstraints>
+              </GridPane>
+           </children>
+        </VBox>
+    </content>
+</TitledPane>

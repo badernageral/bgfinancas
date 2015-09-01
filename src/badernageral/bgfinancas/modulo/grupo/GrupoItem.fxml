@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2015 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane vgap="10.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.grupo.GrupoItemControlador">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="0.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <fx:include fx:id="barra" source="../../template/barra/BarraPadrao.fxml" />
+        <GridPane GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+         <children>
+            <TableView fx:id="listaGrupos" maxWidth="1.7976931348623157E308">
+               <GridPane.margin>
+                  <Insets left="20.0" right="20.0" />
+               </GridPane.margin></TableView>
+         </children>
+        </GridPane>
+      <GridPane fx:id="barraSuperior" GridPane.columnIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="80.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="labelCategoria" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="90.0" styleClass="Titulo" text="Adicionar item" textAlignment="CENTER">
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets></Label>
+                  <Button fx:id="excluir" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="24.0" prefWidth="35.0" GridPane.columnIndex="3">
+                      <styleClass>
+                          <String fx:value="Botao" />
+                          <String fx:value="BotaoFim" />
+                          <String fx:value="BotaoExcluir" />
+                      </styleClass>
+                  </Button>
+            <Button fx:id="cadastrar" contentDisplay="CENTER" layoutX="245.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="24.0" prefWidth="35.0" GridPane.columnIndex="2">
+               <styleClass>
+                  <String fx:value="Botao" />
+                  <String fx:value="BotaoMeio" />
+                  <String fx:value="BotaoCadastrar" />
+               </styleClass>
+            </Button>
+            <ComboBox fx:id="categoria" maxWidth="1.7976931348623157E308" prefWidth="150.0" styleClass="BotaoMeio" GridPane.columnIndex="1" />
+         </children>
+         <GridPane.margin>
+            <Insets top="10.0" />
+         </GridPane.margin>
+      </GridPane>
+        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </BorderPane.margin>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+              <StackPane fx:id="tabelaPane" />
+         </children>
+      </GridPane>
+    </children>
+    <padding>
+        <Insets bottom="20.0" right="20.0" top="10.0" />
+    </padding>
+</GridPane>

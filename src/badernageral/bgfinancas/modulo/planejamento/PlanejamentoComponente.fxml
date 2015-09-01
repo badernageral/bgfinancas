@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2015 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane hgap="20.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.planejamento.PlanejamentoComponenteControlador">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="770.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="200.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+              <GridPane fx:id="barraSuperior">
+                  <children>
+                        <Button fx:id="voltar" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="35.0">
+                            <styleClass>
+                                <String fx:value="Botao" />
+                                <String fx:value="BotaoVoltar" />
+                                <String fx:value="BotaoInicio" />
+                            </styleClass>
+                        </Button>
+                        <Label fx:id="titulo" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="Titulo" text="Titulo" GridPane.columnIndex="1">
+                            <padding>
+                                <Insets left="10.0" right="10.0" />
+                            </padding>
+                        </Label>
+                      <HBox GridPane.columnIndex="2">
+                          <children>
+                              <Button fx:id="anterior" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0">
+                                  <styleClass>
+                                      <String fx:value="Botao" />
+                                      <String fx:value="BotaoMeio" />
+                                      <String fx:value="BotaoAnterior" />
+                                  </styleClass>
+                              </Button>
+                              <Button fx:id="proximo" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0">
+                                  <styleClass>
+                                      <String fx:value="Botao" />
+                                      <String fx:value="BotaoMeio" />
+                                      <String fx:value="BotaoProximo" />
+                                  </styleClass>
+                              </Button>
+                          </children>
+                      </HBox>
+                        <Label fx:id="labelSalario" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="Titulo" text="Salário:" GridPane.columnIndex="3">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding></Label>
+                  <HBox GridPane.columnIndex="4">
+                     <children>
+                              <TextField fx:id="receita" onAction="#acaoAtualizarSaldoReceita" styleClass="BotaoMeio" />
+                        <Button fx:id="atualizar" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" onAction="#acaoAtualizarSaldoReceita" prefHeight="24.0" prefWidth="35.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoMeio" />
+                              <String fx:value="BotaoAtualizar" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <Label fx:id="labelItem" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="90.0" styleClass="Titulo" text="Adicionar item" textAlignment="CENTER" GridPane.columnIndex="5">
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding></Label>
+                  <HBox GridPane.columnIndex="7">
+                     <children>
+                        <Button fx:id="cadastrar" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoMeio" />
+                              <String fx:value="BotaoCadastrar" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="excluir" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0" GridPane.columnIndex="4">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoMeio" />
+                              <String fx:value="BotaoExcluir" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="gerenciarItem" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoFim" />
+                              <String fx:value="BotaoGerenciar" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </HBox>
+                  </children>
+                  <columnConstraints>
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="180.0" minWidth="80.0" prefWidth="160.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" prefWidth="50.0" />
+                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="130.0" minWidth="-Infinity" prefWidth="100.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="90.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="105.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" valignment="TOP" vgrow="SOMETIMES" />
+                  </rowConstraints>
+              </GridPane>
+              <StackPane fx:id="tabelaPane" GridPane.rowIndex="1" />
+            <GridPane fx:id="barraInferior" styleClass="bordaPaneBaixo" GridPane.rowIndex="2">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <HBox alignment="CENTER" GridPane.halignment="CENTER">
+                     <children>
+                        <Label fx:id="labelPlanejamentoSalario" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Salario">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="labelPlanejamentoGastos" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Gastos">
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="labelPlanejamentoSaldo" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Saldo">
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </children>
+      </GridPane>
+        <GridPane vgap="10.0" GridPane.columnIndex="1">
+            <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <fx:include fx:id="listaGrupo" source="../../template/modulo/ListaGrupo.fxml" GridPane.rowIndex="0" />
+                <fx:include fx:id="listaConta" source="../../template/modulo/ListaConta.fxml" GridPane.rowIndex="1" />
+            </children>
+        </GridPane>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+</GridPane>
