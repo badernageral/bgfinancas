@@ -16,8 +16,8 @@ Features
 * Accounts to store money
 * Specific spending limit
 * Simple and complex reports
-* Monthly planning
-* Agenda for reminders
+* Scheduled expenses
+* Reminders
 
 Requirements
 --
