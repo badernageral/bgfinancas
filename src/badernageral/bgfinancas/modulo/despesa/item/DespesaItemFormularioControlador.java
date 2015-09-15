@@ -125,7 +125,7 @@ public final class DespesaItemFormularioControlador implements Initializable, Co
             if(acao == Acao.CADASTRAR){
                 DespesaItem item = new DespesaItem(null, categoriaController.getIdCategoria(), nome.getText(), null);
                 item.cadastrar();
-                if(controladorF==null){
+                if(controlador==null && controladorF==null){
                     Kernel.controlador.acaoFiltrar(true);
                     Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                     Animacao.fadeInOutClose(formulario);

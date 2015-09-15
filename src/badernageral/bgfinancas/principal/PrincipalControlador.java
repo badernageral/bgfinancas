@@ -34,8 +34,6 @@ import badernageral.bgfinancas.modelo.Despesa;
 import badernageral.bgfinancas.modelo.DespesaCategoria;
 import badernageral.bgfinancas.modelo.DespesaItem;
 import badernageral.bgfinancas.modelo.GrupoItem;
-import badernageral.bgfinancas.modelo.PlanejamentoComponente;
-import badernageral.bgfinancas.modelo.PlanejamentoItem;
 import badernageral.bgfinancas.modelo.Receita;
 import badernageral.bgfinancas.modelo.ReceitaCategoria;
 import badernageral.bgfinancas.modelo.ReceitaItem;
@@ -44,6 +42,7 @@ import badernageral.bgfinancas.modelo.Transferencia;
 import badernageral.bgfinancas.modelo.TransferenciaCategoria;
 import badernageral.bgfinancas.modelo.TransferenciaItem;
 import badernageral.bgfinancas.modelo.Usuario;
+import badernageral.bgfinancas.modulo.despesa.DespesasAgendadasControlador;
 import badernageral.bgfinancas.modulo.utilitario.Backup;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -75,7 +74,7 @@ public final class PrincipalControlador implements Initializable {
     @FXML private MenuItem gerenciarContas;
     @FXML private MenuItem gerenciarAgenda;
     @FXML private MenuItem gerenciarGrupos;
-    @FXML private MenuItem gerenciarPlanejamento;
+    @FXML private MenuItem gerenciarDespesasAgendadas;
     @FXML private MenuItem gerenciarUsuarios;
     @FXML private MenuItem movimentarDespesa;
     @FXML private MenuItem movimentarReceita;
@@ -90,7 +89,7 @@ public final class PrincipalControlador implements Initializable {
     @FXML private Button botaoDespesas;
     @FXML private Button botaoReceitas;
     @FXML private Button botaoTransferencias;
-    @FXML private Button botaoPlanejamento;
+    @FXML private Button botaoDespesasAgendadas;
     @FXML private Button botaoAgenda;
     @FXML private Button botaoGrupo;
     @FXML private Button botaoContas;
@@ -110,7 +109,7 @@ public final class PrincipalControlador implements Initializable {
         gerenciarContas.setText(idioma.getMensagem("contas"));
         gerenciarAgenda.setText(idioma.getMensagem("lembretes"));
         gerenciarGrupos.setText(idioma.getMensagem("cotas_despesas"));
-        gerenciarPlanejamento.setText(idioma.getMensagem("planejamento"));
+        gerenciarDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
         gerenciarUsuarios.setText(idioma.getMensagem("usuarios"));
         movimentarDespesa.setText(idioma.getMensagem("despesas"));
         movimentarReceita.setText(idioma.getMensagem("receitas"));
@@ -127,7 +126,7 @@ public final class PrincipalControlador implements Initializable {
         botaoDespesas.setTooltip(new Tooltip(idioma.getMensagem("despesas")));
         botaoReceitas.setTooltip(new Tooltip(idioma.getMensagem("receitas")));
         botaoTransferencias.setTooltip(new Tooltip(idioma.getMensagem("transferencias")));
-        botaoPlanejamento.setTooltip(new Tooltip(idioma.getMensagem("planejamento")));
+        botaoDespesasAgendadas.setTooltip(new Tooltip(idioma.getMensagem("despesas_agendadas")));
         botaoAgenda.setTooltip(new Tooltip(idioma.getMensagem("lembretes")));
         botaoGrupo.setTooltip(new Tooltip(idioma.getMensagem("cotas_despesas")));
         botaoContas.setTooltip(new Tooltip(idioma.getMensagem("contas")));
@@ -256,12 +255,13 @@ public final class PrincipalControlador implements Initializable {
         carregarJanela(TransferenciaCategoria.FXML);
     }
     
-    public void acaoPlanejamentoComponente() {
-        carregarJanela(PlanejamentoComponente.FXML);
+    public void acaoDespesasAgendadas() {
+        carregarJanela(Despesa.FXML_DESPESAS_AGENDADAS);
     }
     
-    public void acaoPlanejamentoItem() {
-        carregarJanela(PlanejamentoItem.FXML);
+    public void acaoDespesasAgendadas(int mes, int ano) {
+        DespesasAgendadasControlador c = carregarJanela(Despesa.FXML_DESPESAS_AGENDADAS);
+        c.setData(mes, ano);
     }
     
     public void acaoUsuario() {

@@ -120,6 +120,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         return janela.getResultado();
     }
     
+    @Override
     public void adicionar(String nome) {
         String[] texto;
         if(nome!=null && !nome.equals("")){

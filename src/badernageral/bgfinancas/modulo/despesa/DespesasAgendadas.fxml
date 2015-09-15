@@ -28,7 +28,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane hgap="20.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.planejamento.PlanejamentoComponenteControlador">
+<GridPane hgap="20.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.DespesasAgendadasControlador">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="770.0" />
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="200.0" />
@@ -79,27 +79,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                               </Button>
                           </children>
                       </HBox>
-                        <Label fx:id="labelSalario" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="Titulo" text="Salário:" GridPane.columnIndex="3">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding></Label>
-                  <HBox GridPane.columnIndex="4">
-                     <children>
-                              <TextField fx:id="receita" onAction="#acaoAtualizarSaldoReceita" styleClass="BotaoMeio" />
-                        <Button fx:id="atualizar" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" onAction="#acaoAtualizarSaldoReceita" prefHeight="24.0" prefWidth="35.0">
-                           <styleClass>
-                              <String fx:value="Botao" />
-                              <String fx:value="BotaoMeio" />
-                              <String fx:value="BotaoAtualizar" />
-                           </styleClass>
-                        </Button>
-                     </children>
-                  </HBox>
-                  <Label fx:id="labelItem" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" prefWidth="90.0" styleClass="Titulo" text="Adicionar item" textAlignment="CENTER" GridPane.columnIndex="5">
-                     <padding>
-                        <Insets right="5.0" />
-                     </padding></Label>
-                  <HBox GridPane.columnIndex="7">
+                  <HBox GridPane.columnIndex="3">
                      <children>
                         <Button fx:id="cadastrar" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
                            <styleClass>
@@ -108,18 +88,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                               <String fx:value="BotaoCadastrar" />
                            </styleClass>
                         </Button>
-                        <Button fx:id="excluir" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0" GridPane.columnIndex="4">
+                        <Button fx:id="alterar" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
                            <styleClass>
                               <String fx:value="Botao" />
                               <String fx:value="BotaoMeio" />
-                              <String fx:value="BotaoExcluir" />
+                              <String fx:value="BotaoAlterar" />
                            </styleClass>
                         </Button>
-                        <Button fx:id="gerenciarItem" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
+                        <Button fx:id="excluir" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0" GridPane.columnIndex="4">
                            <styleClass>
                               <String fx:value="Botao" />
                               <String fx:value="BotaoFim" />
-                              <String fx:value="BotaoGerenciar" />
+                              <String fx:value="BotaoExcluir" />
                            </styleClass>
                         </Button>
                      </children>
@@ -127,12 +107,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   </children>
                   <columnConstraints>
                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="180.0" minWidth="80.0" prefWidth="160.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="160.0" prefWidth="250.0" />
                       <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" prefWidth="50.0" />
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="130.0" minWidth="-Infinity" prefWidth="100.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="90.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="100.0" />
                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="105.0" />
                   </columnConstraints>
                   <rowConstraints>
@@ -150,20 +126,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                <children>
                   <HBox alignment="CENTER" GridPane.halignment="CENTER">
                      <children>
-                        <Label fx:id="labelPlanejamentoSalario" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Salario">
+                        <Label fx:id="labelDespesasAgendadasTotal" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Valor total">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="labelPlanejamentoGastos" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Gastos">
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
-                        </Label>
-                        <Label fx:id="labelPlanejamentoSaldo" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Saldo">
                            <padding>
                               <Insets left="20.0" />
                            </padding>

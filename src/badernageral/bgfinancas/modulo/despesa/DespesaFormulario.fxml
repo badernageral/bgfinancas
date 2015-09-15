@@ -31,7 +31,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 <TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.DespesaFormularioControlador">
    <content>
-      <GridPane hgap="10.0" vgap="10.0">
+      <GridPane fx:id="tabela" gridLinesVisible="false" hgap="10.0" vgap="10.0">
          <children>
             <Label fx:id="labelItem" focusTraversable="false" text="Item:" />
             <fx:include fx:id="item" source="../../template/botao/BotaoListaItem.fxml" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -58,7 +58,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
    </content>

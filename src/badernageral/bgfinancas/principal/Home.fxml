@@ -20,7 +20,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 -->
 
-
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
@@ -150,7 +149,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </TabPane>
          </children>
       </GridPane>
-      <GridPane fx:id="gridPlanejamento" GridPane.rowIndex="1">
+      <GridPane fx:id="gridDespesasAgendadas" GridPane.rowIndex="1">
          <children>
             <GridPane hgap="5.0" styleClass="bordaPaneTopo">
                <columnConstraints>
@@ -162,14 +161,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <ImageView fx:id="imagemPlanejamento" fitHeight="32.0" fitWidth="32.0" onMouseClicked="#acaoPlanejamento" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imagemDespesasAgendadas" fitHeight="32.0" fitWidth="32.0" onMouseClicked="#acaoDespesasAgendadas" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ImageView>
-                  <Label fx:id="labelPlanejamento" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Planejamento" GridPane.columnIndex="1" />
+                  <Label fx:id="labelDespesasAgendadas" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Despesas agendadas" GridPane.columnIndex="1" />
                   <HBox GridPane.columnIndex="2">
                      <children>
-                        <Button fx:id="anterior" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#anteriorPlanejamento" prefHeight="32.0" prefWidth="40.0">
+                        <Button fx:id="anterior" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#anteriorMesDespesas" prefHeight="32.0" prefWidth="40.0">
                            <styleClass>
                               <String fx:value="Botao" />
                               <String fx:value="BotaoMeio" />
@@ -180,7 +179,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Button fx:id="proximo" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#proximoPlanejamento" prefHeight="32.0" prefWidth="40.0">
+                        <Button fx:id="proximo" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#proximoMesDespesas" prefHeight="32.0" prefWidth="40.0">
                            <styleClass>
                               <String fx:value="Botao" />
                               <String fx:value="BotaoMeio" />
@@ -195,7 +194,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   </HBox>
                </children>
             </GridPane>
-            <TableView fx:id="tabelaListaPlanejamento" focusTraversable="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+            <TableView fx:id="tabelaListaDespesasAgendadas" focusTraversable="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
             <GridPane styleClass="bordaPaneBaixo" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
@@ -206,23 +205,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                <children>
                   <HBox alignment="CENTER" GridPane.halignment="CENTER">
                      <children>
-                        <Label fx:id="labelPlanejamentoSalario" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Salario">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
+                        <Label fx:id="labelDespesasAgendadasTotal" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Despesas">
                            <padding>
                               <Insets left="20.0" />
                            </padding>
                         </Label>
-                        <Label fx:id="labelPlanejamentoGastos" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Gastos">
+                        <Label fx:id="labelDespesasAgendadasCredito" layoutX="110.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Crédito">
                            <padding>
                               <Insets left="20.0" />
                            </padding>
-                        </Label>
-                        <Label fx:id="labelPlanejamentoSaldo" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Saldo">
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                         </Label>
                      </children>
                   </HBox>

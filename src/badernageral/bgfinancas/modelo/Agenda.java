@@ -105,7 +105,7 @@ public final class Agenda extends Item<Agenda> implements Modelo {
             if(idCategoria.getValor() != null){
                 this.and(idCategoria, "=");
             }
-            this.orderby(nomeCategoria, nome);
+            this.orderby(data, nomeCategoria, nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Agenda> Linhas = new ArrayList<>();

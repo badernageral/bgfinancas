@@ -21,6 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package badernageral.bgfinancas.modulo.utilitario;
 
 import badernageral.bgfinancas.biblioteca.banco.Conexao;
+import badernageral.bgfinancas.biblioteca.banco.Database;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
@@ -87,6 +88,7 @@ public class Backup {
                 descompactar(importar, diretorio);
                 Janela.showMensagem(Status.SUCESSO, idioma.getMensagem("backup_importado_sucesso"));
                 banco.conectar();
+                Database.verificarBanco();
                 Kernel.main.reiniciar();
             } catch (IOException ex) {
                 Janela.showException(ex);

@@ -25,12 +25,16 @@ import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.banco.Conexao;
 import badernageral.bgfinancas.biblioteca.banco.Database;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
+import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.Configuracao;
+import badernageral.bgfinancas.modelo.Despesa;
 import badernageral.bgfinancas.modelo.Usuario;
 import badernageral.bgfinancas.modulo.usuario.UsuarioFormularioControlador;
 import badernageral.bgfinancas.modulo.utilitario.ConfiguracaoFormularioControlador;
 import java.io.IOException;
+import java.time.LocalDate;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -97,8 +101,18 @@ public class Main extends Application {
             Kernel.palco = new Stage();
             Kernel.palco.setScene(criarCena(criarPainelPrincipal(),null));
             Kernel.palco.show();
+            notificarDespesasAgendadas();
         } catch (Exception ex) {
             Janela.showException(ex);
+        }
+    }
+    
+    private void notificarDespesasAgendadas(){
+        if(new Despesa().isDespesasAtrasadas()){
+            Janela.showMensagem(Status.ADVERTENCIA, idioma.getMensagem("despesas_atrasadas"));
+            Configuracao data_notificacao = new Configuracao().setNome("data_notificacao").consultar();
+            data_notificacao.setValor(Datas.toSqlData(LocalDate.now()));
+            data_notificacao.alterar();
         }
     }
 

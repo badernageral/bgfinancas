@@ -41,10 +41,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <ComboBox fx:id="contaDestino" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="labelDescricao" focusTraversable="false" layoutX="40.0" layoutY="47.0" text="Descrição:" GridPane.rowIndex="3" />
             <TextField fx:id="descricao" layoutX="104.0" layoutY="83.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" onAction="#acaoFinalizar" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="labelValor" focusTraversable="false" text="Valor:" GridPane.rowIndex="5" />
-            <TextField fx:id="valor" layoutX="104.0" layoutY="83.0" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label fx:id="labelData" focusTraversable="false" layoutX="40.0" layoutY="87.0" text="Data:" GridPane.rowIndex="4" />
             <DatePicker fx:id="data" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="labelValor" focusTraversable="false" text="Valor:" GridPane.rowIndex="5" />
+            <TextField fx:id="valor" layoutX="104.0" layoutY="83.0" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
          <columnConstraints>

@@ -25,8 +25,10 @@ import badernageral.bgfinancas.biblioteca.contrato.Modelo;
 import badernageral.bgfinancas.biblioteca.banco.Coluna;
 import badernageral.bgfinancas.biblioteca.banco.Conexao;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
+import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import javafx.collections.ObservableList;
 
 public final class Configuracao extends Banco<Configuracao> implements Modelo {
@@ -131,6 +133,14 @@ public final class Configuracao extends Banco<Configuracao> implements Modelo {
             // Configuracao: moeda
             if(Configuracao.getPropriedade("moeda") == null){
                 new Configuracao("moeda", "R$").cadastrar();
+            }
+            // Configuracao: versão
+            if(Configuracao.getPropriedade("versao") == null){
+                new Configuracao("versao", "3.0").cadastrar();
+            }
+            // Configuracao: data_notificacao
+            if(Configuracao.getPropriedade("data_notificacao") == null){
+                new Configuracao("data_notificacao", Datas.toSqlData(LocalDate.now())).cadastrar();
             }
         } catch (SQLException ex) {
             Janela.showException(ex);

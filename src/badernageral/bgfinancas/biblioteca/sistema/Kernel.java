@@ -22,6 +22,7 @@ package badernageral.bgfinancas.biblioteca.sistema;
 
 import badernageral.bgfinancas.biblioteca.contrato.Controlador;
 import badernageral.bgfinancas.idioma.Linguagem;
+import badernageral.bgfinancas.modelo.Configuracao;
 import badernageral.bgfinancas.principal.Main;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -56,7 +57,7 @@ public final class Kernel {
     private Kernel(){ }
     
     public static void setTitulo(String titulo){
-        palco.setTitle(TITULO+" / "+titulo);
+        palco.setTitle(TITULO+" "+Configuracao.getPropriedade("versao")+" / "+titulo);
     }
     
 }

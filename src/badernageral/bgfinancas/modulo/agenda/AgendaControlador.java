@@ -24,7 +24,6 @@ import badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.Controlador;
-import badernageral.bgfinancas.biblioteca.contrato.Item;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.sistema.Tabela;
 import badernageral.bgfinancas.biblioteca.utilitario.Validar;

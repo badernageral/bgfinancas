@@ -43,6 +43,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     
     public static final String FXML = MODULO+"/Despesa.fxml";
     public static final String FXML_CADASTRO_MULTIPLO = MODULO+"/DespesaCadastroMultiplo.fxml";
+    public static final String FXML_DESPESAS_AGENDADAS = MODULO+"/DespesasAgendadas.fxml";
     public static final String FXML_FORMULARIO = MODULO+"/DespesaFormulario.fxml";
     public static final String FXML_MODAL_DESPESA = MODULO+"/ModalDespesa.fxml";
 
@@ -55,6 +56,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     private final Coluna valor = new Coluna(TABELA, "valor");
     private final Coluna data = new Coluna(TABELA, "data");
     private final Coluna hora = new Coluna(TABELA, "hora");
+    private final Coluna agendada = new Coluna(TABELA, "agendada");
+    private final Coluna parcela = new Coluna(TABELA, "parcela");
     
     private final Coluna idContaInner = new Coluna(Conta.TABELA, "id_conta");
     private final Coluna nomeConta = new Coluna(Conta.TABELA, "nome", "", "nome_conta");
@@ -71,6 +74,11 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     private final Coluna mes = new Coluna(TABELA, "data", "mes", Funcao.MES);
     private final Coluna ano = new Coluna(TABELA, "data", "ano", Funcao.ANO);
     
+    private Boolean somenteAgendamento = false;
+    private Boolean especificarMesAno = false;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
+    
     public Despesa(){ }
       
     public Despesa(String idItem, String nomeItem, String nomeCategoria, String quantidade, String valor){
@@ -81,7 +89,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.valor.setValor(valor);
     }   
 
-    public Despesa(String idDespesa, String idConta, String idItem, String quantidade, String valor, LocalDate data, String hora){
+    public Despesa(String idDespesa, String idConta, String idItem, String quantidade, String valor, LocalDate data, String hora, String agendada){
         this.idDespesa.setValor(idDespesa);
         this.idConta.setValor(idConta);
         this.idItem.setValor(idItem);
@@ -89,6 +97,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.valor.setValor(valor);
         this.data.setValor(Datas.toSqlData(data));
         this.hora.setValor(hora);
+        this.agendada.setValor(agendada);
     }
     
     @Override
@@ -100,8 +109,10 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             rs.getString(quantidade.getColuna()),
             rs.getString(valor.getColuna()),
             rs.getDate(data.getColuna()).toLocalDate(),
-            rs.getString(hora.getColuna())
+            rs.getString(hora.getColuna()),
+            rs.getString(agendada.getColuna())
         );
+        d.setParcela(rs.getString(parcela.getColuna()));
         d.setNomeConta(rs.getString(nomeConta.getAliasColuna()));
         d.setNomeItem(rs.getString(nomeItem.getAliasColuna()));
         d.setNomeCategoria(rs.getString(nomeCategoria.getAliasColuna()));
@@ -110,12 +121,12 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
        
     @Override
     public boolean cadastrar(){
-        return this.insert(idConta, idItem, quantidade, valor, data, hora).commit();
+        return this.insert(idConta, idItem, quantidade, valor, data, hora, agendada, parcela).commit();
     }
     
     @Override
     public boolean alterar(){
-        return this.update(idConta, quantidade, valor, data).where(idDespesa, "=").commit();
+        return this.update(idConta, quantidade, valor, data, agendada).where(idDespesa, "=").commit();
     }
     
     @Override
@@ -132,7 +143,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     @Override
     public ObservableList<Despesa> listar(){
         try{
-            this.select(idDespesa, idConta, idItem, quantidade, valor, data, hora, nomeConta, nomeItem, nomeCategoria);
+            this.select(idDespesa, idConta, idItem, quantidade, valor, data, hora, agendada, parcela, nomeConta, nomeItem, nomeCategoria);
             this.inner(idConta, idContaInner);
             this.inner(idItem, idItemInner);
             this.inner(idCategoria, idCategoriaInner);
@@ -148,7 +159,23 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             if(idConta.getValor() != null){
                 this.and(idConta, "=");
             }
-            this.orderby("DESC", data, hora);
+            agendada.setValor("1");
+            if(somenteAgendamento){
+                this.and(agendada, "=");
+            }else{
+                this.and(agendada, "<>");
+            }
+            if(especificarMesAno){
+                data.setValor(Datas.toSqlData(dataInicio));
+                this.and(data, ">=");
+                data.setValor(Datas.toSqlData(dataFim));
+                this.and(data, "<=");
+            }
+            if(somenteAgendamento){
+                this.orderby(data, nomeItem);
+            }else{
+                this.orderby("DESC", data, hora);
+            }
             ResultSet rs = this.query();
             if(rs != null){
                 List<Despesa> Linhas = new ArrayList<>();
@@ -163,6 +190,28 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         }catch(SQLException ex){
             Janela.showException(ex);
             return null;
+        }
+    }
+    
+     public boolean isDespesasAtrasadas(){
+        try{
+            this.select(idDespesa);
+            agendada.setValor("1");
+            this.where(agendada, "=");
+            data.setValor(Datas.toSqlData(LocalDate.now()));
+            this.and(data, "<=");
+            data.setValor(Configuracao.getPropriedade("data_notificacao"));
+            this.and(data, ">");
+            this.orderby("DESC", data, hora);
+            ResultSet rs = this.query();
+            if(rs != null){
+                return rs.next();
+            }else{
+                return false;
+            }
+        }catch(SQLException ex){
+            Janela.showException(ex);
+            return false;
         }
     }
     
@@ -198,6 +247,10 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         return hora.getValor();
     }
     
+    public String getAgendada() {
+        return agendada.getValor();
+    }
+    
     public String getDataHora(){
         return getData()+" "+getHora();
     }
@@ -207,7 +260,11 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     }
     
     public String getNomeItem() {
-        return nomeItem.getValor();
+        if(agendada.getValor().equals("1") && parcela.getValor()!=null){
+            return nomeItem.getValor()+" - "+parcela.getValor();
+        }else{
+            return nomeItem.getValor();
+        }
     }
     
     public String getNomeCategoria() {
@@ -240,6 +297,14 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.hora.setValor(hora);
     }
     
+    public void setAgendada(String agendada) {
+        this.agendada.setValor(agendada);
+    }
+    
+    public void setParcela(String parcela) {
+        this.parcela.setValor(parcela);
+    }
+    
     public void setNomeConta(String conta) {
         this.nomeConta.setValor(conta);
     }
@@ -257,6 +322,17 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         return this;
     }
     
+    public Despesa setSomenteAgendamento() {
+        this.somenteAgendamento = true;
+        return getThis();
+    }
+    
+    public Despesa setMesAno(int mes, int ano) {
+        this.especificarMesAno = true;
+        this.dataInicio = LocalDate.of(ano, mes, 1);
+        this.dataFim = dataInicio.withDayOfMonth(dataInicio.lengthOfMonth());
+        return getThis();
+    }
     public Despesa setFiltro(String filtro){
         nomeConta.setValor(filtro);
         nomeItem.setValor(filtro);
@@ -278,6 +354,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
                 this.and(data, ">=");
                 data.setValor(Datas.toSqlData(fim));
                 this.and(data, "<=");
+                agendada.setValor("1");
+                this.and(agendada, "<>");
                 ResultSet rs = this.query();
                 if(rs.next()){
                     String resultado = rs.getString(sumValor.getAliasColuna());
@@ -305,6 +383,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
+            agendada.setValor("1");
+            this.and(agendada, "<>");
             this.groupBy(nomeCategoria);
             this.orderby(nomeCategoria);
             ResultSet rs = this.query();
@@ -342,6 +422,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
+            agendada.setValor("1");
+            this.and(agendada, "<>");
             if(nome_categoria != null){
                 this.and(nomeCategoria, "=");
             }
@@ -379,6 +461,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
+            agendada.setValor("1");
+            this.and(agendada, "<>");
             if (categoriasSelecionadas.size() > 0) {
                 this.andIN(idCategoria, categoriasSelecionadas);
             }

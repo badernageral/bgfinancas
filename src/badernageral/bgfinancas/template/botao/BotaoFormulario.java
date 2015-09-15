@@ -25,9 +25,13 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 public final class BotaoFormulario implements Initializable {
     
+    @FXML private StackPane formularioBotao;
+    @FXML private HBox grupoBotao;
     @FXML private Button finalizar;
     @FXML private Button cancelar;
        
@@ -50,6 +54,14 @@ public final class BotaoFormulario implements Initializable {
     
     public Button getBotaoCancelar(){
         return cancelar;
+    }
+    
+    public StackPane getStackPane(){
+        return formularioBotao;
+    }
+    
+    public HBox getGrupoBotao(){
+        return grupoBotao;
     }
     
 }

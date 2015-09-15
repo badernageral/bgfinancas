@@ -55,14 +55,10 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        formulario.setText(idioma.getMensagem("configuracoes"));
         Botao.prepararBotaoModal(this, botaoController);
-        labelIdioma.setText(idioma.getMensagem("idioma")+":");
-        labelMoeda.setText(idioma.getMensagem("tipo_moeda")+":");
-        botaoController.setTextBotaoFinalizar(idioma.getMensagem("alterar"));
         idiomas.setItems(idioma.getListaIdiomas());
         idiomas.getSelectionModel().select(idioma.getIdiomaSistema());
-        moeda.setText(Configuracao.getPropriedade("moeda"));
+        mudarIdioma();
     }
     
     public void setPrimeiroAcesso(){
@@ -74,17 +70,27 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
         if(idiomas.getSelectionModel().getSelectedItem().equals("English")){
             moeda.setText("$");
             formulario.setText("Settings");
-            botaoController.setTextBotaoFinalizar("Next");
-            botaoController.setTextBotaoCancelar("Exit");
             labelIdioma.setText("Language:");
             labelMoeda.setText("Currency:");
+            if(primeiroAcesso){
+                botaoController.setTextBotaoFinalizar("Next");
+                botaoController.setTextBotaoCancelar("Exit");
+            }else{
+                botaoController.setTextBotaoFinalizar("Edit");
+                botaoController.setTextBotaoCancelar("Cancel");
+            }
         }else{
             moeda.setText("R$");
             formulario.setText("Configurações");
-            botaoController.setTextBotaoFinalizar("Próximo");
-            botaoController.setTextBotaoCancelar("Sair");
             labelIdioma.setText("Idioma:");
             labelMoeda.setText("Moeda:");
+            if(primeiroAcesso){
+                botaoController.setTextBotaoFinalizar("Próximo");
+                botaoController.setTextBotaoCancelar("Sair");
+            }else{
+                botaoController.setTextBotaoFinalizar("Alterar");
+                botaoController.setTextBotaoCancelar("Cancelar");
+            }
         }
     }
     

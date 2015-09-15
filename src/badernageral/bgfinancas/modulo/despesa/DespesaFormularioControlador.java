@@ -34,7 +34,6 @@ import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Operacao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -50,12 +49,18 @@ import badernageral.bgfinancas.modelo.DespesaItem;
 import badernageral.bgfinancas.modulo.conta.ContaFormularioControlador;
 import badernageral.bgfinancas.modulo.despesa.item.DespesaItemFormularioControlador;
 import badernageral.bgfinancas.template.botao.BotaoListaItem;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 public final class DespesaFormularioControlador implements Initializable, ControladorFormulario {
        
     @FXML private TitledPane formulario;
+    @FXML private GridPane tabela;
     @FXML private Label labelItem;
     @FXML private Label labelConta;
     @FXML private Label labelData;
@@ -68,10 +73,14 @@ public final class DespesaFormularioControlador implements Initializable, Contro
     @FXML private TextField valor;
     @FXML private BotaoFormulario botaoController;
     
-    private Despesa Modelo;
+    private final CheckBox checkAgendar = new CheckBox();
+    private final TextField qtdMeses = new TextField();
+    private Boolean pagar = false;
+    
+    private Despesa modelo;
     
     private Acao acao;
-    private DespesaControlador controlador = null;
+    private DespesasAgendadasControlador controlador = null;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -122,60 +131,113 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         Animacao.fadeInInvisivel(contaController.getComboCategoria(), formulario);
     }
     
-    public void cadastrar(DespesaControlador controlador){
+    public void cadastrar(DespesasAgendadasControlador controlador){
         acao = Acao.CADASTRAR;
         this.controlador = controlador;
-        data.setValue(LocalDate.now());
+        if(controlador!=null){
+            data.setValue(LocalDate.now().withMonth(controlador.getData().getMonthValue()));
+        }else{
+            data.setValue(LocalDate.now());
+        }
         quantidade.setText("1");
         botaoController.setTextBotaoFinalizar(idioma.getMensagem("cadastrar"));
+        tabela.getChildren().remove(botaoController.getStackPane());
+        tabela.add(botaoController.getStackPane(), 1, 6);
+        Label labelAgendada = new Label(idioma.getMensagem("agendar")+":");
+        tabela.add(labelAgendada, 0, 5);
+        qtdMeses.setPromptText(idioma.getMensagem("numero_meses"));
+        qtdMeses.setOnAction(e -> acaoFinalizar());
+        HBox grupo = new HBox();
+        grupo.getChildren().addAll(checkAgendar,qtdMeses);
+        tabela.add(grupo, 1, 5);
+        if(controlador!=null){
+            checkAgendar.setSelected(true);
+            checkAgendar.setDisable(true);
+        }else{
+            qtdMeses.setVisible(false);
+        }
+        checkAgendar.setOnAction(e -> {
+            if(checkAgendar.isSelected()){
+                qtdMeses.setVisible(true);
+            }else{
+                qtdMeses.setVisible(false);
+            }
+        });
     }
     
     public void alterar(Despesa modelo){
-        Modelo = modelo;
+        this.modelo = modelo;
         botaoController.setTextBotaoFinalizar(idioma.getMensagem("alterar"));
-        DespesaItem item = new DespesaItem().setIdItem(Modelo.getIdItem()).consultar();
+        DespesaItem item = new DespesaItem().setIdItem(modelo.getIdItem()).consultar();
         if(item != null){
             itemController.setItemSelecionado(item);
         }
-        Conta conta = new Conta().setIdCategoria(Modelo.getIdConta()).consultar();
+        Conta conta = new Conta().setIdCategoria(modelo.getIdConta()).consultar();
         if(conta != null){
             contaController.setCategoriaSelecionada(conta);
         }
         itemController.getComboItem().setDisable(true);
         itemController.getBotaoCadastrar().setDisable(true);
-        data.setValue(Modelo.getDataLocal());
-        quantidade.setText(Modelo.getQuantidade());
-        valor.setText(Modelo.getValor());
+        data.setValue(modelo.getDataLocal());
+        quantidade.setText(modelo.getQuantidade());
+        valor.setText(modelo.getValor());
+        if(modelo.getAgendada().equals("1")){
+            Button bPagar = new Button(idioma.getMensagem("pagar"));
+            botaoController.getGrupoBotao().getChildren().add(0, bPagar);
+            bPagar.setOnAction(e -> {
+                pagar = true;
+                acaoFinalizar();
+            });
+        }
     }
     
     @Override
     public void acaoFinalizar(){
         if(validarFormulario()){
             if(acao == Acao.CADASTRAR){
-                Despesa item = new Despesa(null, contaController.getIdCategoria(), itemController.getIdItem(), quantidade.getText(), valor.getText(), data.getValue(), Datas.getHoraAtual());
-                item.cadastrar();
-                new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), valor.getText());
-                Kernel.principal.acaoDespesa();
+                if(checkAgendar.isSelected()){
+                    LocalDate dataCadastro = data.getValue();
+                    int j = Integer.parseInt(qtdMeses.getText());
+                    for(int i=1;i<=j;i++){
+                        Despesa item = new Despesa(null, contaController.getIdCategoria(), itemController.getIdItem(), quantidade.getText(), valor.getText(), dataCadastro, Datas.getHoraAtual(), "1");
+                        if(j>1){ item.setParcela(i+"/"+j); }
+                        item.cadastrar();
+                        dataCadastro = dataCadastro.plusMonths(1);
+                    }
+                    Kernel.principal.acaoDespesasAgendadas(data.getValue().getMonthValue(), data.getValue().getYear());
+                }else{
+                    Despesa item = new Despesa(null, contaController.getIdCategoria(), itemController.getIdItem(), quantidade.getText(), valor.getText(), data.getValue(), Datas.getHoraAtual(), "0");
+                    item.cadastrar();
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), valor.getText());
+                    Kernel.controlador.acaoFiltrar(true);
+                }
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }else{
-                Boolean contaMudou = !(Modelo.getIdConta().equals(contaController.getIdCategoria()));
-                if(contaMudou){
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, Modelo.getIdConta(), Modelo.getValor());
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), Modelo.getValor());
+                if(!modelo.getAgendada().equals("1")){
+                    Boolean contaMudou = !(modelo.getIdConta().equals(contaController.getIdCategoria()));
+                    if(contaMudou){
+                        new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdConta(), modelo.getValor());
+                        new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), modelo.getValor());
+                    }
+                    modelo.setIdConta(contaController.getComboCategoria().getValue());
+                    Boolean valorMudou = !(modelo.getValor().equals(valor.getText()));
+                    if(valorMudou){
+                        BigDecimal valorDiferenca = new BigDecimal(modelo.getValor());
+                        valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
+                        new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdConta(), valorDiferenca.toString());
+                    }
+                }else{
+                    if(pagar){
+                        modelo.setAgendada("0");
+                        new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), valor.getText());
+                    }
                 }
-                Modelo.setIdConta(contaController.getComboCategoria().getValue());
-                Boolean valorMudou = !(Modelo.getValor().equals(valor.getText()));
-                if(valorMudou){
-                    BigDecimal valorDiferenca = new BigDecimal(Modelo.getValor());
-                    valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, Modelo.getIdConta(), valorDiferenca.toString());
-                }
-                Modelo.setValor(valor.getText());
-                Modelo.setQuantidade(quantidade.getText());
-                Modelo.setData(data.getValue());
-                Modelo.alterar();
-                Kernel.principal.acaoDespesa();
+                modelo.setValor(valor.getText());
+                modelo.setQuantidade(quantidade.getText());
+                modelo.setData(data.getValue());
+                modelo.alterar();
+                Kernel.controlador.acaoFiltrar(true);
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }
@@ -189,6 +251,9 @@ public final class DespesaFormularioControlador implements Initializable, Contro
             Validar.datePicker(data);
             Validar.textFieldDecimal(quantidade);
             Validar.textFieldDecimal(valor);
+            if(checkAgendar.isSelected()){
+                Validar.textFieldInteiro(qtdMeses);
+            }
             return true;
         } catch (Erro ex) {
             return false;

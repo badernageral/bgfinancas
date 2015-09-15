@@ -33,6 +33,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     -fx-font-size: 13;
 }
 
+.table-view{
+    -fx-accent: #CCCCCC;
+}
+
 .fonte_10{ -fx-font-size: 12px; }
 
 .transparente{ -fx-background-color: transparent; }
@@ -48,7 +52,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #botaoDespesas{ -fx-background-image: url("../imagem/modulo/despesas.png"); }
 #botaoReceitas{ -fx-background-image: url("../imagem/modulo/receitas.png"); }
 #botaoTransferencias{ -fx-background-image: url("../imagem/modulo/transferencias.png"); }
-#botaoPlanejamento{ -fx-background-image: url("../imagem/modulo/planejamento.png"); }
+#botaoDespesasAgendadas{ -fx-background-image: url("../imagem/modulo/despesas_agendadas.png"); }
 #botaoAgenda{ -fx-background-image: url("../imagem/modulo/agenda.png"); }
 #botaoGrupo{ -fx-background-image: url("../imagem/modulo/grupos.png"); }
 #botaoContas{ -fx-background-image: url("../imagem/modulo/contas.png"); }
@@ -59,7 +63,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #botaoDespesas:hover{ -fx-background-image: url("../imagem/modulo/hover/despesas.png"); }
 #botaoReceitas:hover{ -fx-background-image: url("../imagem/modulo/hover/receitas.png"); }
 #botaoTransferencias:hover{ -fx-background-image: url("../imagem/modulo/hover/transferencias.png"); }
-#botaoPlanejamento:hover{ -fx-background-image: url("../imagem/modulo/hover/planejamento.png"); }
+#botaoDespesasAgendadas:hover{ -fx-background-image: url("../imagem/modulo/hover/despesas_agendadas.png"); }
 #botaoAgenda:hover{ -fx-background-image: url("../imagem/modulo/hover/agenda.png"); }
 #botaoGrupo:hover{ -fx-background-image: url("../imagem/modulo/hover/grupos.png"); }
 #botaoContas:hover{ -fx-background-image: url("../imagem/modulo/hover/contas.png"); }
@@ -68,7 +72,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #imagemLogo{ -fx-image: url("../imagem/layout/logo.png"); }
 #imagemContas{ -fx-image: url("../imagem/modulo/icon/contas.png"); }
-#imagemPlanejamento{ -fx-image: url("../imagem/modulo/icon/planejamento.png"); }
+#imagemDespesasAgendadas{ -fx-image: url("../imagem/modulo/icon/despesas_agendadas.png"); }
 #imagemAgenda{ -fx-image: url("../imagem/modulo/icon/agenda.png"); }
 #imagemRelatorio{ -fx-image: url("../imagem/modulo/icon/relatorio.png"); }
 #imagemGrupos{ -fx-image: url("../imagem/modulo/icon/grupo.png"); }
@@ -78,23 +82,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;
 }
-#labelCreditoTotal{
+#labelCreditoTotal, #labelDespesasAgendadasCredito{
     -fx-background-image: url("../imagem/outros/credito.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;
 }
-#labelPlanejamentoSalario{
-    -fx-background-image: url("../imagem/outros/salario.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: left center;
-}
-#labelPlanejamentoGastos, #labelDespesaValor{
+#labelDespesasAgendadasTotal, #labelDespesaValor{
     -fx-background-image: url("../imagem/outros/gastos.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: left center;
-}
-#labelPlanejamentoSaldo{
-    -fx-background-image: url("../imagem/outros/saldo.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;
 }

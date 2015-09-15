@@ -51,7 +51,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem fx:id="gerenciarPlanejamento" mnemonicParsing="false" onAction="#acaoPlanejamentoComponente" text="Planejamento">
+                        <MenuItem fx:id="gerenciarDespesasAgendadas" mnemonicParsing="false" onAction="#acaoDespesasAgendadas" text="Despesas agendadas">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
@@ -134,7 +134,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <String fx:value="Botao" />
                         <String fx:value="transparente" />
                      </styleClass></Button>
-                  <Button fx:id="botaoPlanejamento" focusTraversable="false" mnemonicParsing="false" onAction="#acaoPlanejamentoComponente" prefHeight="50.0" prefWidth="50.0">
+                  <Button fx:id="botaoDespesasAgendadas" focusTraversable="false" mnemonicParsing="false" onAction="#acaoDespesasAgendadas" prefHeight="50.0" prefWidth="50.0">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>

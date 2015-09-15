@@ -47,6 +47,7 @@ public class Tabela<T extends Modelo> {
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabela.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tabela.setPlaceholder(new Label(Linguagem.getInstance().getMensagem("tabela_vazia")));
+        tabela.setFocusTraversable(false);
     }
     
     public void prepararTabela(TableView<T> tabela){

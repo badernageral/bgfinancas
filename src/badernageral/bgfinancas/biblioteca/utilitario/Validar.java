@@ -100,9 +100,21 @@ public final class Validar {
     
     public static void textFieldDecimal(TextField campo) throws Erro{
         try{
+            Validar.textField(campo);
             BigDecimal valor = new BigDecimal(campo.getText());
         }catch(NumberFormatException ex){
             Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("use_ponto_decimais"), campo, Duracao.NORMAL);
+            campo.requestFocus();
+            throw new Erro();
+        }
+    }
+    
+    public static void textFieldInteiro(TextField campo) throws Erro{
+        try{
+            Validar.textField(campo);
+            Integer.parseInt(campo.getText());
+        }catch(NumberFormatException ex){
+            Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("use_inteiros"), campo, Duracao.NORMAL);
             campo.requestFocus();
             throw new Erro();
         }

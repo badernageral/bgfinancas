@@ -146,6 +146,8 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     }
     
     private void relatorioGraficoBarras(Grafico objeto){
+        xAxisPrincipal.setLabel(idioma.getMensagem("valores")+" ("+idioma.getMensagem("moeda")+")");
+        xAxisSecundario.setLabel(idioma.getMensagem("valores")+" ("+idioma.getMensagem("moeda")+")");
         ajustarColunas(50,50);
         tabela.add(graficoPrincipal, 0, 1);
         tabela.add(graficoSecundario, 1, 1);
@@ -156,7 +158,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
                 item.getNode().setOnMouseClicked((MouseEvent event) -> {
                     updateGraficoSecundario(serie.getName(), objeto);
                 });
-                eventosGrafico(item.getNode(), serie.getName());
+                eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
             });
         });
         graficoPrincipal.setTitle(idioma.getMensagem("categorias")+" - "+getValorTotal(graficoPrincipal.getData()));
@@ -179,7 +181,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         graficoSecundario.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), nomeCategoria));
         graficoSecundario.getData().stream().forEach((serie) -> {
             serie.getData().stream().forEach((item) -> {
-                eventosGrafico(item.getNode(), serie.getName());
+                eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
             });
         });
         graficoSecundario.setTitle(idioma.getMensagem("itens")+" / "+nomeCategoria+" - "+getValorTotal(graficoSecundario.getData()));

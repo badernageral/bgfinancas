@@ -24,9 +24,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.template.botao.BotaoFormulario">
+<StackPane fx:id="formularioBotao" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.template.botao.BotaoFormulario">
     <children>
-        <HBox spacing="5.0">
+        <HBox fx:id="grupoBotao" spacing="5.0">
             <children>
                <Button fx:id="finalizar" mnemonicParsing="false" text="Finalizar" />
                <Button fx:id="cancelar" mnemonicParsing="false" text="Cancelar" />
