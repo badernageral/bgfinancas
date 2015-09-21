@@ -144,16 +144,25 @@ public final class Database {
     private static void executarAtualizacoes(){
         Configuracao.verificar();
         Conexao banco = Conexao.getInstance();
-        if(Configuracao.getPropriedade("versao").equals("3.0")){
+        String versao = Configuracao.getPropriedade("versao");
+        if(versao.equals("3.0")){
             banco.executeUpdate("ALTER TABLE despesas ADD COLUMN agendada INTEGER DEFAULT 0 NOT NULL");
             banco.executeUpdate("ALTER TABLE despesas ADD COLUMN parcela VARCHAR_IGNORECASE(10)");
             banco.executeUpdate("DROP TABLE planejamento_componentes");
             banco.executeUpdate("DROP TABLE planejamento_itens");
             banco.executeUpdate("DROP TABLE planejamento");
-            Configuracao versao = new Configuracao().setNome("versao").consultar();
-            versao.setValor("3.1");
-            versao.alterar();
+            versao = setValorVersao("3.1");
         }
+        if(versao.equals("3.1")){
+            versao = setValorVersao("3.1.1");
+        }
+    }
+    
+    private static String setValorVersao(String versao){
+        Configuracao confVersao = new Configuracao().setNome("versao").consultar();
+        confVersao.setValor(versao);
+        confVersao.alterar();
+        return versao;
     }
     
     public static void popularBanco(){

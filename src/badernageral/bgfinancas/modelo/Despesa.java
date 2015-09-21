@@ -87,6 +87,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.nomeCategoria.setValor(nomeCategoria);
         this.quantidade.setValor(quantidade);
         this.valor.setValor(valor);
+        this.agendada.setValor("0");
     }   
 
     public Despesa(String idDespesa, String idConta, String idItem, String quantidade, String valor, LocalDate data, String hora, String agendada){
@@ -260,7 +261,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     }
     
     public String getNomeItem() {
-        if(agendada.getValor().equals("1") && parcela.getValor()!=null){
+        if(agendada.getValor()!=null && agendada.getValor().equals("1") && parcela.getValor()!=null){
             return nomeItem.getValor()+" - "+parcela.getValor();
         }else{
             return nomeItem.getValor();
