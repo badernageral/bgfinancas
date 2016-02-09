@@ -46,7 +46,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
          <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" prefWidth="75.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
          </columnConstraints>
          <padding>

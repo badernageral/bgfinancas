@@ -28,6 +28,7 @@ import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -165,13 +166,13 @@ public final class Grupo extends Categoria<Grupo> implements Modelo {
         this.saldo.setValor(saldo);
     }
     
-    public ObservableList<Grupo> getRelatorio(String filtro){
+    public ObservableList<Grupo> getRelatorio(LocalDate hoje, String filtro){
         ObservableList<Grupo> grupos = new Grupo().setNome(filtro).listar();
         for(Grupo g : grupos){
             BigDecimal saldo = new BigDecimal(g.getValor());
             ObservableList<GrupoItem> _itens = new GrupoItem().setIdCategoria(g.getIdCategoria()).listar();
             for(GrupoItem i : _itens){
-                saldo = saldo.subtract(new BigDecimal(new Despesa().setIdCategoria(i.getIdItem()).getSumValor()));
+                saldo = saldo.subtract(new BigDecimal(new Despesa().setIdCategoria(i.getIdItem()).getSumValor(hoje)));
             }
             g.setSaldo(saldo.toString());
         }

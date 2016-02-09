@@ -34,6 +34,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import badernageral.bgfinancas.modelo.Grupo;
 import badernageral.bgfinancas.modulo.grupo.GrupoFormularioControlador;
+import java.time.LocalDate;
 import javafx.scene.layout.GridPane;
 
 public final class ListaGrupo implements Initializable {
@@ -58,7 +59,8 @@ public final class ListaGrupo implements Initializable {
     }
     
     public void atualizarTabela(boolean animacao){
-        tabelaListaGrupo.setItems(new Grupo().getRelatorio(null));
+        LocalDate hoje = LocalDate.now();
+        tabelaListaGrupo.setItems(new Grupo().getRelatorio(hoje,null));
         if(animacao){
             Animacao.fadeOutIn(tabelaListaGrupo);
         }

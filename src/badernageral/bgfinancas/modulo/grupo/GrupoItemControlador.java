@@ -38,6 +38,7 @@ import badernageral.bgfinancas.modelo.Grupo;
 import badernageral.bgfinancas.modelo.GrupoItem;
 import badernageral.bgfinancas.template.barra.BarraPadrao;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -118,7 +119,8 @@ public final class GrupoItemControlador implements Initializable, Controlador {
     
     public void atualizarGrupos(){
         Grupo grupoSelecionado = listaGrupos.getSelectionModel().getSelectedItem();
-        listaGrupos.setItems(new Grupo().getRelatorio(barraController.getFiltro().getText()));
+        LocalDate hoje = LocalDate.now();
+        listaGrupos.setItems(new Grupo().getRelatorio(hoje,barraController.getFiltro().getText()));
         listaGrupos.getSelectionModel().select(grupoSelecionado);
     }
     

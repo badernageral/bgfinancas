@@ -25,6 +25,7 @@ import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.PilhaVoltar;
+import badernageral.bgfinancas.biblioteca.tipo.Status;
 import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.Agenda;
 import badernageral.bgfinancas.modelo.AgendaTipo;
@@ -42,9 +43,15 @@ import badernageral.bgfinancas.modelo.Transferencia;
 import badernageral.bgfinancas.modelo.TransferenciaCategoria;
 import badernageral.bgfinancas.modelo.TransferenciaItem;
 import badernageral.bgfinancas.modelo.Usuario;
+import badernageral.bgfinancas.modelo.Utilitario;
 import badernageral.bgfinancas.modulo.despesa.DespesasAgendadasControlador;
 import badernageral.bgfinancas.modulo.utilitario.Backup;
+import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -79,11 +86,14 @@ public final class PrincipalControlador implements Initializable {
     @FXML private MenuItem movimentarDespesa;
     @FXML private MenuItem movimentarReceita;
     @FXML private MenuItem movimentarTransferencia;
+    @FXML private MenuItem movimentarGuia;
     @FXML private MenuItem utilitariosConfiguracoes;
     @FXML private MenuItem utilitariosRelatorios;
     @FXML private MenuItem utilitariosExportarBackup;
     @FXML private MenuItem utilitariosImportarBackup;
+    @FXML private MenuItem ajudaTutorial;
     @FXML private MenuItem ajudaSobreSistema;
+    @FXML private MenuItem ajudaVerificarAtualizacoes;
     
     @FXML private Button botaoHome;
     @FXML private Button botaoDespesas;
@@ -95,6 +105,7 @@ public final class PrincipalControlador implements Initializable {
     @FXML private Button botaoContas;
     @FXML private Button botaoUsuarios;
     @FXML private Button botaoRelatorios;
+    @FXML private Button botaoGuia;
     
     @FXML private Button botaoAjuda;
     @FXML private Button botaoAjudaProximo;
@@ -114,11 +125,14 @@ public final class PrincipalControlador implements Initializable {
         movimentarDespesa.setText(idioma.getMensagem("despesas"));
         movimentarReceita.setText(idioma.getMensagem("receitas"));
         movimentarTransferencia.setText(idioma.getMensagem("transferencias"));
+        movimentarGuia.setText(idioma.getMensagem("guia"));
         utilitariosConfiguracoes.setText(idioma.getMensagem("configuracoes"));
         utilitariosRelatorios.setText(idioma.getMensagem("relatorios"));
         utilitariosExportarBackup.setText(idioma.getMensagem("exportar_backup"));
         utilitariosImportarBackup.setText(idioma.getMensagem("importar_backup"));
+        ajudaTutorial.setText(idioma.getMensagem("tutorial"));
         ajudaSobreSistema.setText(idioma.getMensagem("sobre_sistema"));
+        ajudaVerificarAtualizacoes.setText(idioma.getMensagem("verificar_atualizacoes"));
     }
     
     private void tooltipBotoes(){
@@ -132,9 +146,14 @@ public final class PrincipalControlador implements Initializable {
         botaoContas.setTooltip(new Tooltip(idioma.getMensagem("contas")));
         botaoUsuarios.setTooltip(new Tooltip(idioma.getMensagem("usuarios")));
         botaoRelatorios.setTooltip(new Tooltip(idioma.getMensagem("relatorios")));
+        botaoGuia.setTooltip(new Tooltip(idioma.getMensagem("guia")));
         botaoAjuda.setTooltip(new Tooltip(idioma.getMensagem("ajuda")));
         botaoAjudaProximo.setTooltip(new Tooltip(idioma.getMensagem("proximo")));
         botaoAjudaAnterior.setTooltip(new Tooltip(idioma.getMensagem("anterior")));
+    }
+    
+    public void acaoGuia(){
+        Janela.abrir(Utilitario.FXML_GUIA, idioma.getMensagem("guia"));
     }
     
     public void acaoAjuda(){
@@ -177,6 +196,27 @@ public final class PrincipalControlador implements Initializable {
     
     public void acaoSobreSistema() {
         Janela.abrir(Kernel.RAIZ+"/modulo/ajuda/SobreSistema.fxml", idioma.getMensagem("sobre_sistema"));
+    }
+    
+    public void acaoVerificarAtualizacoes() {
+        try {
+            URL url = new URL("http://badernageral.github.io/ultima_versao_bgfinancas.txt");
+            BufferedReader arquivo = new BufferedReader(new InputStreamReader(url.openStream()));
+            Double versao_sistema = Double.parseDouble(Configuracao.getPropriedade("versao"));
+            Double versao_atual = Double.parseDouble(arquivo.readLine());
+            arquivo.close();
+            if(versao_sistema < versao_atual){
+                if(Janela.showPergunta(idioma.getMensagem("sistema_desatualizado"))){
+                    Desktop.getDesktop().browse(new URI("https://github.com/badernageral/bgfinancas/releases"));
+                }
+            }else{
+                Janela.showMensagem(Status.SUCESSO, idioma.getMensagem("sistema_atualizado"));
+            }
+        } catch (UnknownHostException ex){
+            Janela.showMensagem(Status.ERRO, idioma.getMensagem("sem_internet"));
+        } catch (Exception ex) {
+            Janela.showException(ex);
+        }
     }
     
     public void acaoConfiguracao() {

@@ -261,9 +261,8 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         return this;
     }
     
-    public ObservableList<Receita> getRelatorioMensal(){
+    public ObservableList<Receita> getRelatorioMensal(LocalDate hoje){
         try{
-            LocalDate hoje = LocalDate.now();
             LocalDate inicio = hoje.withDayOfMonth(1);
             LocalDate fim = hoje.withDayOfMonth(hoje.lengthOfMonth());
             this.select(sumValor, nomeCategoria);

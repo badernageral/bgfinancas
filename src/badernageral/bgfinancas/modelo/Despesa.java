@@ -341,10 +341,9 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         return this;
     }
     
-    public String getSumValor(){
+    public String getSumValor(LocalDate hoje){
         try{
             if(idCategoria.getValor() != null){
-                LocalDate hoje = LocalDate.now();
                 LocalDate inicio = hoje.withDayOfMonth(1);
                 LocalDate fim = hoje.withDayOfMonth(hoje.lengthOfMonth());
                 this.select(sumValor);
@@ -372,9 +371,12 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         }
     }
     
-    public ObservableList<Despesa> getRelatorioMensal(){
+    public ObservableList<Despesa> getRelatorioMensal(LocalDate hoje){
+        return getRelatorioMensal(hoje,false);
+    }
+    
+    public ObservableList<Despesa> getRelatorioMensal(LocalDate hoje, Boolean somente_agendamento){
         try{
-            LocalDate hoje = LocalDate.now();
             LocalDate inicio = hoje.withDayOfMonth(1);
             LocalDate fim = hoje.withDayOfMonth(hoje.lengthOfMonth());
             this.select(sumValor, nomeCategoria);
@@ -385,7 +387,11 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
             agendada.setValor("1");
-            this.and(agendada, "<>");
+            if(somente_agendamento){
+                this.and(agendada, "=");
+            }else{
+                this.and(agendada, "<>");
+            }
             this.groupBy(nomeCategoria);
             this.orderby(nomeCategoria);
             ResultSet rs = this.query();

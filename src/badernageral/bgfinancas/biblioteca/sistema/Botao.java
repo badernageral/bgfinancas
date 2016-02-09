@@ -139,7 +139,7 @@ public final class Botao {
         Botao.prepararBotaoVoltar(voltar);
     }
     
-    private static void prepararBotaoModal(ControladorFormulario controlador, Button finalizar, Button cancelar, Button[] cadastrar){
+    public static void prepararBotaoModal(ControladorFormulario controlador, Button finalizar, Button cancelar, Button[] cadastrar){
         if(finalizar != null){
             finalizar.setTooltip(new Tooltip("(ENTER)"));
             finalizar.setOnAction((ActionEvent e) -> {

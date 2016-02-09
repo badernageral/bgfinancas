@@ -41,12 +41,14 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -70,21 +72,29 @@ public final class HomeControlador implements Initializable, Controlador {
     // Relatório
     @FXML private Label labelRelatorio;
     @FXML private Label labelRelatorioData;
+    @FXML private Label labelValorTotalRelatorio;
+    @FXML private TabPane painelRelatorio;
     @FXML private Tab tabRelatorioDespesas;
     @FXML private Tab tabRelatorioReceitas;
     @FXML private Tab tabRelatorioTransferencias;
     @FXML private Tab tabRelatorioGrupos;
+    @FXML private Tab tabRelatorioDespesasAgendadas;
     @FXML private TableView<Despesa> tabelaListaRelatorioDespesas;
     @FXML private TableView<Receita> tabelaListaRelatorioReceitas;
     @FXML private TableView<Transferencia> tabelaListaRelatorioTransferencias;
     @FXML private TableView<Grupo> tabelaListaRelatorioGrupos;
+    @FXML private TableView<Despesa> tabelaListaRelatorioDespesasAgendadas;
     private final Tabela<Despesa> tabelaRelatorioDespesas = new Tabela<>();
     private final Tabela<Receita> tabelaRelatorioReceitas = new Tabela<>();
     private final Tabela<Transferencia> tabelaRelatorioTransferencias = new Tabela<>();
     private final Tabela<Grupo> tabelaGrupos = new Tabela<>();
+    private final Tabela<Despesa> tabelaRelatorioDespesasAgendadas = new Tabela<>();
+    private LocalDate dataRelatorio = LocalDate.now();
+    private BigDecimal valorTotalRelatorio = BigDecimal.ZERO;
     
     // Despesas Agendadas
     @FXML private Label labelDespesasAgendadas;
+    @FXML private Label labelDespesasAgendadasData;
     @FXML private Label labelDespesasAgendadasTotal;
     @FXML private Label labelDespesasAgendadasCredito;
     @FXML private TableView<Despesa> tabelaListaDespesasAgendadas;
@@ -92,7 +102,9 @@ public final class HomeControlador implements Initializable, Controlador {
     
     // Agenda
     @FXML private Label labelAgenda;
+    @FXML private Label labelValorTotalAgenda;
     @FXML private TableView<Agenda> tabelaListaAgenda;
+    private BigDecimal valorTotalAgenda = BigDecimal.ZERO;
     private final Tabela<Agenda> tabelaAgenda = new Tabela<>();
     
     // Outros
@@ -118,6 +130,7 @@ public final class HomeControlador implements Initializable, Controlador {
     }
     
     private void inicializarDespesasAgendadas(){
+        labelDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
         tabelaDespesasAgendadas.prepararTabela(tabelaListaDespesasAgendadas, 2);
         tabelaDespesasAgendadas.adicionarColuna(tabelaListaDespesasAgendadas, idioma.getMensagem("nome"), "nomeItem").setMinWidth(150);
         tabelaDespesasAgendadas.setColunaDinheiro(tabelaDespesasAgendadas.adicionarColuna(tabelaListaDespesasAgendadas, idioma.getMensagem("valor"), "valor"), false);
@@ -134,8 +147,10 @@ public final class HomeControlador implements Initializable, Controlador {
     }
     
     private void inicializarRelatorio(){
+        painelRelatorio.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            atualizarValorTotalRelatorio(newValue);
+        });
         labelRelatorio.setText(idioma.getMensagem("mini_relatorio_mensal"));
-        labelRelatorioData.setText(idioma.getNomeMes(LocalDate.now().getMonthValue()).substring(0,3)+" / "+LocalDate.now().getYear());
         tabRelatorioDespesas.setText(idioma.getMensagem("despesas"));
         Image imagemDespesas = new Image("/badernageral/bgfinancas/recursos/imagem/modulo/icon/despesas.png");
         ImageView iconeDespesas = new ImageView(imagemDespesas);
@@ -152,6 +167,10 @@ public final class HomeControlador implements Initializable, Controlador {
         Image imagemGrupos = new Image("/badernageral/bgfinancas/recursos/imagem/modulo/icon/grupos.png");
         ImageView iconeGrupos = new ImageView(imagemGrupos);
         tabRelatorioGrupos.setGraphic(iconeGrupos);
+        tabRelatorioDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
+        Image imagemDespesasAgendadas = new Image("/badernageral/bgfinancas/recursos/imagem/modulo/icon/despesa_agendada.png");
+        ImageView iconeDespesasAgendadas = new ImageView(imagemDespesasAgendadas);
+        tabRelatorioDespesasAgendadas.setGraphic(iconeDespesasAgendadas);
         tabelaRelatorioDespesas.prepararTabela(tabelaListaRelatorioDespesas, 3);
         tabelaRelatorioDespesas.adicionarColuna(tabelaListaRelatorioDespesas, idioma.getMensagem("categoria"), "nomeCategoria");
         tabelaRelatorioDespesas.setColunaDinheiro(tabelaRelatorioDespesas.adicionarColuna(tabelaListaRelatorioDespesas, idioma.getMensagem("valor"), "valor"), true);
@@ -165,6 +184,9 @@ public final class HomeControlador implements Initializable, Controlador {
         tabelaGrupos.adicionarColuna(tabelaListaRelatorioGrupos, idioma.getMensagem("cota"), "nome");
         tabelaGrupos.setColunaDinheiro(tabelaGrupos.adicionarColuna(tabelaListaRelatorioGrupos, idioma.getMensagem("valor"), "valor"), false);
         tabelaGrupos.setColunaDinheiro(tabelaGrupos.adicionarColuna(tabelaListaRelatorioGrupos, idioma.getMensagem("saldo"), "saldo"), true);
+        tabelaRelatorioDespesasAgendadas.prepararTabela(tabelaListaRelatorioDespesasAgendadas, 3);
+        tabelaRelatorioDespesasAgendadas.adicionarColuna(tabelaListaRelatorioDespesasAgendadas, idioma.getMensagem("categoria"), "nomeCategoria");
+        tabelaRelatorioDespesasAgendadas.setColunaDinheiro(tabelaRelatorioDespesasAgendadas.adicionarColuna(tabelaListaRelatorioDespesasAgendadas, idioma.getMensagem("valor"), "valor"), true);
     }
     
     private void calcularSaldoContas(){
@@ -205,20 +227,63 @@ public final class HomeControlador implements Initializable, Controlador {
     }
     
     private void atualizarRelatorio(){
-        tabelaListaRelatorioDespesas.setItems(new Despesa().getRelatorioMensal());
-        tabelaListaRelatorioReceitas.setItems(new Receita().getRelatorioMensal());
-        tabelaListaRelatorioTransferencias.setItems(new Transferencia().getRelatorioMensal());
-        tabelaListaRelatorioGrupos.setItems(new Grupo().getRelatorio(null));
+        labelRelatorioData.setText(idioma.getNomeMes(dataRelatorio.getMonthValue()).substring(0,3)+" / "+dataRelatorio.getYear());
+        tabelaListaRelatorioDespesas.setItems(new Despesa().getRelatorioMensal(dataRelatorio));
+        tabelaListaRelatorioReceitas.setItems(new Receita().getRelatorioMensal(dataRelatorio));
+        tabelaListaRelatorioTransferencias.setItems(new Transferencia().getRelatorioMensal(dataRelatorio));
+        tabelaListaRelatorioGrupos.setItems(new Grupo().getRelatorio(dataRelatorio, null));
+        tabelaListaRelatorioDespesasAgendadas.setItems(new Despesa().getRelatorioMensal(dataRelatorio,true));
+        atualizarValorTotalRelatorio(painelRelatorio.getSelectionModel().getSelectedIndex());
+    }
+    
+    private void atualizarValorTotalRelatorio(Number aba){
+        labelValorTotalRelatorio.setVisible(true);
+        valorTotalRelatorio = BigDecimal.ZERO;
+        switch(aba.intValue()){
+            case 0:
+                tabelaListaRelatorioDespesas.getItems().stream().forEach(item -> {
+                    valorTotalRelatorio = valorTotalRelatorio.add(new BigDecimal(item.getValor()));
+                });
+                break;
+            case 1:
+                tabelaListaRelatorioReceitas.getItems().stream().forEach(item -> {
+                    valorTotalRelatorio = valorTotalRelatorio.add(new BigDecimal(item.getValor()));
+                });
+                break;
+            case 2:
+                tabelaListaRelatorioTransferencias.getItems().stream().forEach(item -> {
+                    valorTotalRelatorio = valorTotalRelatorio.add(new BigDecimal(item.getValor()));
+                });
+                break;
+            default:
+                labelValorTotalRelatorio.setVisible(false);
+                break;
+        }
+        labelValorTotalRelatorio.setText(idioma.getMensagem("moeda")+" "+valorTotalRelatorio.toString());
     }
     
     public void atualizarDespesasAgendadas(){
         tabelaListaDespesasAgendadas.setItems(new Despesa().setSomenteAgendamento().setMesAno(data.getMonthValue(), data.getYear()).listar());
-        labelDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas")+" - "+idioma.getNomeMes(data.getMonthValue())+" / "+data.getYear());
+        labelDespesasAgendadasData.setText(idioma.getNomeMes(data.getMonthValue()).substring(0,3)+" / "+data.getYear());
         calcularValorDespesasAgendadas();
     }
     
     private void atualizarAgenda(){
         tabelaListaAgenda.setItems(new Agenda().listar());
+        tabelaListaAgenda.getItems().stream().forEach(item -> {
+            valorTotalAgenda = valorTotalAgenda.add(new BigDecimal(item.getValor()));
+        });
+        labelValorTotalAgenda.setText(idioma.getMensagem("moeda")+" "+valorTotalAgenda.toString());
+    }
+    
+    public void proximoMesRelatorio(){
+        dataRelatorio = dataRelatorio.plusMonths(1);
+        atualizarRelatorio();
+    }
+    
+    public void anteriorMesRelatorio(){
+        dataRelatorio = dataRelatorio.minusMonths(1);
+        atualizarRelatorio();
     }
     
     public void proximoMesDespesas(){

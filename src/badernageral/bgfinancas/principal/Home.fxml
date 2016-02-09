@@ -99,6 +99,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -111,16 +113,51 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   <Label fx:id="labelRelatorio" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Relatórios" GridPane.columnIndex="1" />
                   <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
                      <children>
-                        <Label fx:id="labelRelatorioData" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Data">
+                        <Label fx:id="labelValorTotalRelatorio" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="labelValorTotal" text="Valor">
                            <padding>
                               <Insets left="22.0" right="10.0" />
                            </padding>
                         </Label>
                      </children>
                   </HBox>
+                  <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="3">
+                     <children>
+                        <Label fx:id="labelRelatorioData" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="labelData" text="Data">
+                           <padding>
+                              <Insets left="22.0" right="10.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox GridPane.columnIndex="4">
+                     <children>
+                        <Button fx:id="relatorioAnterior" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#anteriorMesRelatorio" prefHeight="32.0" prefWidth="40.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoMeio" />
+                              <String fx:value="BotaoAnterior" />
+                              <String fx:value="BotaoBranco" />
+                           </styleClass>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button fx:id="relatorioProximo" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#proximoMesRelatorio" prefHeight="32.0" prefWidth="40.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoMeio" />
+                              <String fx:value="BotaoProximo" />
+                              <String fx:value="BotaoBranco" />
+                           </styleClass>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
-            <TabPane focusTraversable="false" side="BOTTOM" styleClass="floating" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+            <TabPane fx:id="painelRelatorio" focusTraversable="false" side="BOTTOM" styleClass="floating" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
                <tabs>
                   <Tab fx:id="tabRelatorioDespesas" closable="false" text="Despesas">
                      <content>
@@ -142,6 +179,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <TableView fx:id="tabelaListaRelatorioGrupos" focusTraversable="false" />
                      </content>
                   </Tab>
+                  <Tab fx:id="tabRelatorioDespesasAgendadas" closable="false" text="Despesas agendadas">
+                     <content>
+                        <TableView fx:id="tabelaListaRelatorioDespesasAgendadas" focusTraversable="false" />
+                     </content>
+                  </Tab>
                </tabs>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
@@ -154,6 +196,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <GridPane hgap="5.0" styleClass="bordaPaneTopo">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
                </columnConstraints>
@@ -166,7 +209,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <Cursor fx:constant="HAND" />
                      </cursor></ImageView>
                   <Label fx:id="labelDespesasAgendadas" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Despesas agendadas" GridPane.columnIndex="1" />
-                  <HBox GridPane.columnIndex="2">
+                  <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
+                     <children>
+                        <Label fx:id="labelDespesasAgendadasData" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="labelData" text="Data">
+                           <padding>
+                              <Insets left="22.0" right="10.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox GridPane.columnIndex="3">
                      <children>
                         <Button fx:id="anterior" contentDisplay="CENTER" focusTraversable="false" mnemonicParsing="false" onAction="#anteriorMesDespesas" prefHeight="32.0" prefWidth="40.0">
                            <styleClass>
@@ -241,6 +293,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -251,6 +304,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <Cursor fx:constant="HAND" />
                      </cursor></ImageView>
                   <Label fx:id="labelAgenda" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" text="Agenda" GridPane.columnIndex="1" />
+                  <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
+                     <children>
+                        <Label fx:id="labelValorTotalAgenda" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" styleClass="labelValorTotal" text="Valor">
+                           <padding>
+                              <Insets left="22.0" right="10.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
             <TableView fx:id="tabelaListaAgenda" focusTraversable="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />

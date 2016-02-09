@@ -42,7 +42,6 @@ import badernageral.bgfinancas.template.botao.BotaoFormulario;
 import badernageral.bgfinancas.template.botao.BotaoListaCategoria;
 import badernageral.bgfinancas.modelo.ReceitaCategoria;
 import badernageral.bgfinancas.modelo.ReceitaItem;
-import badernageral.bgfinancas.modulo.receita.ReceitaFormularioControlador;
 import badernageral.bgfinancas.modulo.receita.categoria.ReceitaCategoriaFormularioControlador;
 import javafx.scene.control.TitledPane;
 
@@ -58,7 +57,7 @@ public final class ReceitaItemFormularioControlador implements Initializable, Co
     @FXML private TextField nome;
     
     private ReceitaItem modelo;
-    private ReceitaFormularioControlador controlador = null;
+    private ControladorFormulario controlador = null;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -99,7 +98,7 @@ public final class ReceitaItemFormularioControlador implements Initializable, Co
         }
     }
     
-    public void cadastrar(ReceitaFormularioControlador controlador, String nome){
+    public void cadastrar(ControladorFormulario controlador, String nome){
         acao = Acao.CADASTRAR;
         this.nome.setText(nome);
         this.controlador = controlador;

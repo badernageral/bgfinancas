@@ -259,5 +259,12 @@ public final class DespesaFormularioControlador implements Initializable, Contro
             return false;
         }
     }
+    
+    public void lancamentoGuiado(Item item){
+        itemController.setItemSelecionado(item);
+        itemController.getComboItem().setDisable(true);
+        itemController.getBotaoCadastrar().setDisable(true);
+        itemController.getBotaoCadastrar().setVisible(false);
+    }
 
 }

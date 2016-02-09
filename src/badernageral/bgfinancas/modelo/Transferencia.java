@@ -289,9 +289,8 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
         return this;
     }
     
-    public ObservableList<Transferencia> getRelatorioMensal(){
+    public ObservableList<Transferencia> getRelatorioMensal(LocalDate hoje){
         try{
-            LocalDate hoje = LocalDate.now();
             LocalDate inicio = hoje.withDayOfMonth(1);
             LocalDate fim = hoje.withDayOfMonth(hoje.lengthOfMonth());
             this.select(sumValor, nomeCategoria);

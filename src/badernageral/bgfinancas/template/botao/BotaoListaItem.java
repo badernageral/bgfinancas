@@ -39,7 +39,7 @@ public final class BotaoListaItem implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         autoFiltro = new AutoFiltro<>(item);
     }
-    
+        
     public void setItemSelecionado(Item item){
         autoFiltro.atualizarItens();
         this.item.getSelectionModel().select(item);

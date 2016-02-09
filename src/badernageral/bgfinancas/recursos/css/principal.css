@@ -58,6 +58,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #botaoContas{ -fx-background-image: url("../imagem/modulo/contas.png"); }
 #botaoUsuarios{ -fx-background-image: url("../imagem/modulo/usuarios.png"); }
 #botaoRelatorios{ -fx-background-image: url("../imagem/modulo/relatorio.png"); }
+#botaoGuia{ -fx-background-image: url("../imagem/ajuda/guia.png"); }
 
 #botaoHome:hover{ -fx-background-image: url("../imagem/modulo/hover/home.png"); }
 #botaoDespesas:hover{ -fx-background-image: url("../imagem/modulo/hover/despesas.png"); }
@@ -69,6 +70,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #botaoContas:hover{ -fx-background-image: url("../imagem/modulo/hover/contas.png"); }
 #botaoUsuarios:hover{ -fx-background-image: url("../imagem/modulo/hover/usuarios.png"); }
 #botaoRelatorios:hover{ -fx-background-image: url("../imagem/modulo/hover/relatorio.png"); }
+#botaoGuia:hover{ -fx-background-image: url("../imagem/ajuda/hover/guia.png"); }
 
 #imagemLogo{ -fx-image: url("../imagem/layout/logo.png"); }
 #imagemContas{ -fx-image: url("../imagem/modulo/icon/contas.png"); }
@@ -92,8 +94,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;
 }
-#labelRelatorioData{
+.labelData{
     -fx-background-image: url("../imagem/outros/calendario.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: left center;
+}
+.labelValorTotal{
+    -fx-background-image: url("../imagem/outros/total.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;
 }

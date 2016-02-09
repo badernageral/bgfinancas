@@ -75,6 +75,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
+                        <MenuItem fx:id="movimentarGuia" mnemonicParsing="false" onAction="#acaoGuia" text="Transferencia">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
                     </items>
                   </Menu>
                   <Menu fx:id="menuUtilitarios" mnemonicParsing="false" text="Utilitários">
@@ -87,7 +92,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   </Menu>
                   <Menu fx:id="menuAjuda" mnemonicParsing="false" text="Ajuda">
                      <items>
+                        <MenuItem fx:id="ajudaTutorial" mnemonicParsing="false" onAction="#acaoAjuda" text="Tutorial" />
                         <MenuItem fx:id="ajudaSobreSistema" mnemonicParsing="false" onAction="#acaoSobreSistema" text="Sobre o sistema" />
+                        <MenuItem fx:id="ajudaVerificarAtualizacoes" mnemonicParsing="false" onAction="#acaoVerificarAtualizacoes" text="Verificar atualizações" />
                      </items>
                   </Menu>
               </menus>
@@ -117,7 +124,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                      <styleClass>
                         <String fx:value="Botao" />
                         <String fx:value="transparente" />
-                     </styleClass></Button>
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="botaoGuia" focusTraversable="false" layoutX="952.0" layoutY="10.0" mnemonicParsing="false" onAction="#acaoGuia" prefHeight="54.0" prefWidth="54.0">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                     <styleClass>
+                        <String fx:value="Botao" />
+                        <String fx:value="botaoGuia" />
+                        <String fx:value="transparente" />
+                     </styleClass>
+                  </Button>
                   <Button fx:id="botaoTransferencias" focusTraversable="false" mnemonicParsing="false" onAction="#acaoTransferencia" prefHeight="50.0" prefWidth="50.0">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
