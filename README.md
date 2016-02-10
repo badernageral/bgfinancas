@@ -22,13 +22,18 @@ Features
 Requirements
 --
 
-Java 8u40 or later.
+Linux: openjfx & openjdk-8
+
+Others: Java 8u40 or later.
 
 Installation
 --
 Source code:
-* Use command line ant from the source code folder to compile it.
-* To execute just run the jar.
+* Use command line **ant** from the source code folder to compile it.
+```
+# ant build.xml
+```
+* To execute just run the generated jar.
 
 Compiled releases:
 * At releases page you can find executable file for windows and tarball file for others systems (linux, mac os).
