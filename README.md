@@ -31,7 +31,7 @@ Installation
 Source code:
 * Use command line **ant** from the source code folder to compile it.
 ```
-# ant build.xml
+user@debian:~/bgfinancas$ ant
 ```
 * To execute just run the generated jar.
 
