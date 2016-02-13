@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BG Finanças
+Comment=Run BG Finanças
+Exec=bgfinancas
+Terminal=false
+Type=Application
+Icon=bgfinancas
+StartupNotify=true
+Categories=Utility;

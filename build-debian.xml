@@ -2,11 +2,10 @@
 
     <property name="dir.src" value="src"/>
     <property name="dir.build" value="build"/>
-    <property name="dir.lib" value="lib"/>
     <property name="dir.jar" value="jar"/>
 
     <path id="classpath">
-        <fileset dir="${dir.lib}" includes="**/*.jar"/>
+        <fileset dir="/usr/share/java" includes="hsqldb.jar"/>
     </path>
 
     <target name="clean">
@@ -24,13 +23,10 @@
 
     <target name="jar">
         <mkdir dir="${dir.jar}"/>
-	<copy todir="${dir.jar}/lib">
-            <fileset dir="${dir.lib}"/>
-        </copy>
         <jar destfile="${dir.jar}/bgfinancas.jar" basedir="${dir.build}">
             <manifest>
                 <attribute name="Main-Class" value="badernageral.bgfinancas.principal.Main"/>
-                <attribute name="Class-Path" value="lib/hsqldb-2.3.3.jar"/>
+                <attribute name="Class-Path" value="/usr/share/java/hsqldb.jar"/>
 	    </manifest>
         </jar>
     </target>
