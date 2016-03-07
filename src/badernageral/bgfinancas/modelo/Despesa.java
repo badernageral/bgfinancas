@@ -298,8 +298,9 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.hora.setValor(hora);
     }
     
-    public void setAgendada(String agendada) {
+    public Despesa setAgendada(String agendada) {
         this.agendada.setValor(agendada);
+        return getThis();
     }
     
     public void setParcela(String parcela) {
@@ -429,8 +430,13 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
-            agendada.setValor("1");
-            this.and(agendada, "<>");
+            if(agendada.getValor().equals("1")){
+                this.and(agendada, "=");
+            }else{
+                agendada.setValor("1");
+                this.and(agendada, "<>");
+                agendada.setValor("0");
+            }
             if(nome_categoria != null){
                 this.and(nomeCategoria, "=");
             }

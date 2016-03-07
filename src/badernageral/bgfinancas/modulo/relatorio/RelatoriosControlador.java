@@ -97,7 +97,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         Kernel.setTitulo(TITULO);
         Botao.prepararBotaoVoltar(voltar);
         labelRelatorio.setText(idioma.getMensagem("selecione_relatorio")+":");
-        List<String> tipoRelatorio = Arrays.asList(idioma.getMensagem("despesas"),idioma.getMensagem("despesas_tempo"),idioma.getMensagem("receitas"),idioma.getMensagem("transferencias"));
+        List<String> tipoRelatorio = Arrays.asList(idioma.getMensagem("despesas"),idioma.getMensagem("despesas_tempo"),idioma.getMensagem("despesas_agendadas"),idioma.getMensagem("receitas"),idioma.getMensagem("transferencias"));
         relatorio.setItems(FXCollections.observableList(tipoRelatorio));
         relatorio.getSelectionModel().select(0);
         labelInicio.setText(idioma.getMensagem("inicio")+":");
@@ -112,15 +112,18 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         removerGraficos();
         switch(relatorio.getSelectionModel().getSelectedIndex()){
             case 0:
-                relatorioGraficoBarras(new Despesa());
+                relatorioGraficoBarras(new Despesa().setAgendada("0"));
                 break;
             case 1:
                 relatorioGraficoLinhas();
                 break;
             case 2:
-                relatorioGraficoBarras(new Receita());
+                relatorioGraficoBarras(new Despesa().setAgendada("1"));
                 break;
             case 3:
+                relatorioGraficoBarras(new Receita());
+                break;
+            case 4:
                 relatorioGraficoBarras(new Transferencia());
                 break;
             default:
@@ -174,17 +177,24 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         try{
             Series<String,Number> primeiraCategoria = graficoPrincipal.getData().get(0);
             updateGraficoSecundario(primeiraCategoria.getName(), objeto);
-        }catch(Exception e){}
+        }catch(Exception e){
+            updateGraficoSecundario("", null);
+        }
     }
     
     private void updateGraficoSecundario(String nomeCategoria, Grafico objeto){
-        graficoSecundario.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), nomeCategoria));
-        graficoSecundario.getData().stream().forEach((serie) -> {
-            serie.getData().stream().forEach((item) -> {
-                eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
+        if(objeto!=null){
+            graficoSecundario.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), nomeCategoria));
+            graficoSecundario.getData().stream().forEach((serie) -> {
+                serie.getData().stream().forEach((item) -> {
+                    eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
+                });
             });
-        });
-        graficoSecundario.setTitle(idioma.getMensagem("itens")+" / "+nomeCategoria+" - "+getValorTotal(graficoSecundario.getData()));
+            graficoSecundario.setTitle(idioma.getMensagem("itens")+" / "+nomeCategoria+" - "+getValorTotal(graficoSecundario.getData()));
+        }else{
+            graficoSecundario.getData().clear();
+            graficoSecundario.setTitle(idioma.getMensagem("itens")+" - "+getValorTotal(graficoSecundario.getData()));
+        }
     }
     
     private void relatorioGraficoLinhas(){        

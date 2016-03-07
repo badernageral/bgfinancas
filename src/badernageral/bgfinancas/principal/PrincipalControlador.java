@@ -26,6 +26,7 @@ import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.PilhaVoltar;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Versao;
 import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.Agenda;
 import badernageral.bgfinancas.modelo.AgendaTipo;
@@ -202,15 +203,14 @@ public final class PrincipalControlador implements Initializable {
         try {
             URL url = new URL("http://badernageral.github.io/ultima_versao_bgfinancas.txt");
             BufferedReader arquivo = new BufferedReader(new InputStreamReader(url.openStream()));
-            Double versao_sistema = Double.parseDouble(Configuracao.getPropriedade("versao"));
-            Double versao_atual = Double.parseDouble(arquivo.readLine());
+            String versao_atual = arquivo.readLine();
             arquivo.close();
-            if(versao_sistema < versao_atual){
+            if(Versao.isAtualizada(Configuracao.getPropriedade("versao"), versao_atual)){
+                Janela.showMensagem(Status.SUCESSO, idioma.getMensagem("sistema_atualizado"));
+            }else{
                 if(Janela.showPergunta(idioma.getMensagem("sistema_desatualizado"))){
                     Desktop.getDesktop().browse(new URI("https://github.com/badernageral/bgfinancas/releases"));
                 }
-            }else{
-                Janela.showMensagem(Status.SUCESSO, idioma.getMensagem("sistema_atualizado"));
             }
         } catch (UnknownHostException ex){
             Janela.showMensagem(Status.ERRO, idioma.getMensagem("sem_internet"));
