@@ -205,14 +205,14 @@ public final class Database {
                 banco.executeUpdate("INSERT INTO DESPESAS_ITENS VALUES(3,1,'Bean')");
                 banco.executeUpdate("INSERT INTO DESPESAS_ITENS VALUES(4,2,'Cinema')");
                 banco.executeUpdate("INSERT INTO DESPESAS_ITENS VALUES(5,3,'Donut')");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(0,1,0,20.00,60.00,'"+data+"','08:18:04',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(2,0,2,1.00,10.00,'"+data+"','08:19:47',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(3,0,3,1.00,5.00,'"+data+"','08:20:08',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(4,1,4,2.00,30.00,'"+data+"','08:20:41',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(5,1,5,1.00,3.00,'"+data+"','08:21:59',0,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(0,1,0,20.00,60.00,'"+data+"','08:18:04',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(2,0,2,1.00,10.00,'"+data+"','08:19:47',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(3,0,3,1.00,5.00,'"+data+"','08:20:08',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(4,1,4,2.00,30.00,'"+data+"','08:20:41',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(5,1,5,1.00,3.00,'"+data+"','08:21:59',0,NULL,NULL)");
             }
             if(new Despesa().setSomenteAgendamento().listar().isEmpty()){
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(1,1,1,1.00,100.00,'"+data+"','08:19:01',1,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(1,1,1,1.00,100.00,'"+data+"','08:19:01',1,NULL,NULL)");
             }
             if(new Receita().listar().isEmpty()){
                 banco.executeUpdate("INSERT INTO RECEITAS VALUES(0,0,0,'"+Linguagem.getInstance().getNomeMes(LocalDate.now().getMonthValue())+" / "+LocalDate.now().getYear()+"',900.00,'"+data+"','15:28:52')");
@@ -260,14 +260,14 @@ public final class Database {
                 banco.executeUpdate("INSERT INTO DESPESAS_ITENS VALUES(3,1,'Feij\u00e3o')");
                 banco.executeUpdate("INSERT INTO DESPESAS_ITENS VALUES(4,2,'Cinema')");
                 banco.executeUpdate("INSERT INTO DESPESAS_ITENS VALUES(5,3,'Pastel')");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(0,1,0,20.00,60.00,'"+data+"','08:18:04',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(2,0,2,1.00,10.00,'"+data+"','08:19:47',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(3,0,3,1.00,5.00,'"+data+"','08:20:08',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(4,1,4,2.00,30.00,'"+data+"','08:20:41',0,NULL)");
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(5,1,5,1.00,3.00,'"+data+"','08:21:59',0,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(0,1,0,20.00,60.00,'"+data+"','08:18:04',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(2,0,2,1.00,10.00,'"+data+"','08:19:47',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(3,0,3,1.00,5.00,'"+data+"','08:20:08',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(4,1,4,2.00,30.00,'"+data+"','08:20:41',0,NULL,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(5,1,5,1.00,3.00,'"+data+"','08:21:59',0,NULL,NULL)");
             }
             if(new Despesa().setSomenteAgendamento().listar().isEmpty()){
-                banco.executeUpdate("INSERT INTO DESPESAS VALUES(1,1,1,1.00,100.00,'"+data+"','08:19:01',1,NULL)");
+                banco.executeUpdate("INSERT INTO DESPESAS VALUES(1,1,1,1.00,100.00,'"+data+"','08:19:01',1,NULL,NULL)");
             }
             if(new Receita().listar().isEmpty()){                
                 banco.executeUpdate("INSERT INTO RECEITAS VALUES(0,0,0,'"+Linguagem.getInstance().getNomeMes(LocalDate.now().getMonthValue())+" / "+LocalDate.now().getYear()+"',900.00,'"+data+"','15:28:52')");
