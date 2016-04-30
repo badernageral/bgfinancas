@@ -58,9 +58,13 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     private final Coluna hora = new Coluna(TABELA, "hora");
     private final Coluna agendada = new Coluna(TABELA, "agendada");
     private final Coluna parcela = new Coluna(TABELA, "parcela");
+    private final Coluna idCartaoCredito = new Coluna(TABELA, "id_cartao_credito");
     
     private final Coluna idContaInner = new Coluna(Conta.TABELA, "id_conta");
     private final Coluna nomeConta = new Coluna(Conta.TABELA, "nome", "", "nome_conta");
+    
+    private final Coluna idCartaoCreditoLeft = new Coluna(CartaoCredito.TABELA, "id_cartao_credito");
+    private final Coluna nomeCartaoCredito = new Coluna(CartaoCredito.TABELA, "nome", "", "nome_cartao_credito");
 
     private final Coluna idItemInner = new Coluna(DespesaItem.TABELA, "id_item");
     private final Coluna idCategoria = new Coluna(DespesaItem.TABELA, "id_categoria");
@@ -90,7 +94,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.agendada.setValor("0");
     }   
 
-    public Despesa(String idDespesa, String idConta, String idItem, String quantidade, String valor, LocalDate data, String hora, String agendada){
+    public Despesa(String idDespesa, String idConta, String idItem, String quantidade, String valor, LocalDate data, String hora, String agendada, String cartao_credito){
         this.idDespesa.setValor(idDespesa);
         this.idConta.setValor(idConta);
         this.idItem.setValor(idItem);
@@ -99,6 +103,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         this.data.setValor(Datas.toSqlData(data));
         this.hora.setValor(hora);
         this.agendada.setValor(agendada);
+        this.idCartaoCredito.setValor(cartao_credito);
     }
     
     @Override
@@ -111,18 +116,20 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             rs.getString(valor.getColuna()),
             rs.getDate(data.getColuna()).toLocalDate(),
             rs.getString(hora.getColuna()),
-            rs.getString(agendada.getColuna())
+            rs.getString(agendada.getColuna()),
+            rs.getString(idCartaoCredito.getColuna())
         );
         d.setParcela(rs.getString(parcela.getColuna()));
         d.setNomeConta(rs.getString(nomeConta.getAliasColuna()));
         d.setNomeItem(rs.getString(nomeItem.getAliasColuna()));
         d.setNomeCategoria(rs.getString(nomeCategoria.getAliasColuna()));
+        d.setNomeCartaoCredito(rs.getString(nomeCartaoCredito.getAliasColuna()));
         return d;
     }
        
     @Override
     public boolean cadastrar(){
-        return this.insert(idConta, idItem, quantidade, valor, data, hora, agendada, parcela).commit();
+        return this.insert(idConta, idItem, quantidade, valor, data, hora, agendada, parcela, idCartaoCredito).commit();
     }
     
     @Override
@@ -144,10 +151,11 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     @Override
     public ObservableList<Despesa> listar(){
         try{
-            this.select(idDespesa, idConta, idItem, quantidade, valor, data, hora, agendada, parcela, nomeConta, nomeItem, nomeCategoria);
+            this.select(idDespesa, idConta, idItem, quantidade, valor, data, hora, agendada, parcela, idCartaoCredito, nomeConta, nomeItem, nomeCategoria, nomeCartaoCredito);
             this.inner(idConta, idContaInner);
             this.inner(idItem, idItemInner);
             this.inner(idCategoria, idCategoriaInner);
+            this.left(idCartaoCredito,idCartaoCreditoLeft);
             this.where(nomeConta, "LIKE", "(");
             this.or(nomeItem, "LIKE");
             this.or(nomeCategoria, "LIKE", ")");
@@ -159,6 +167,13 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             }
             if(idConta.getValor() != null){
                 this.and(idConta, "=");
+            }
+            if(idCartaoCredito.getValor() != null){
+                if(idCartaoCredito.getValor().equals("NULL")){
+                    this.andIsNull(idCartaoCredito);
+                }else{
+                    this.and(idCartaoCredito, "=");
+                }
             }
             agendada.setValor("1");
             if(somenteAgendamento){
@@ -260,6 +275,10 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         return nomeConta.getValor();
     }
     
+    public String getNomeCartaoCredito() {
+        return nomeCartaoCredito.getValor();
+    }
+    
     public String getNomeItem() {
         if(agendada.getValor()!=null && agendada.getValor().equals("1") && parcela.getValor()!=null){
             return nomeItem.getValor()+" - "+parcela.getValor();
@@ -290,6 +309,11 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         return getThis();
     }
     
+    public Despesa setIdCartaoCredito(Categoria cartao_credito) {
+        this.idCartaoCredito.setValor(cartao_credito.getIdCategoria());
+        return getThis();
+    }
+    
     public void setData(LocalDate data) {
         this.data.setValor(Datas.toSqlData(data));
     }
@@ -309,6 +333,10 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     
     public void setNomeConta(String conta) {
         this.nomeConta.setValor(conta);
+    }
+    
+    public void setNomeCartaoCredito(String cartao_credito) {
+        this.nomeCartaoCredito.setValor(cartao_credito);
     }
     
     public void setNomeItem(String item) {
@@ -416,7 +444,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     }
     
     @Override
-    public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria){
+    public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria, String id_categoria, Integer tipo_categoria){
         try{
             Coluna coluna = nomeCategoria;
             if(nome_categoria != null){
@@ -439,6 +467,19 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             }
             if(nome_categoria != null){
                 this.and(nomeCategoria, "=");
+            }
+            if(id_categoria != null){
+                if(tipo_categoria==1){
+                    idConta.setValor(id_categoria);
+                    this.and(idConta, "=");
+                }else if(tipo_categoria==2){
+                    idCartaoCredito.setValor(id_categoria);
+                    this.and(idCartaoCredito, "=");
+                }
+            }else{
+                if(tipo_categoria==3){
+                    this.andIsNull(idCartaoCredito);
+                }
             }
             this.groupBy(coluna);
             this.orderby(coluna);

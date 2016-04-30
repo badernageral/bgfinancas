@@ -138,15 +138,15 @@ public final class Grupo extends Categoria<Grupo> implements Modelo {
     }
     
     @Override
-    public void montarSelectCategoria(ComboBox<Categoria> Combo){
+    public void montarSelectCategoria(ComboBox<Categoria> combo){
         try{
-            Combo.getItems().clear();
-            Combo.setPromptText(idioma.getMensagem("selecione"));
+            combo.getItems().clear();
+            combo.setPromptText(idioma.getMensagem("selecione"));
             this.select(idCategoria,nome,valor).orderby(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
-                    Combo.getItems().add(instanciar(rs));
+                    combo.getItems().add(instanciar(rs));
                 }
             }
         }catch(SQLException ex){

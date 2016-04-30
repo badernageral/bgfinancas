@@ -26,6 +26,6 @@ import javafx.scene.chart.XYChart;
 
 public interface Grafico {
     
-    public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria);
+    public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria, String id_categoria, Integer tipo_categoria);
     
 }

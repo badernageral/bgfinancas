@@ -1,35 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-Copyright 2012-2015 Jose Robson Mariano Alves
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-This file is part of bgfinancas.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This package is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-
--->
-
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.DespesaFormularioControlador">
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.DespesaFormularioControlador">
    <content>
       <GridPane fx:id="tabela" gridLinesVisible="false" hgap="10.0" vgap="10.0">
          <children>
@@ -46,7 +26,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
          <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" prefWidth="75.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" prefWidth="110.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
          </columnConstraints>
          <padding>

@@ -323,12 +323,16 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
     }
     
     @Override
-    public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria){
+    public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria, String id_categoria, Integer tipo_categoria){
         try{
             Coluna coluna = nomeCategoria;
             if(nome_categoria != null){
                 coluna = nomeItem;
                 nomeCategoria.setValor(nome_categoria);
+            }
+            if(id_categoria != null){
+                idContaOrigem.setValor(id_categoria);
+                idContaDestino.setValor(id_categoria);
             }
             this.select(sumValor, coluna);
             this.inner(idItem, idItemInner);
@@ -339,6 +343,10 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
             this.and(data, "<=");
             if(nome_categoria != null){
                 this.and(nomeCategoria, "=");
+            }
+            if(id_categoria != null){
+                this.and(idContaOrigem, "=", "(");
+                this.or(idContaDestino, "=", ")");
             }
             this.groupBy(coluna);
             this.orderby(coluna);

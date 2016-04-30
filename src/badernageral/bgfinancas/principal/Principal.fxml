@@ -47,6 +47,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                               <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
+                        <MenuItem fx:id="gerenciarCartoesCredito" mnemonicParsing="false" onAction="#acaoCartoesCredito" text="Cartões de crédito">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
                         <MenuItem fx:id="gerenciarGrupos" mnemonicParsing="false" onAction="#acaoGrupoItem" text="Cotas de despesas">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="G" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -75,7 +80,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="T" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator></MenuItem>
-                        <MenuItem fx:id="movimentarGuia" mnemonicParsing="false" onAction="#acaoGuia" text="Transferencia">
+                        <MenuItem fx:id="movimentarGuia" mnemonicParsing="false" onAction="#acaoGuia" text="Lançamento guiado">
                            <accelerator>
                               <KeyCodeCombination alt="UP" code="H" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
@@ -84,7 +89,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   </Menu>
                   <Menu fx:id="menuUtilitarios" mnemonicParsing="false" text="Utilitários">
                     <items>
-                        <MenuItem fx:id="utilitariosRelatorios" mnemonicParsing="false" onAction="#acaoRelatorios" text="Relatórios" />
+                        <MenuItem fx:id="utilitariosRelatorios" mnemonicParsing="false" onAction="#acaoRelatorios" text="Relatórios">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                         <MenuItem fx:id="utilitariosConfiguracoes" mnemonicParsing="false" onAction="#acaoConfiguracao" text="Configurações" />
                         <MenuItem fx:id="utilitariosExportarBackup" mnemonicParsing="false" onAction="#acaoExportarBackup" text="Exportar backup" />
                         <MenuItem fx:id="utilitariosImportarBackup" mnemonicParsing="false" onAction="#acaoImportarBackup" text="Importar backup" />
@@ -92,7 +100,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   </Menu>
                   <Menu fx:id="menuAjuda" mnemonicParsing="false" text="Ajuda">
                      <items>
-                        <MenuItem fx:id="ajudaTutorial" mnemonicParsing="false" onAction="#acaoAjuda" text="Tutorial" />
+                        <MenuItem fx:id="ajudaTutorial" mnemonicParsing="false" onAction="#acaoAjuda" text="Tutorial">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="ANY" />
+                           </accelerator></MenuItem>
                         <MenuItem fx:id="ajudaSobreSistema" mnemonicParsing="false" onAction="#acaoSobreSistema" text="Sobre o sistema" />
                         <MenuItem fx:id="ajudaVerificarAtualizacoes" mnemonicParsing="false" onAction="#acaoVerificarAtualizacoes" text="Verificar atualizações" />
                      </items>
@@ -168,6 +179,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <String fx:value="Botao" />
                         <String fx:value="transparente" />
                      </styleClass></Button>
+                  <Button fx:id="botaoCartaoCredito" focusTraversable="false" layoutX="446.0" layoutY="10.0" mnemonicParsing="false" onAction="#acaoCartaoCredito" prefHeight="54.0" prefWidth="54.0">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                     <styleClass>
+                        <String fx:value="Botao" />
+                        <String fx:value="transparente" />
+                     </styleClass>
+                  </Button>
                   <Button fx:id="botaoContas" focusTraversable="false" layoutX="334.0" layoutY="10.0" mnemonicParsing="false" onAction="#acaoConta" prefHeight="54.0" prefWidth="54.0">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />

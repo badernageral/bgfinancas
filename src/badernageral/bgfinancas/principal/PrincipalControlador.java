@@ -30,6 +30,7 @@ import badernageral.bgfinancas.biblioteca.utilitario.Versao;
 import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.Agenda;
 import badernageral.bgfinancas.modelo.AgendaTipo;
+import badernageral.bgfinancas.modelo.CartaoCredito;
 import badernageral.bgfinancas.modelo.Configuracao;
 import badernageral.bgfinancas.modelo.Conta;
 import badernageral.bgfinancas.modelo.Despesa;
@@ -82,6 +83,7 @@ public final class PrincipalControlador implements Initializable {
     @FXML private MenuItem gerenciarContas;
     @FXML private MenuItem gerenciarAgenda;
     @FXML private MenuItem gerenciarGrupos;
+    @FXML private MenuItem gerenciarCartoesCredito;
     @FXML private MenuItem gerenciarDespesasAgendadas;
     @FXML private MenuItem gerenciarUsuarios;
     @FXML private MenuItem movimentarDespesa;
@@ -103,6 +105,7 @@ public final class PrincipalControlador implements Initializable {
     @FXML private Button botaoDespesasAgendadas;
     @FXML private Button botaoAgenda;
     @FXML private Button botaoGrupo;
+    @FXML private Button botaoCartaoCredito;
     @FXML private Button botaoContas;
     @FXML private Button botaoUsuarios;
     @FXML private Button botaoRelatorios;
@@ -122,6 +125,7 @@ public final class PrincipalControlador implements Initializable {
         gerenciarAgenda.setText(idioma.getMensagem("lembretes"));
         gerenciarGrupos.setText(idioma.getMensagem("cotas_despesas"));
         gerenciarDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
+        gerenciarCartoesCredito.setText(idioma.getMensagem("cartoes_credito"));
         gerenciarUsuarios.setText(idioma.getMensagem("usuarios"));
         movimentarDespesa.setText(idioma.getMensagem("despesas"));
         movimentarReceita.setText(idioma.getMensagem("receitas"));
@@ -144,6 +148,7 @@ public final class PrincipalControlador implements Initializable {
         botaoDespesasAgendadas.setTooltip(new Tooltip(idioma.getMensagem("despesas_agendadas")));
         botaoAgenda.setTooltip(new Tooltip(idioma.getMensagem("lembretes")));
         botaoGrupo.setTooltip(new Tooltip(idioma.getMensagem("cotas_despesas")));
+        botaoCartaoCredito.setTooltip(new Tooltip(idioma.getMensagem("cartoes_credito")));
         botaoContas.setTooltip(new Tooltip(idioma.getMensagem("contas")));
         botaoUsuarios.setTooltip(new Tooltip(idioma.getMensagem("usuarios")));
         botaoRelatorios.setTooltip(new Tooltip(idioma.getMensagem("relatorios")));
@@ -239,6 +244,10 @@ public final class PrincipalControlador implements Initializable {
         carregarJanela(Kernel.FXML_HOME);
     }
     
+    public void acaoCartaoCredito() {
+        carregarJanela(CartaoCredito.FXML);
+    }
+    
     public void acaoConta() {
         carregarJanela(Conta.FXML);
     }
@@ -297,6 +306,10 @@ public final class PrincipalControlador implements Initializable {
     
     public void acaoDespesasAgendadas() {
         carregarJanela(Despesa.FXML_DESPESAS_AGENDADAS);
+    }
+    
+    public void acaoCartoesCredito() {
+        carregarJanela(CartaoCredito.FXML);
     }
     
     public void acaoDespesasAgendadas(int mes, int ano) {

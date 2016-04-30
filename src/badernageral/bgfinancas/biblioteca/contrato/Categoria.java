@@ -25,6 +25,7 @@ import badernageral.bgfinancas.biblioteca.banco.Coluna;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 
@@ -33,15 +34,15 @@ public abstract class Categoria<T extends Categoria<T>> extends Banco<T> {
     protected Coluna idCategoria;
     protected Coluna nome;
     
-    public void montarSelectCategoria(ComboBox<Categoria> Combo){
+    public void montarSelectCategoria(ComboBox<Categoria> combo){
         try{
-            Combo.getItems().clear();
-            Combo.setPromptText(idioma.getMensagem("selecione"));
+            combo.getItems().clear();
+            combo.setPromptText(idioma.getMensagem("selecione"));
             this.select(idCategoria, nome).orderby(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
-                    Combo.getItems().add(instanciar(rs));
+                    combo.getItems().add(instanciar(rs));
                 }
             }
         }catch(SQLException ex){

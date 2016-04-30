@@ -95,6 +95,12 @@ public abstract class Banco<T extends Banco<T>> {
         return getThis();
     }
     
+    protected T left(Coluna coluna, Coluna colunaInner){
+        sql.append(" LEFT JOIN ").append(colunaInner.getTabela()).append(" ");
+        sql.append("ON ").append(coluna.getTabelaColuna(false)).append(" = ").append(colunaInner.getTabelaColuna(false));
+        return getThis();
+    }
+    
     protected T where(Coluna coluna, String operador){
         this.where(coluna, operador, null);
         return getThis();
@@ -141,6 +147,13 @@ public abstract class Banco<T extends Banco<T>> {
         }
         sql.setLength(sql.length() - 1);
         sql.append(")");
+        return getThis();
+    }
+    
+    public T andIsNull(Coluna coluna){
+        sql.append(" AND ");
+        sql.append(coluna.getTabelaColuna(false));
+        sql.append(" IS NULL ");
         return getThis();
     }
     

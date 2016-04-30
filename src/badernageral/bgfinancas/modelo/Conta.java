@@ -164,16 +164,16 @@ public final class Conta extends Categoria<Conta> implements Modelo {
     }
     
     @Override
-    public void montarSelectCategoria(ComboBox<Categoria> Combo){
+    public void montarSelectCategoria(ComboBox<Categoria> combo){
         try{
-            Combo.getItems().clear();
-            Combo.setPromptText(idioma.getMensagem("selecione"));
+            combo.getItems().clear();
+            combo.setPromptText(idioma.getMensagem("selecione"));
             ativada.setValor("1");
             this.select(idCategoria, nome, valor, ativada, saldoTotal).where(ativada, "=").orderby(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
-                    Combo.getItems().add(instanciar(rs));
+                    combo.getItems().add(instanciar(rs));
                 }
             }
         }catch(SQLException ex){

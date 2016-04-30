@@ -21,6 +21,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package badernageral.bgfinancas.modulo.relatorio;
 
 import badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
+import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.Controlador;
 import badernageral.bgfinancas.biblioteca.contrato.Grafico;
 import badernageral.bgfinancas.biblioteca.sistema.Botao;
@@ -28,6 +29,8 @@ import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.tipo.Posicao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.modelo.CartaoCredito;
+import badernageral.bgfinancas.modelo.Conta;
 import badernageral.bgfinancas.modelo.Despesa;
 import badernageral.bgfinancas.modelo.DespesaCategoria;
 import badernageral.bgfinancas.modelo.Receita;
@@ -68,9 +71,11 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     
     @FXML private Button voltar;
     @FXML private Label labelRelatorio;
+    @FXML private Label labelContaCartao;
     @FXML private Label labelInicio;
     @FXML private Label labelFim;
     @FXML private ComboBox<String> relatorio;
+    @FXML private ComboBox<Categoria> listaContaCartao;
     @FXML private DatePicker inicio;
     @FXML private DatePicker fim;
     @FXML private Button atualizar;
@@ -105,6 +110,27 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         LocalDate hoje = LocalDate.now();
         inicio.setValue(hoje.withDayOfMonth(1));
         fim.setValue(hoje.withDayOfMonth(hoje.lengthOfMonth()));
+        prepararFiltro();
+    }
+    
+    public void prepararFiltro(){
+        listaContaCartao.setOnAction(null);
+        if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_agendadas"))){
+            labelContaCartao.setText(idioma.getMensagem("cartao_credito")+":");
+            new CartaoCredito().montarSelectCategoria(listaContaCartao);
+            CartaoCredito cartaoSemCartao = new CartaoCredito().setNome(idioma.getMensagem("sem_cartao_credito"));
+            CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("todos"));
+            listaContaCartao.getItems().add(cartaoSemCartao);
+            listaContaCartao.getItems().add(cartaoTodos);
+            listaContaCartao.getSelectionModel().select(cartaoTodos);
+        }else{
+            labelContaCartao.setText(idioma.getMensagem("conta")+":");
+            new Conta().montarSelectCategoria(listaContaCartao);
+            Conta contasTodas = new Conta().setNome(idioma.getMensagem("todas"));
+            listaContaCartao.getItems().add(contasTodas);
+            listaContaCartao.getSelectionModel().select(contasTodas);
+        }
+        listaContaCartao.setOnAction(e -> { carregarRelatorio(); });
         carregarRelatorio();
     }
     
@@ -148,13 +174,26 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         return idioma.getMensagem("moeda")+" "+valorTotal;
     }
     
+    private Integer getTipoCategoria(){
+        if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_agendadas"))){
+            if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("sem_cartao_credito"))){
+                return 3;
+            }else{
+                return 2;
+            }
+        }
+        return 1;
+    }
+    
     private void relatorioGraficoBarras(Grafico objeto){
         xAxisPrincipal.setLabel(idioma.getMensagem("valores")+" ("+idioma.getMensagem("moeda")+")");
         xAxisSecundario.setLabel(idioma.getMensagem("valores")+" ("+idioma.getMensagem("moeda")+")");
         ajustarColunas(50,50);
         tabela.add(graficoPrincipal, 0, 1);
         tabela.add(graficoSecundario, 1, 1);
-        graficoPrincipal.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), null));
+        String id_categoria = listaContaCartao.getSelectionModel().getSelectedItem().getIdCategoria();
+        Integer tipo_categoria = getTipoCategoria();
+        graficoPrincipal.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), null, id_categoria, tipo_categoria));
         graficoPrincipal.getData().stream().forEach((serie) -> {
             serie.getData().stream().forEach((item) -> {
                 item.getNode().setCursor(Cursor.HAND);
@@ -184,7 +223,9 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     
     private void updateGraficoSecundario(String nomeCategoria, Grafico objeto){
         if(objeto!=null){
-            graficoSecundario.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), nomeCategoria));
+            String id_categoria = listaContaCartao.getSelectionModel().getSelectedItem().getIdCategoria();
+            Integer tipo_categoria = getTipoCategoria();
+            graficoSecundario.getData().setAll(objeto.getRelatorioMensalBarras(inicio.getValue(), fim.getValue(), nomeCategoria, id_categoria, tipo_categoria));
             graficoSecundario.getData().stream().forEach((serie) -> {
                 serie.getData().stream().forEach((item) -> {
                     eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
@@ -280,12 +321,13 @@ public final class RelatoriosControlador implements Initializable, Controlador {
 
     @Override
     public void acaoAjuda() {
-        Ajuda.getInstance().setObjetos(voltar,labelRelatorio,relatorio,labelInicio,inicio,labelFim,fim,atualizar,graficoPrincipal,graficoSecundario,listaCategorias,graficoLinhas);
+        Ajuda.getInstance().setObjetos(voltar,labelRelatorio,relatorio,labelContaCartao,listaContaCartao,labelInicio,inicio,labelFim,fim,atualizar,graficoPrincipal,graficoSecundario,listaCategorias,graficoLinhas);
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_relat_1"));
         Ajuda.getInstance().capitulo(relatorio, Posicao.BAIXO, idioma.getMensagem("tuto_relat_2"));
-        Ajuda.getInstance().capitulo(inicio, Posicao.BAIXO, idioma.getMensagem("tuto_relat_3"));
-        Ajuda.getInstance().capitulo(fim, Posicao.BAIXO, idioma.getMensagem("tuto_relat_4"));
-        Ajuda.getInstance().capitulo(atualizar, Posicao.BAIXO, idioma.getMensagem("tuto_relat_5"));
+        Ajuda.getInstance().capitulo(listaContaCartao, Posicao.BAIXO, idioma.getMensagem("tuto_relat_3"));
+        Ajuda.getInstance().capitulo(inicio, Posicao.BAIXO, idioma.getMensagem("tuto_relat_4"));
+        Ajuda.getInstance().capitulo(fim, Posicao.BAIXO, idioma.getMensagem("tuto_relat_5"));
+        Ajuda.getInstance().capitulo(atualizar, Posicao.BAIXO, idioma.getMensagem("tuto_relat_6"));
         Ajuda.getInstance().apresentarProximo();
     }
     
