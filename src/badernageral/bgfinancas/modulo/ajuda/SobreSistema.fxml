@@ -51,7 +51,16 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <Text fx:id="desenvolvedor" strokeType="OUTSIDE" strokeWidth="0.0" text="José Robson Mariano Alves" GridPane.columnIndex="1" />
             <Button fx:id="ok" mnemonicParsing="false" onAction="#acaoCancelar" text="OK" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <ImageView fx:id="imagemLogo" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.rowSpan="2" />
-            <Text fx:id="site" layoutX="100.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="http://bgfinancas.sourceforge.net" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Text fx:id="site" strokeType="OUTSIDE" strokeWidth="0.0" text="Site:">
+                     <HBox.margin>
+                        <Insets top="4.0" />
+                     </HBox.margin>
+                  </Text>
+                  <Hyperlink fx:id="link" onAction="#abrirSite" text="http://bgfinancas.sourceforge.net" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </content>

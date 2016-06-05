@@ -171,6 +171,9 @@ public final class Database {
             banco.executeUpdate("ALTER TABLE despesas ADD COLUMN id_cartao_credito INTEGER DEFAULT NULL");
             versao = setValorVersao("3.3");
         }
+        if(versao.equals("3.3")){
+            versao = setValorVersao("3.4");
+        }
     }
     
     private static String setValorVersao(String versao){

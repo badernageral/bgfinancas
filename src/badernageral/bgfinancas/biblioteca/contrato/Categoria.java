@@ -25,7 +25,6 @@ import badernageral.bgfinancas.biblioteca.banco.Coluna;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 

@@ -30,7 +30,7 @@
         <jar destfile="${dir.jar}/bgfinancas.jar" basedir="${dir.build}">
             <manifest>
                 <attribute name="Main-Class" value="badernageral.bgfinancas.principal.Main"/>
-                <attribute name="Class-Path" value="lib/hsqldb-2.3.3.jar"/>
+                <attribute name="Class-Path" value="lib/hsqldb-2.3.4.jar"/>
 	    </manifest>
         </jar>
     </target>

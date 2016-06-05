@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -11,7 +15,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.relatorio.RelatoriosControlador">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.relatorio.RelatoriosControlador">
     <center>
         <GridPane fx:id="tabela" hgap="20.0" vgap="10.0">
             <columnConstraints>
@@ -23,18 +27,18 @@
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                  <GridPane GridPane.columnSpan="2147483647">
+                  <GridPane fx:id="barraSuperior" GridPane.columnSpan="2147483647">
                       <columnConstraints>
                           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" />
                           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
                           <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="125.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
+                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="120.0" minWidth="-Infinity" prefWidth="90.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="50.0" />
                       </columnConstraints>
                       <rowConstraints>
@@ -69,7 +73,7 @@
                         <Insets right="5.0" />
                      </padding>
                   </Label>
-                  <Button fx:id="atualizar" contentDisplay="CENTER" focusTraversable="false" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#carregarRelatorio" prefHeight="25.0" prefWidth="40.0" GridPane.columnIndex="9">
+                  <Button fx:id="atualizar" contentDisplay="CENTER" focusTraversable="false" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#carregarRelatorio" prefHeight="25.0" prefWidth="40.0" GridPane.columnIndex="10">
                      <styleClass>
                         <String fx:value="Botao" />
                         <String fx:value="BotaoAtualizar" />
@@ -82,6 +86,7 @@
                      </padding>
                   </Label>
                   <ComboBox fx:id="listaContaCartao" focusTraversable="false" layoutX="155.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefWidth="150.0" styleClass="BotaoMeio" GridPane.columnIndex="4" />
+                  <ComboBox fx:id="tipo" focusTraversable="false" layoutX="465.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefWidth="150.0" styleClass="BotaoMeio" GridPane.columnIndex="9" />
                       </children>
                   </GridPane>
             </children>

@@ -81,6 +81,8 @@ public final class DespesaFormularioControlador implements Initializable, Contro
     private final TextField qtdMeses = new TextField();
     private final ComboBox<Categoria> listaCartaoCredito = new ComboBox<>();
     private final Button botaoListaCartaoCredito = new Button();
+    private final Label labelCartaoCredito = new Label(idioma.getMensagem("cartao_credito")+":");
+    private final HBox grupoCartaoCredito = new HBox();
     private Boolean pagar = false;
     
     private Despesa modelo;
@@ -146,6 +148,21 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         Animacao.fadeInInvisivel(contaController.getComboCategoria(), formulario);
     }
     
+    private void prepararCartaoCredito(Boolean checkbox){
+        new CartaoCredito().montarSelectCategoria(listaCartaoCredito);
+        listaCartaoCredito.getStyleClass().add("ListaComBotao");
+        botaoListaCartaoCredito.getStyleClass().add("Botao");
+        botaoListaCartaoCredito.getStyleClass().add("BotaoFim");
+        botaoListaCartaoCredito.getStyleClass().add("BotaoCadastrar");
+        botaoListaCartaoCredito.setMinWidth(40);
+        botaoListaCartaoCredito.setOnAction(e -> { acaoCadastrar(3); });
+        if(checkbox){
+            grupoCartaoCredito.getChildren().addAll(checkCartaoCredito,listaCartaoCredito,botaoListaCartaoCredito);
+        }else{
+            grupoCartaoCredito.getChildren().addAll(listaCartaoCredito,botaoListaCartaoCredito);
+        }
+    }
+    
     public void cadastrar(DespesasAgendadasControlador controlador){
         acao = Acao.CADASTRAR;
         this.controlador = controlador;
@@ -165,25 +182,16 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         HBox grupoAgendar = new HBox();
         grupoAgendar.getChildren().addAll(checkAgendar,qtdMeses);
         tabela.add(grupoAgendar, 1, 5);
-        Label labelCartaoCredito = new Label(idioma.getMensagem("cartao_credito")+":");
-        new CartaoCredito().montarSelectCategoria(listaCartaoCredito);
-        listaCartaoCredito.getStyleClass().add("ListaComBotao");
-        botaoListaCartaoCredito.getStyleClass().add("Botao");
-        botaoListaCartaoCredito.getStyleClass().add("BotaoFim");
-        botaoListaCartaoCredito.getStyleClass().add("BotaoCadastrar");
-        botaoListaCartaoCredito.setMinWidth(40);
-        botaoListaCartaoCredito.setOnAction(e -> { acaoCadastrar(3); });
-        HBox grupoCartaoCredito = new HBox();
-        grupoCartaoCredito.getChildren().addAll(checkCartaoCredito,listaCartaoCredito,botaoListaCartaoCredito);
+        prepararCartaoCredito(true);
         if(controlador!=null){
             checkAgendar.setSelected(true);
             checkAgendar.setDisable(true);
-            eventoDespesaAgendada(labelCartaoCredito,grupoCartaoCredito);
+            eventoDespesaAgendada();
         }else{
             qtdMeses.setVisible(false);
         }
         checkAgendar.setOnAction(e -> {
-            eventoDespesaAgendada(labelCartaoCredito,grupoCartaoCredito);
+            eventoDespesaAgendada();
         });
         checkCartaoCredito.setOnAction(e -> {
             if(checkCartaoCredito.isSelected()){
@@ -200,7 +208,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         });
     }
     
-    private void eventoDespesaAgendada(Label labelCartaoCredito, HBox grupoCartaoCredito){
+    private void eventoDespesaAgendada(){
         tabela.getChildren().remove(botaoController.getStackPane());
         if(checkAgendar.isSelected()){
             qtdMeses.setVisible(true);
@@ -242,6 +250,15 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                 pagar = true;
                 acaoFinalizar();
             });
+            prepararCartaoCredito(false);
+            tabela.getChildren().remove(botaoController.getStackPane());
+            tabela.add(labelCartaoCredito, 0, 5);
+            tabela.add(grupoCartaoCredito, 1, 5);
+            tabela.add(botaoController.getStackPane(), 1, 6);
+            if(modelo.getNomeCartaoCredito()!=null){
+                listaCartaoCredito.getItems().add(0, new CartaoCredito().setNome(idioma.getMensagem("nenhum")));
+                listaCartaoCredito.getSelectionModel().select(new CartaoCredito().setIdCategoria(modelo.getIdCartaoCredito()).setNome(modelo.getNomeCartaoCredito()));
+            }
         }
     }
     
@@ -290,6 +307,9 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                         modelo.setAgendada("0");
                         new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), valor.getText());
                     }
+                }
+                if(listaCartaoCredito.getSelectionModel().getSelectedItem()!=null){
+                    modelo.setIdCartaoCredito(listaCartaoCredito.getSelectionModel().getSelectedItem());
                 }
                 modelo.setValor(valor.getText());
                 modelo.setQuantidade(quantidade.getText());

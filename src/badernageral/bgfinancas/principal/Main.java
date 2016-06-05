@@ -33,12 +33,14 @@ import badernageral.bgfinancas.modelo.Despesa;
 import badernageral.bgfinancas.modelo.Usuario;
 import badernageral.bgfinancas.modulo.usuario.UsuarioFormularioControlador;
 import badernageral.bgfinancas.modulo.utilitario.ConfiguracaoFormularioControlador;
+import java.awt.SplashScreen;
 import java.io.IOException;
 import java.time.LocalDate;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -49,6 +51,7 @@ public class Main extends Application {
     private final Linguagem idioma = Linguagem.getInstance();
     private ConfiguracaoFormularioControlador confControlador = null;
     private UsuarioFormularioControlador userControlador = null;
+    private final SplashScreen splash = SplashScreen.getSplashScreen();
 
     @Override
     public void start(Stage palco) {
@@ -61,6 +64,8 @@ public class Main extends Application {
         }else{
             iniciarLogin();
         }
+        carregarIcone();
+        splash.close();
         palco.show();
     }
 
@@ -101,6 +106,7 @@ public class Main extends Application {
             Kernel.palco = new Stage();
             Kernel.palco.setScene(criarCena(criarPainelPrincipal(),null));
             Kernel.palco.show();
+            carregarIcone();
             notificarDespesasAgendadas();
         } catch (Exception ex) {
             Janela.showException(ex);
@@ -150,6 +156,10 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader();
         Pane painel = loader.load(getClass().getResourceAsStream(Kernel.FXML_PRINCIPAL));
         return painel;
+    }
+    
+    private void carregarIcone(){
+        Kernel.palco.getIcons().add(new Image("/badernageral/bgfinancas/recursos/imagem/layout/icone.png"));
     }
 
     public static void main(String[] args) {

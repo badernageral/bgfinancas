@@ -24,11 +24,15 @@ import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.ControladorFormulario;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
 import badernageral.bgfinancas.biblioteca.contrato.Item;
+import badernageral.bgfinancas.biblioteca.sistema.Janela;
+import java.awt.Desktop;
+import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TitledPane;
 import javafx.scene.text.Text;
 
@@ -37,14 +41,25 @@ public final class SobreSistemaControlador implements Initializable, Controlador
     @FXML private TitledPane formulario;
     @FXML private Text desenvolvedor;
     @FXML private Text site;
+    @FXML private Hyperlink link;
     @FXML private Button ok;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("sobre_sistema"));
         desenvolvedor.setText(idioma.getMensagem("desenvolvedor")+": José Robson Mariano Alves");
-        site.setText(idioma.getMensagem("website_oficial")+": http://bgfinancas.sourceforge.net");
+        site.setText(idioma.getMensagem("website_oficial")+":");
         ok.setText(idioma.getMensagem("ok"));
+    }
+    
+    public void abrirSite(){
+        try{
+            if(Desktop.isDesktopSupported()){
+                Desktop.getDesktop().browse(new URI(link.getText()));
+            }
+        }catch(Exception ex){
+            Janela.showException(ex);
+        }
     }
     
     @Override

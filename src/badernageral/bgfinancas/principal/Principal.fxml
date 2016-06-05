@@ -30,7 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="layoutGeral" prefHeight="660.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.principal.PrincipalControlador">
+<BorderPane fx:id="layoutGeral" prefHeight="660.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.principal.PrincipalControlador">
    <top>
       <VBox fx:id="layoutTopo" BorderPane.alignment="TOP_CENTER">
          <children>

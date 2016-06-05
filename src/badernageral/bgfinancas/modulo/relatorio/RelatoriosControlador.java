@@ -75,11 +75,13 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     @FXML private Label labelInicio;
     @FXML private Label labelFim;
     @FXML private ComboBox<String> relatorio;
+    @FXML private ComboBox<String> tipo;
     @FXML private ComboBox<Categoria> listaContaCartao;
     @FXML private DatePicker inicio;
     @FXML private DatePicker fim;
     @FXML private Button atualizar;
     @FXML private GridPane tabela;
+    @FXML private GridPane barraSuperior;
     
     private BigDecimal valorTotal;
     
@@ -110,10 +112,27 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         LocalDate hoje = LocalDate.now();
         inicio.setValue(hoje.withDayOfMonth(1));
         fim.setValue(hoje.withDayOfMonth(hoje.lengthOfMonth()));
+        prepararTipoTempo();
         prepararFiltro();
     }
     
+    private void prepararTipoTempo(){
+        tipo.getItems().add(idioma.getMensagem("semanal"));
+        tipo.getItems().add(idioma.getMensagem("mensal"));
+        tipo.getItems().add(idioma.getMensagem("anual"));
+        tipo.getSelectionModel().select(1);
+        tipo.setOnAction(e -> { carregarRelatorio(); });
+    }
+    
     public void prepararFiltro(){
+        barraSuperior.getChildren().remove(atualizar);
+        barraSuperior.getChildren().remove(tipo);
+        if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_tempo"))){
+            barraSuperior.add(tipo, 9, 0);
+            barraSuperior.add(atualizar, 10, 0);
+        }else{
+            barraSuperior.add(atualizar, 9, 0);
+        }
         listaContaCartao.setOnAction(null);
         if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_agendadas"))){
             labelContaCartao.setText(idioma.getMensagem("cartao_credito")+":");
@@ -252,7 +271,6 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         ajustarColunas(25,75);
         tabela.add(listaCategorias, 0, 1);
         tabela.add(graficoLinhas, 1, 1);  
-        graficoLinhas.setTitle(idioma.getMensagem("categorias"));        
         gerarGraficoLinhas();
     }
     
@@ -263,7 +281,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
                 categoriasSelecionadas.add(categoria.getIdCategoria());
             }
         });
-        graficoLinhas.getData().setAll(new Despesa().getRelatorioMensalLinhas(inicio.getValue(), fim.getValue(), categoriasSelecionadas));
+        new Despesa().preencherRelatorioMensalLinhas(graficoLinhas, inicio.getValue(), fim.getValue(), categoriasSelecionadas, listaContaCartao.getSelectionModel().getSelectedItem(), tipo.getSelectionModel().getSelectedItem());
         graficoLinhas.getData().stream().forEach((serie) -> {
             serie.getData().stream().forEach((item) -> {
                 eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());

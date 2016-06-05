@@ -27,7 +27,6 @@ import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
 import badernageral.bgfinancas.biblioteca.utilitario.Erro;
 import badernageral.bgfinancas.biblioteca.utilitario.Validar;
 import badernageral.bgfinancas.idioma.Linguagem;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -76,14 +75,6 @@ public final class ModalDespesaControlador implements Initializable, Controlador
     @Override
     public void acaoFinalizar() {
         try{
-            if(entrada_1.getText().contains("*")){
-                String[] valor = entrada_1.getText().split("\\*");
-                if(valor.length>=2){
-                    BigDecimal a = new BigDecimal(valor[0]);
-                    entrada_1.setText(a.multiply(new BigDecimal(valor[1])).toString());
-                    throw new Erro();
-                }
-            }
             Validar.textFieldDecimal(entrada_1);
             Validar.textFieldDecimal(entrada_2);
             Stage palco = (Stage) formulario.getScene().getWindow();

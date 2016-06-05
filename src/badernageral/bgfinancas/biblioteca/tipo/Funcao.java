@@ -24,6 +24,7 @@ public enum Funcao {
     
     SOMAR("SUM"),
     MES("MONTH"),
+    SEMANA("WEEK"),
     ANO("YEAR");
 
     public String funcao;

@@ -24,18 +24,26 @@ import badernageral.bgfinancas.biblioteca.banco.Banco;
 import badernageral.bgfinancas.biblioteca.contrato.Modelo;
 import badernageral.bgfinancas.biblioteca.banco.Coluna;
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
+import static badernageral.bgfinancas.biblioteca.contrato.Controlador.idioma;
 import badernageral.bgfinancas.biblioteca.contrato.Grafico;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.tipo.Funcao;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 
 public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     
@@ -75,6 +83,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     
     private final Coluna sumValor = new Coluna(TABELA, "valor", "sum_valor", Funcao.SOMAR);
     private final Coluna sumQuantidade = new Coluna(TABELA, "quantidade", "sum_quantidade", Funcao.SOMAR);
+    private final Coluna semana = new Coluna(TABELA, "data", "semana", Funcao.SEMANA);
     private final Coluna mes = new Coluna(TABELA, "data", "mes", Funcao.MES);
     private final Coluna ano = new Coluna(TABELA, "data", "ano", Funcao.ANO);
     
@@ -134,7 +143,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     
     @Override
     public boolean alterar(){
-        return this.update(idConta, quantidade, valor, data, agendada).where(idDespesa, "=").commit();
+        return this.update(idConta, quantidade, valor, data, agendada, idCartaoCredito).where(idDespesa, "=").commit();
     }
     
     @Override
@@ -273,6 +282,10 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
     
     public String getNomeConta() {
         return nomeConta.getValor();
+    }
+    
+    public String getIdCartaoCredito() {
+        return idCartaoCredito.getValor();
     }
     
     public String getNomeCartaoCredito() {
@@ -506,9 +519,15 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         }
     }
     
-    public List<XYChart.Series<String,Number>> getRelatorioMensalLinhas(LocalDate inicio, LocalDate fim, List<String> categoriasSelecionadas){
+    public void preencherRelatorioMensalLinhas(LineChart<String,Number> graficoLinhas, LocalDate inicio, LocalDate fim, List<String> categoriasSelecionadas, Categoria conta, String tipo){
         try{
-            this.select(sumValor, mes, ano, nomeCategoria);
+            if(tipo.equals(idioma.getMensagem("semanal"))){
+                this.select(sumValor, nomeCategoria, ano, mes, semana);
+            }else if(tipo.equals(idioma.getMensagem("mensal"))){
+                this.select(sumValor, nomeCategoria, ano, mes);
+            }else{
+                this.select(sumValor, nomeCategoria, ano);
+            }
             this.inner(idItem, idItemInner);
             this.inner(idCategoria, idCategoriaInner);
             data.setValor(Datas.toSqlData(inicio));
@@ -520,34 +539,80 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             if (categoriasSelecionadas.size() > 0) {
                 this.andIN(idCategoria, categoriasSelecionadas);
             }
-            this.groupBy(nomeCategoria, mes, ano);
-            this.orderby(nomeCategoria, mes, ano);
+            if(conta.getIdCategoria()!=null){
+                idConta.setValor(conta.getIdCategoria());
+                this.and(idConta, "=");
+            }
+            if(tipo.equals(idioma.getMensagem("semanal"))){
+                this.groupBy(ano, mes, semana, nomeCategoria);
+                this.orderby(ano, mes, semana);
+            }else if(tipo.equals(idioma.getMensagem("mensal"))){
+                this.groupBy(ano, mes, nomeCategoria);
+                this.orderby(ano, mes);
+            }else{
+                this.groupBy(ano, nomeCategoria);
+                this.orderby(ano);
+            }
             ResultSet rs = this.query();
+            BigDecimal valor_total = new BigDecimal("0.0");
+            List<XYChart.Series<String,Number>> categorias = new ArrayList<>();
             if(rs != null){
-                List<XYChart.Series<String,Number>> categorias = new ArrayList<>();
-                String ultimaCategoria = "";
+                Set<String> datas = new LinkedHashSet<>();
                 XYChart.Series<String,Number> categoria = new XYChart.Series<>();
                 while(rs.next()){
-                    String novaCategoria = rs.getString(nomeCategoria.getAliasColuna());
-                    if(!ultimaCategoria.equals(novaCategoria)){
-                        if(!ultimaCategoria.equals("")){
-                            categorias.add(categoria);
-                        }
-                        ultimaCategoria = novaCategoria;
+                    String nome_categoria = rs.getString(nomeCategoria.getAliasColuna());
+                    try{
+                        categoria = categorias.stream().filter(c -> c.getName().equals(nome_categoria)).findFirst().get();
+                    }catch(NoSuchElementException ex){
                         categoria = new XYChart.Series<>();
-                        categoria.setName(novaCategoria);
+                        categoria.setName(nome_categoria);
+                        categorias.add(categoria);
                     }
-                    String descricao = idioma.getNomeMes(rs.getInt(mes.getAliasColuna())).substring(0,3)+"/"+rs.getString(ano.getAliasColuna());
+                    String descricao = "";
+                    if(tipo.equals(idioma.getMensagem("semanal"))){
+                        descricao = rs.getString(semana.getAliasColuna())+"/"+idioma.getNomeMes(rs.getInt(mes.getAliasColuna())).substring(0,3)+"/"+rs.getString(ano.getAliasColuna());
+                    }else if(tipo.equals(idioma.getMensagem("mensal"))){
+                        descricao = idioma.getNomeMes(rs.getInt(mes.getAliasColuna())).substring(0,3)+"/"+rs.getString(ano.getAliasColuna());
+                    }else{
+                        descricao = rs.getString(ano.getAliasColuna());;
+                    }
+                    datas.add(descricao);
+                    valor_total = valor_total.add(new BigDecimal(rs.getString(sumValor.getAliasColuna())));
                     categoria.getData().add(new XYChart.Data<>(descricao,rs.getDouble(sumValor.getAliasColuna())));
                 }
-                categorias.add(categoria);
-                return categorias;
-            }else{
-                return null;
+                // Bug JavaFX
+                if(categorias.size()>0){
+                    categoria = categorias.get(0);
+                    for(String d : datas){
+                        try{
+                            categoria.getData().stream().filter(c -> c.getXValue().equals(d)).findFirst().get();
+                        }catch(NoSuchElementException ex){
+                            categoria.getData().add(new XYChart.Data<>(d,0));
+                        }
+                    }
+                    if(tipo.equals(idioma.getMensagem("semanal"))){
+                        categoria.getData().sort((Data<String,Number> a, Data<String,Number> b) -> {
+                            String[] A = a.getXValue().split("/");
+                            String[] B = b.getXValue().split("/");
+                            if(Integer.parseInt(A[2])>Integer.parseInt(B[2])){
+                                return 1;
+                            }else if(Integer.parseInt(A[2])<Integer.parseInt(B[2])){
+                                return -1;
+                            }else{
+                                if(Integer.parseInt(A[0])>Integer.parseInt(B[0])){
+                                    return 1;
+                                }else{
+                                    return -1;
+                                }
+                            }
+                        });
+                    }
+                }
             }
+            graficoLinhas.setTitle(idioma.getMensagem("categorias")+" - "+idioma.getMensagem("moeda")+" "+valor_total);
+            graficoLinhas.getData().setAll(categorias);
         }catch(SQLException ex){
             Janela.showException(ex);
-            return null;
         }
     }
 
