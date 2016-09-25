@@ -48,8 +48,10 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
     @FXML private BotaoFormulario botaoController;
     @FXML private Label labelIdioma;
     @FXML private Label labelMoeda;
+    @FXML private Label labelLogin;
     @FXML private ComboBox<String> idiomas;
     @FXML private TextField moeda;
+    @FXML private ComboBox<String> login;
     
     private boolean primeiroAcesso = false;
     
@@ -67,11 +69,15 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
     }
     
     public void mudarIdioma(){
+        login.getItems().clear();
         if(idiomas.getSelectionModel().getSelectedItem().equals("English")){
             moeda.setText("$");
             formulario.setText("Settings");
             labelIdioma.setText("Language:");
             labelMoeda.setText("Currency:");
+            labelLogin.setText("Login screen:");
+            login.getItems().add("No");
+            login.getItems().add("Yes");
             if(primeiroAcesso){
                 botaoController.setTextBotaoFinalizar("Next");
                 botaoController.setTextBotaoCancelar("Exit");
@@ -84,6 +90,9 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
             formulario.setText("Configurações");
             labelIdioma.setText("Idioma:");
             labelMoeda.setText("Moeda:");
+            labelLogin.setText("Tela de login:");
+            login.getItems().add("Não");
+            login.getItems().add("Sim");
             if(primeiroAcesso){
                 botaoController.setTextBotaoFinalizar("Próximo");
                 botaoController.setTextBotaoCancelar("Sair");
@@ -92,6 +101,7 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
                 botaoController.setTextBotaoCancelar("Cancelar");
             }
         }
+        login.getSelectionModel().select(Integer.parseInt(Configuracao.getPropriedade("login")));
     }
     
     @Override
@@ -108,11 +118,14 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
         if(validarFormulario()){
             Configuracao cIdioma = new Configuracao().setNome("idioma").consultar();
             Configuracao cMoeda = new Configuracao().setNome("moeda").consultar();
-            if(cIdioma!=null && cMoeda!=null){
+            Configuracao cLogin = new Configuracao().setNome("login").consultar();
+            if(cIdioma!=null && cMoeda!=null && cLogin!=null){
                 cIdioma.setValor(idioma.idiomaToLocale(idiomas.getSelectionModel().getSelectedItem()));
                 cIdioma.alterar();
                 cMoeda.setValor(moeda.getText());
                 cMoeda.alterar();
+                cLogin.setValor(Integer.toString(login.getSelectionModel().getSelectedIndex()));
+                cLogin.alterar();
                 if(primeiroAcesso){
                     Kernel.main.continuarPrimeiroAcesso();
                 }else{

@@ -142,6 +142,10 @@ public final class Configuracao extends Banco<Configuracao> implements Modelo {
             if(Configuracao.getPropriedade("data_notificacao") == null){
                 new Configuracao("data_notificacao", Datas.toSqlData(LocalDate.now())).cadastrar();
             }
+            // Configuracao: login
+            if(Configuracao.getPropriedade("login") == null){
+                new Configuracao("login", "1").cadastrar();
+            }
         } catch (SQLException ex) {
             Janela.showException(ex);
         }

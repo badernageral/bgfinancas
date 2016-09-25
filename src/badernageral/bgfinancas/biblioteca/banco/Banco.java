@@ -157,6 +157,13 @@ public abstract class Banco<T extends Banco<T>> {
         return getThis();
     }
     
+    public T andIsNotNull(Coluna coluna){
+        sql.append(" AND ");
+        sql.append(coluna.getTabelaColuna(false));
+        sql.append(" IS NOT NULL ");
+        return getThis();
+    }
+    
     protected T or(Coluna coluna, String operador){
         this.or(coluna, operador, null);
         return getThis();
@@ -166,7 +173,7 @@ public abstract class Banco<T extends Banco<T>> {
         sql.append(" OR ");
         this.abreGrupo(grupo);
         sql.append(coluna.getTabelaColuna(false)).append(" ").append(operador).append(" ? ");
-        if(operador.equals("LIKE") || operador.equals("like")){
+        if(operador.toUpperCase().equals("LIKE")){
             parametros.add("%"+coluna.getValor()+"%");
         }else{
             parametros.add(coluna.getValor());

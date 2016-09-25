@@ -49,6 +49,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -124,9 +126,31 @@ public final class HomeControlador implements Initializable, Controlador {
     
     private void inicializarContas(){
         tabelaConta.prepararTabela(tabelaListaConta, 1);
+        prepararColunaTipoConta(tabelaConta.adicionarColuna(tabelaListaConta, "", "saldoTotal"));
         tabelaConta.adicionarColuna(tabelaListaConta, idioma.getMensagem("nome"), "nome");
         tabelaConta.setColunaDinheiro(tabelaConta.adicionarColuna(tabelaListaConta, idioma.getMensagem("saldo"), "valor"), true);
         labelContas.setText(idioma.getMensagem("contas"));
+        
+    }
+    
+    private void prepararColunaTipoConta(TableColumn colunaTipoConta){
+        colunaTipoConta.setMinWidth(35);
+        colunaTipoConta.setMaxWidth(35);
+        colunaTipoConta.setCellFactory(coluna -> {
+            return new TableCell<Conta, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null && !empty) {
+                        if(item.equals(idioma.getMensagem("credito"))){
+                            setStyle("-fx-background-image: url(\"badernageral/bgfinancas/recursos/imagem/outros/credito.png\");-fx-background-repeat: no-repeat;-fx-background-position: center center");
+                        }else{
+                            setStyle("-fx-background-image: url(\"badernageral/bgfinancas/recursos/imagem/outros/poupanca.png\");-fx-background-repeat: no-repeat;-fx-background-position: center center");
+                        }
+                    }
+                }
+            };
+        });
     }
     
     private void inicializarDespesasAgendadas(){

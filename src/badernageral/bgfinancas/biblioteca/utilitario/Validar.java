@@ -113,7 +113,7 @@ public final class Validar {
     }
     
     private static void calcularValorCampo(TextField campo) throws Erro{
-        Pattern regex = Pattern.compile("(\\d*\\.\\d*|\\d*)([\\+\\*\\-\\/])(\\d*\\.\\d*|\\d*)");
+        Pattern regex = Pattern.compile("(\\d+\\.\\d+|\\d+)([\\+\\*\\-\\/])(\\d+\\.\\d+|\\d+)");
         Matcher res = regex.matcher(campo.getText());
         if (res.matches()){
             BigDecimal a = new BigDecimal(res.group(1));
@@ -151,7 +151,9 @@ public final class Validar {
         try{
             BigDecimal valor = new BigDecimal(numero);
         }catch(NumberFormatException ex){
-            Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("use_ponto_decimais"), campo, Duracao.NORMAL);
+            if(campo!=null){
+                Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("use_ponto_decimais"), campo, Duracao.NORMAL);
+            }
             throw new Erro();
         }
     }

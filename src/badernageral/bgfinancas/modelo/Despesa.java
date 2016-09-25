@@ -29,12 +29,16 @@ import badernageral.bgfinancas.biblioteca.contrato.Grafico;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.tipo.Funcao;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
+import badernageral.bgfinancas.biblioteca.utilitario.Erro;
+import badernageral.bgfinancas.biblioteca.utilitario.Validar;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -167,6 +171,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             this.left(idCartaoCredito,idCartaoCreditoLeft);
             this.where(nomeConta, "LIKE", "(");
             this.or(nomeItem, "LIKE");
+            this.or(valor, "=");
+            this.or(data, "=");
             this.or(nomeCategoria, "LIKE", ")");
             if(idItem.getValor() != null){
                 this.and(idItem, "=");
@@ -180,6 +186,8 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
             if(idCartaoCredito.getValor() != null){
                 if(idCartaoCredito.getValor().equals("NULL")){
                     this.andIsNull(idCartaoCredito);
+                }else if(idCartaoCredito.getValor().equals("NOTNULL")){
+                    this.andIsNotNull(idCartaoCredito);
                 }else{
                     this.and(idCartaoCredito, "=");
                 }
@@ -380,6 +388,14 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
         nomeConta.setValor(filtro);
         nomeItem.setValor(filtro);
         nomeCategoria.setValor(filtro);
+        try{
+            LocalDate filtroData = LocalDate.parse(filtro, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+            data.setValor(Datas.toSqlData(filtroData));
+        }catch(DateTimeParseException e){}
+        try{
+            Validar.decimal(filtro, null);
+            valor.setValor(filtro);
+        }catch(Erro e){}
         return this;
     }
     
@@ -490,7 +506,9 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico {
                     this.and(idCartaoCredito, "=");
                 }
             }else{
-                if(tipo_categoria==3){
+                if(tipo_categoria==4){
+                    this.andIsNotNull(idCartaoCredito);
+                }else if(tipo_categoria==3){
                     this.andIsNull(idCartaoCredito);
                 }
             }

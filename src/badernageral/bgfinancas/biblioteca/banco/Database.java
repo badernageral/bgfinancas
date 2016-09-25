@@ -174,6 +174,9 @@ public final class Database {
         if(versao.equals("3.3")){
             versao = setValorVersao("3.4");
         }
+        if(versao.equals("3.4")){
+            versao = setValorVersao("3.5");
+        }
     }
     
     private static String setValorVersao(String versao){

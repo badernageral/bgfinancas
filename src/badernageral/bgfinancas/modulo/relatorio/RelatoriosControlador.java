@@ -138,8 +138,10 @@ public final class RelatoriosControlador implements Initializable, Controlador {
             labelContaCartao.setText(idioma.getMensagem("cartao_credito")+":");
             new CartaoCredito().montarSelectCategoria(listaContaCartao);
             CartaoCredito cartaoSemCartao = new CartaoCredito().setNome(idioma.getMensagem("sem_cartao_credito"));
+            CartaoCredito cartaoSomenteCartao = new CartaoCredito().setNome(idioma.getMensagem("somente_cartao_credito"));
             CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("todos"));
             listaContaCartao.getItems().add(cartaoSemCartao);
+            listaContaCartao.getItems().add(cartaoSomenteCartao);
             listaContaCartao.getItems().add(cartaoTodos);
             listaContaCartao.getSelectionModel().select(cartaoTodos);
         }else{
@@ -195,7 +197,9 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     
     private Integer getTipoCategoria(){
         if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_agendadas"))){
-            if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("sem_cartao_credito"))){
+            if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("somente_cartao_credito"))){
+                return 4;
+            }else if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("sem_cartao_credito"))){
                 return 3;
             }else{
                 return 2;

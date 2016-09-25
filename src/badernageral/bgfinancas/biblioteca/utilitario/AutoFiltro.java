@@ -22,6 +22,8 @@ package badernageral.bgfinancas.biblioteca.utilitario;
 
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.Item;
+import badernageral.bgfinancas.biblioteca.sistema.Janela;
+import badernageral.bgfinancas.biblioteca.tipo.Status;
 import badernageral.bgfinancas.idioma.Linguagem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -121,12 +123,10 @@ public final class AutoFiltro<T extends Categoria> implements EventHandler<KeyEv
             Item iB = (Item) b;
             String nomeA = Outros.removerAcentos(iA.getNome().toLowerCase());
             String nomeB = Outros.removerAcentos(iB.getNome().toLowerCase());
-            if(nomeA.contains(filtro) && !nomeB.contains(filtro)) {
-                return -1;
-            }
-            if(!nomeA.contains(filtro) && nomeB.contains(filtro)) {
-                return 1;
-            }
+            if(nomeA.contains(filtro) && !nomeB.contains(filtro)) { return -1; }
+            if(!nomeA.contains(filtro) && nomeB.contains(filtro)) { return 1; }
+            if(nomeA.startsWith(filtro) && !nomeB.startsWith(filtro)) { return -1; }
+            if(!nomeA.startsWith(filtro) && nomeB.startsWith(filtro)) { return 1; }
             return Outros.removerAcentos(iA.toString()).compareTo(Outros.removerAcentos(iB.toString()));
         });
         comboBox.setItems(lista_itens);

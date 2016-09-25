@@ -69,12 +69,10 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
                         Item iB = (Item) b;
                         String nomeA = Outros.removerAcentos(iA.getNome().toLowerCase());
                         String nomeB = Outros.removerAcentos(iB.getNome().toLowerCase());
-                        if(nomeA.contains(textoConsultado) && !nomeB.contains(textoConsultado)) {
-                            return -1;
-                        }
-                        if(!nomeA.contains(textoConsultado) && nomeB.contains(textoConsultado)) {
-                            return 1;
-                        }
+                        if(nomeA.contains(textoConsultado) && !nomeB.contains(textoConsultado)) { return -1; }
+                        if(!nomeA.contains(textoConsultado) && nomeB.contains(textoConsultado)) { return 1; }
+                        if(nomeA.startsWith(textoConsultado) && !nomeB.startsWith(textoConsultado)) { return -1; }
+                        if(!nomeA.startsWith(textoConsultado) && nomeB.startsWith(textoConsultado)) { return 1; }
                         return Outros.removerAcentos(iA.toString()).compareTo(Outros.removerAcentos(iB.toString()));
                     });
                     popularPopup(lista_itens);

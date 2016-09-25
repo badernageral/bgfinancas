@@ -35,9 +35,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
          <children>
             <Label fx:id="labelIdioma" text="Idioma:" />
             <Label fx:id="labelMoeda" text="Moeda:" GridPane.rowIndex="1" />
-            <TextField fx:id="moeda" maxWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <fx:include fx:id="botao" source="/badernageral/bgfinancas/template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="labelLogin" text="Login:" GridPane.rowIndex="2" />
             <ComboBox fx:id="idiomas" maxWidth="1.7976931348623157E308" onAction="#mudarIdioma" GridPane.columnIndex="1" />
+            <TextField fx:id="moeda" maxWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="login" maxWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <fx:include fx:id="botao" source="/badernageral/bgfinancas/template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
          <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" />
@@ -47,6 +49,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
          </padding>
          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

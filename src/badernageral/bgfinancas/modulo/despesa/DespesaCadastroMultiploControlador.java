@@ -209,6 +209,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         itens = tabelaLista.getSelectionModel().getSelectedItems();
         if(Validar.exclusao(itens, excluir, false)){
             tabelaLista.getItems().removeAll(itens);
+            calcularValorTotal();
         }
     }
     

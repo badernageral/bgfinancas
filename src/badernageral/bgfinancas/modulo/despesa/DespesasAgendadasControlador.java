@@ -105,8 +105,10 @@ public final class DespesasAgendadasControlador implements Initializable, Contro
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("cartao_credito"), "nomeCartaoCredito");
         new CartaoCredito().montarSelectCategoria(listaCartaoCredito);
         CartaoCredito cartaoSemCartao = new CartaoCredito().setIdCategoria("NULL").setNome(idioma.getMensagem("sem_cartao_credito"));
+        CartaoCredito cartaoSomenteCartao = new CartaoCredito().setIdCategoria("NOTNULL").setNome(idioma.getMensagem("somente_cartao_credito"));
         CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("todos"));
         listaCartaoCredito.getItems().add(cartaoSemCartao);
+        listaCartaoCredito.getItems().add(cartaoSomenteCartao);
         listaCartaoCredito.getItems().add(cartaoTodos);
         listaCartaoCredito.getSelectionModel().select(cartaoTodos);
         listaCartaoCredito.setOnAction(e -> { acaoFiltrar(true); });

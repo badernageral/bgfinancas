@@ -62,7 +62,16 @@ public class Main extends Application {
         if(new Usuario().listar().isEmpty()){
             iniciarPrimeiroAcesso();
         }else{
-            iniciarLogin();
+            if(Configuracao.getPropriedade("login").equals("1")){
+                iniciarLogin();
+            }else{
+                try {
+                    palco.setScene(criarCena(criarPainelPrincipal(),null));
+                    notificarDespesasAgendadas();
+                } catch (Exception ex) {
+                    Janela.showException(ex);
+                }
+            }
         }
         carregarIcone();
         splash.close();

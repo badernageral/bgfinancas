@@ -28,9 +28,14 @@ import badernageral.bgfinancas.biblioteca.contrato.Grafico;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.tipo.Funcao;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
+import badernageral.bgfinancas.biblioteca.utilitario.Erro;
+import badernageral.bgfinancas.biblioteca.utilitario.Validar;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -134,6 +139,8 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             this.where(descricao, "LIKE", "(");
             this.or(nomeConta, "LIKE");
             this.or(nomeItem, "LIKE");
+            this.or(data, "=");
+            this.or(valor, "=");
             this.or(nomeCategoria, "LIKE", ")");
             if(idItem.getValor() != null){
                 this.and(idItem, "=");
@@ -258,6 +265,14 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         nomeConta.setValor(filtro);
         nomeItem.setValor(filtro);
         nomeCategoria.setValor(filtro);
+        try{
+            LocalDate filtroData = LocalDate.parse(filtro, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+            data.setValor(Datas.toSqlData(filtroData));
+        }catch(DateTimeParseException e){}
+        try{
+            Validar.decimal(filtro, null);
+            valor.setValor(filtro);
+        }catch(Erro e){}
         return this;
     }
     
