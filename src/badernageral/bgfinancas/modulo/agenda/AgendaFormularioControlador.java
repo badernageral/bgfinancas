@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -32,6 +32,7 @@ import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.tipo.Acao;
 import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -60,13 +61,15 @@ public final class AgendaFormularioControlador implements Initializable, Control
     @FXML private TextField descricao;
     @FXML private DatePicker data;
     @FXML private TextField valor;
+    @FXML private Label ajuda;
     
-    private Agenda Modelo;
+    private Agenda modelo;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("lembrete"));
         Botao.prepararBotaoModal(this, botaoController, categoriaController);
+        Calculadora.preparar(valor, ajuda);
         labelTipo.setText(idioma.getMensagem("tipo")+":");
         labelDescricao.setText(idioma.getMensagem("descricao")+":");
         labelData.setText(idioma.getMensagem("data")+":");
@@ -102,16 +105,16 @@ public final class AgendaFormularioControlador implements Initializable, Control
     }
     
     public void alterar(Agenda modelo){
-        Modelo = modelo;
+        this.modelo = modelo;
         acao = Acao.ALTERAR;
         botaoController.setTextBotaoFinalizar(idioma.getMensagem("alterar"));
-        AgendaTipo agendaTipo = new AgendaTipo().setIdCategoria(Modelo.getIdCategoria()).consultar();
+        AgendaTipo agendaTipo = new AgendaTipo().setIdCategoria(modelo.getIdCategoria()).consultar();
         if(agendaTipo != null){
             categoriaController.setCategoriaSelecionada(agendaTipo);
         }
-        descricao.setText(Modelo.getNome());
-        data.setValue(Modelo.getDataLocal());
-        valor.setText(Modelo.getValor());
+        descricao.setText(modelo.getNome());
+        data.setValue(modelo.getData());
+        valor.setText(modelo.getValor().toString());
     }
     
     @Override
@@ -124,7 +127,7 @@ public final class AgendaFormularioControlador implements Initializable, Control
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }else if(acao == Acao.ALTERAR){
-                Agenda lembrete = new Agenda(Modelo.getIdItem(), categoriaController.getIdCategoria(), descricao.getText(), data.getValue(), valor.getText(), null);
+                Agenda lembrete = new Agenda(modelo.getIdItem(), categoriaController.getIdCategoria(), descricao.getText(), data.getValue(), valor.getText(), null);
                 lembrete.alterar();
                 Kernel.controlador.acaoFiltrar(true);
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
@@ -135,10 +138,10 @@ public final class AgendaFormularioControlador implements Initializable, Control
     
     private boolean validarFormulario(){
         try {
+            Validar.textFieldDecimal(valor);
             Validar.comboBox(categoriaController.getComboCategoria());
             Validar.textField(descricao);
             Validar.datePicker(data);
-            Validar.textFieldDecimal(valor);
             return true;
         } catch (Erro ex) {
             return false;

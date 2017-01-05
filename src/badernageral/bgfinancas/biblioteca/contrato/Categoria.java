@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -37,7 +37,7 @@ public abstract class Categoria<T extends Categoria<T>> extends Banco<T> {
         try{
             combo.getItems().clear();
             combo.setPromptText(idioma.getMensagem("selecione"));
-            this.select(idCategoria, nome).orderby(nome);
+            this.select(idCategoria, nome).orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
@@ -54,7 +54,7 @@ public abstract class Categoria<T extends Categoria<T>> extends Banco<T> {
             Choice.getItems().clear();
             T Todas = instanciar("todas", idioma.getMensagem("todas"));
             Choice.getItems().add(Todas);
-            this.select(idCategoria, nome).orderby(nome);
+            this.select(idCategoria, nome).orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){

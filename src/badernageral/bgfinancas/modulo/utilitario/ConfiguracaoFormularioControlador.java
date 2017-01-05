@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -127,11 +127,11 @@ public final class ConfiguracaoFormularioControlador implements Initializable, C
                 cLogin.setValor(Integer.toString(login.getSelectionModel().getSelectedIndex()));
                 cLogin.alterar();
                 if(primeiroAcesso){
-                    Kernel.main.continuarPrimeiroAcesso();
+                    Kernel.master.continuarPrimeiroAcesso();
                 }else{
                     Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                     Animacao.fadeInOutClose(formulario);
-                    Kernel.main.reiniciar();
+                    Kernel.master.reiniciar();
                 }
             }else{
                 Janela.showMensagem(Status.ERRO, idioma.getMensagem("erro"));

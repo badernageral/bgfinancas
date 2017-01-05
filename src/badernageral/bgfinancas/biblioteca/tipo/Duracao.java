@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -25,7 +25,8 @@ public enum Duracao {
     NENHUMA(0),
     CURTA(1250),
     NORMAL(2500),
-    LONGA(4000);
+    LONGA(4000),
+    MUITO_LONGA(6000);
 
     public int duracao;
     

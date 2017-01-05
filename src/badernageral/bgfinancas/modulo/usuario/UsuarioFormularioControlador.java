@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -105,7 +105,7 @@ public final class UsuarioFormularioControlador implements Initializable, Contro
                 Usuario u = new Usuario(null, nome.getText(), usuario.getText(), senha.getText());
                 u.cadastrar();
                 if(primeiroAcesso){
-                    Kernel.main.reiniciar();
+                    Kernel.master.reiniciar();
                 }else{
                     Kernel.principal.acaoUsuario();
                     Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);

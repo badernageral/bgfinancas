@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -24,10 +24,12 @@ import badernageral.bgfinancas.biblioteca.contrato.Modelo;
 import badernageral.bgfinancas.biblioteca.banco.Coluna;
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
+import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.biblioteca.utilitario.Erro;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -124,7 +126,7 @@ public final class CartaoCredito extends Categoria<CartaoCredito> implements Mod
             if(nome.getValor() != null){
                 this.where(nome, "LIKE");
             }
-            this.orderby(nome);
+            this.orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<CartaoCredito> Linhas = new ArrayList<>();
@@ -145,10 +147,10 @@ public final class CartaoCredito extends Categoria<CartaoCredito> implements Mod
     public ObservableList<CartaoCredito> getRelatorio(String filtro){
         ObservableList<CartaoCredito> grupos = new CartaoCredito().setNome(filtro).listar();
         for(CartaoCredito cc : grupos){
-            BigDecimal _saldo = new BigDecimal(cc.getLimite());
+            BigDecimal _saldo = cc.getLimite();
             ObservableList<Despesa> despesas = new Despesa().setSomenteAgendamento().setIdCartaoCredito(cc).listar();
             for(Despesa d : despesas){
-                _saldo = _saldo.subtract(new BigDecimal(d.getValor()));
+                _saldo = _saldo.subtract(d.getValor());
             }
             cc.setSaldo(_saldo.toString());
         }
@@ -160,7 +162,7 @@ public final class CartaoCredito extends Categoria<CartaoCredito> implements Mod
         try{
             combo.getItems().clear();
             combo.setPromptText(idioma.getMensagem("selecione"));
-            this.select(idCategoria, nome, limite, vencimento).orderby(nome);
+            this.select(idCategoria, nome, limite, vencimento).orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
@@ -172,12 +174,16 @@ public final class CartaoCredito extends Categoria<CartaoCredito> implements Mod
         }
     }
     
-    public String getLimite() {
-        return limite.getValor();
+    public BigDecimal getLimite() {
+        return new BigDecimal(limite.getValor());
     }
     
-    public String getVencimento() {
-        return vencimento.getValor();
+    public BigDecimal getSaldo() {
+        return new BigDecimal(saldo.getValor());
+    }
+    
+    public BigDecimal getVencimento() {
+        return new BigDecimal(vencimento.getValor());
     }
     
     public void setLimite(String limite) {
@@ -186,10 +192,6 @@ public final class CartaoCredito extends Categoria<CartaoCredito> implements Mod
     
     public void setVencimento(String vencimento) {
         this.vencimento.setValor(vencimento);
-    }
-    
-    public String getSaldo() {
-        return saldo.getValor();
     }
     
     public void setSaldo(String saldo) {

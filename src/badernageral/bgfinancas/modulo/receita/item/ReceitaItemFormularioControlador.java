@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -121,16 +121,20 @@ public final class ReceitaItemFormularioControlador implements Initializable, Co
         if(validarFormulario()){
             if(acao == Acao.CADASTRAR){
                 ReceitaItem item = new ReceitaItem(null, categoriaController.getIdCategoria(), nome.getText(), categoriaController.getNomeCategoria());
-                item.cadastrar();
-                if(controlador==null){
-                    Kernel.principal.acaoReceitaItem();
-                    Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
-                    Animacao.fadeInOutClose(formulario);
+                if(item.consultar()!=null){
+                    Janela.showTooltip(Status.ERRO, idioma.getMensagem("nome_igual"), Duracao.CURTA);
                 }else{
-                    Animacao.fadeOutClose(formulario);
-                    item = new ReceitaItem().setNome(item.getNome()).setNomeCategoria(item.getNomeCategoria()).consultar();
-                    controlador.selecionarComboItem(0, item);
-                }               
+                    item.cadastrar();
+                    if(controlador==null){
+                        Kernel.controlador.acaoFiltrar(true);
+                        Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
+                        Animacao.fadeInOutClose(formulario);
+                    }else{
+                        Animacao.fadeOutClose(formulario);
+                        item = new ReceitaItem().setNome(item.getNome()).setNomeCategoria(item.getNomeCategoria()).consultar();
+                        controlador.selecionarComboItem(0, item);
+                    }
+                }
             }else if(acao == Acao.ALTERAR){
                 ReceitaItem item = new ReceitaItem(modelo.getIdItem(), categoriaController.getIdCategoria(), nome.getText(), null);
                 item.alterar();

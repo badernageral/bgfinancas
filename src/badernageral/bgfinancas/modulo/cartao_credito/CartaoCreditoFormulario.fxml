@@ -7,16 +7,22 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.cartao_credito.CartaoCreditoFormularioControlador">
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.cartao_credito.CartaoCreditoFormularioControlador">
    <content>
       <GridPane hgap="10.0" vgap="10.0">
          <children>
             <Label fx:id="labelNome" text="Nome:" />
             <TextField fx:id="nome" onAction="#acaoFinalizar" GridPane.columnIndex="1" />
             <Label fx:id="labelLimite" text="Limite:" GridPane.rowIndex="1" />
-            <TextField fx:id="limite" onAction="#acaoFinalizar" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="limite" onAction="#acaoFinalizar" />
+                  <Label fx:id="ajuda" />
+               </children>
+            </HBox>
             <Label fx:id="labelVencimento" text="Dia do vencimento:" GridPane.rowIndex="2" />
             <ComboBox fx:id="vencimento" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="3" />

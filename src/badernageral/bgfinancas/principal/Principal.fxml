@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -205,6 +205,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <String fx:value="transparente" />
                      </styleClass></Button>
                   <Button fx:id="botaoRelatorios" focusTraversable="false" layoutX="446.0" layoutY="10.0" mnemonicParsing="false" onAction="#acaoRelatorios" prefHeight="54.0" prefWidth="54.0">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                     <styleClass>
+                        <String fx:value="Botao" />
+                        <String fx:value="transparente" />
+                     </styleClass>
+                  </Button>
+                  <Button fx:id="botaoCalculadora" focusTraversable="false" layoutX="446.0" layoutY="10.0" mnemonicParsing="false" onAction="#acaoCalculadora" prefHeight="54.0" prefWidth="54.0">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>

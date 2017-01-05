@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -119,7 +119,7 @@ public final class Grupo extends Categoria<Grupo> implements Modelo {
             if(nome.getValor() != null){
                 this.where(nome, "LIKE");
             }
-            this.orderby(nome);
+            this.orderByAsc(nome);
             ResultSet rs = this.query();            
             if(rs != null){
                 List<Grupo> Linhas = new ArrayList<>();
@@ -142,7 +142,7 @@ public final class Grupo extends Categoria<Grupo> implements Modelo {
         try{
             combo.getItems().clear();
             combo.setPromptText(idioma.getMensagem("selecione"));
-            this.select(idCategoria,nome,valor).orderby(nome);
+            this.select(idCategoria,nome,valor).orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
@@ -154,12 +154,12 @@ public final class Grupo extends Categoria<Grupo> implements Modelo {
         }
     }
     
-    public String getValor() {
-        return valor.getValor();
+    public BigDecimal getValor() {
+        return new BigDecimal(valor.getValor());
     }
     
-    public String getSaldo() {
-        return saldo.getValor();
+    public BigDecimal getSaldo() {
+        return new BigDecimal(saldo.getValor());
     }
     
     public void setSaldo(String saldo) {
@@ -169,7 +169,7 @@ public final class Grupo extends Categoria<Grupo> implements Modelo {
     public ObservableList<Grupo> getRelatorio(LocalDate hoje, String filtro){
         ObservableList<Grupo> grupos = new Grupo().setNome(filtro).listar();
         for(Grupo g : grupos){
-            BigDecimal saldo = new BigDecimal(g.getValor());
+            BigDecimal saldo = g.getValor();
             ObservableList<GrupoItem> _itens = new GrupoItem().setIdCategoria(g.getIdCategoria()).listar();
             for(GrupoItem i : _itens){
                 saldo = saldo.subtract(new BigDecimal(new Despesa().setIdCategoria(i.getIdItem()).getSumValor(hoje)));

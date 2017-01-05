@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -60,10 +60,10 @@ public final class TransferenciaControlador implements Initializable, Controlado
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("categoria"), "nomeCategoria");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("item"), "nomeItem");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("descricao"), "descricao");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("valor"), "valor"), false);
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("valor"), "valor");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("conta_origem"), "nomeContaOrigem");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("conta_destino"), "nomeContaDestino");
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("data"), "dataHora");
+        tabela.adicionarColunaDataHora(tabelaLista, idioma.getMensagem("data"), "dataHora");
         new TransferenciaCategoria().montarSelectCategoria(cenaController.getChoiceCategoria());
         acaoFiltrar(false);
     }
@@ -114,8 +114,8 @@ public final class TransferenciaControlador implements Initializable, Controlado
         if(Validar.exclusao(itens,cenaController.getBotaoExcluir())){
             itens.forEach((Transferencia d) -> {
                     d.excluir();
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, d.getIdContaOrigem(), d.getValor());
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, d.getIdContaDestino(), d.getValor());
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, d.getIdContaOrigem(), d.getValor().toString());
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, d.getIdContaDestino(), d.getValor().toString());
             });
             Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
             acaoFiltrar(true);

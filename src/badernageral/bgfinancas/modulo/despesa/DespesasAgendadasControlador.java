@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -16,8 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-*/
-
+ */
 package badernageral.bgfinancas.modulo.despesa;
 
 import badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
@@ -31,6 +30,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Posicao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
+import badernageral.bgfinancas.biblioteca.utilitario.AreaTransferencia;
 import badernageral.bgfinancas.biblioteca.utilitario.Validar;
 import badernageral.bgfinancas.modelo.CartaoCredito;
 import badernageral.bgfinancas.modelo.Despesa;
@@ -43,65 +43,77 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 
 public final class DespesasAgendadasControlador implements Initializable, Controlador {
-    
-    @FXML private Button voltar;
-    @FXML private Label titulo;
-    @FXML private Button anterior;
-    @FXML private Button proximo;
-    @FXML private Label labelCartaoCredito;
-    @FXML private Button cadastrar;
-    @FXML private Button alterar;
-    @FXML private Button excluir;
-    @FXML private Label labelDespesasAgendadasTotal;
-    @FXML private GridPane barraSuperior;
-    @FXML private GridPane barraInferior;
-    @FXML private ListaGrupo listaGrupoController;
-    @FXML private ListaConta listaContaController;
-    @FXML private ComboBox<Categoria> listaCartaoCredito;
-    
-    @FXML private StackPane tabelaPane;
-    
+
+    @FXML
+    private Button voltar;
+    @FXML
+    private Label titulo;
+    @FXML
+    private Button anterior;
+    @FXML
+    private Button proximo;
+    @FXML
+    private Label labelCartaoCredito;
+    @FXML
+    private Button cadastrar;
+    @FXML
+    private Button alterar;
+    @FXML
+    private Button excluir;
+    @FXML
+    private Label labelDespesasAgendadasTotal;
+    @FXML
+    private GridPane barraSuperior;
+    @FXML
+    private GridPane barraInferior;
+    @FXML
+    private ListaGrupo listaGrupoController;
+    @FXML
+    private ListaConta listaContaController;
+    @FXML
+    private ComboBox<Categoria> listaCartaoCredito;
+
+    @FXML
+    private StackPane tabelaPane;
+
     private LocalDate data = LocalDate.now();
     private Despesa modelo;
-       
+
     private final String TITULO = idioma.getMensagem("despesas_agendadas");
-    
+
     private ObservableList<Despesa> itens;
     private final Tabela<Despesa> tabela = new Tabela<>();
     private final TableView<Despesa> tabelaLista = new TableView<>();
     private final List<Despesa> itensDespesasAgendadas = new ArrayList<>();
-    private final ObservableList<Despesa> areaTransferencia = FXCollections.observableList(itensDespesasAgendadas);
     
+    private final AreaTransferencia areaTransferencia = new AreaTransferencia();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Kernel.setTitulo(TITULO);
         Botao.prepararBotao(new Button[]{cadastrar}, alterar, excluir, voltar);
         Botao.prepararBotaoGerenciar(1, anterior, idioma.getMensagem("anterior"));
         Botao.prepararBotaoGerenciar(2, proximo, idioma.getMensagem("proximo"));
-        labelCartaoCredito.setText(idioma.getMensagem("cartao_credito")+":");
+        labelCartaoCredito.setText(idioma.getMensagem("cartao_credito") + ":");
         tabelaPane.getChildren().add(tabelaLista);
         tabela.prepararTabela(tabelaLista);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("categoria"), "nomeCategoria");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("item"), "nomeItem").setMinWidth(120);
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("quantidade"), "quantidade");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("valor"), "valor"), false);
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("quantidade"), "quantidade");
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("valor"), "valor");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("conta"), "nomeConta");
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("data"), "data");
+        tabela.adicionarColunaData(tabelaLista, idioma.getMensagem("data"), "data");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("cartao_credito"), "nomeCartaoCredito");
         new CartaoCredito().montarSelectCategoria(listaCartaoCredito);
         CartaoCredito cartaoSemCartao = new CartaoCredito().setIdCategoria("NULL").setNome(idioma.getMensagem("sem_cartao_credito"));
@@ -111,95 +123,79 @@ public final class DespesasAgendadasControlador implements Initializable, Contro
         listaCartaoCredito.getItems().add(cartaoSomenteCartao);
         listaCartaoCredito.getItems().add(cartaoTodos);
         listaCartaoCredito.getSelectionModel().select(cartaoTodos);
-        listaCartaoCredito.setOnAction(e -> { acaoFiltrar(true); });
-        atualizarTitulo(false);
-        criarMenu();
-    }
-    
-    public void criarMenu(){
-        ContextMenu menu = new ContextMenu();
-        MenuItem copiar = new MenuItem("Copiar");
-        MenuItem colar = new MenuItem("Colar");
-        copiar.disableProperty().bind(Bindings.isEmpty(tabelaLista.getSelectionModel().getSelectedItems()));
-        colar.disableProperty().bind(Bindings.isEmpty(areaTransferencia));
-        copiar.setOnAction(event -> {
-            areaTransferencia.clear();
-            tabelaLista.getSelectionModel().getSelectedItems().stream().forEach(d -> {
-               areaTransferencia.add(d);
-            });
-        });
-        colar.setOnAction(event -> {
-            areaTransferencia.stream().forEach(d -> {
-                d.setData(LocalDate.of(data.getYear(), data.getMonthValue(), d.getDataLocal().getDayOfMonth()));
-                d.cadastrar();
-            });
+        listaCartaoCredito.setOnAction(e -> {
             acaoFiltrar(true);
         });
-        menu.getItems().addAll(copiar,colar);
-        tabelaLista.setContextMenu(menu);
+        atualizarTitulo(false);
+        areaTransferencia.criarMenu(this, tabelaLista, true);
     }
-    
-    private void atualizarTitulo(Boolean animacao){
-        titulo.setText(TITULO+" - "+idioma.getNomeMes(data.getMonthValue())+" / "+data.getYear());
+
+    private void atualizarTitulo(Boolean animacao) {
+        titulo.setText(TITULO + " - " + idioma.getNomeMes(data.getMonthValue()) + " / " + data.getYear());
         acaoFiltrar(animacao);
     }
-    
+
     @Override
-    public void acaoFiltrar(Boolean animacao){
-        tabelaLista.setItems(new Despesa().setSomenteAgendamento().setMesAno(data.getMonthValue(),data.getYear()).setIdCartaoCredito(listaCartaoCredito.getSelectionModel().getSelectedItem()).listar());
+    public void acaoFiltrar(Boolean animacao) {
+        tabelaLista.setItems(new Despesa().setSomenteAgendamento().setMesAno(data.getMonthValue(), data.getYear()).setIdCartaoCredito(listaCartaoCredito.getSelectionModel().getSelectedItem()).listar());
         listaGrupoController.atualizarTabela(animacao);
         listaContaController.atualizarTabela(animacao);
         calcularSaldo();
-        if(animacao){
+        if (animacao) {
             Animacao.fadeOutIn(tabelaLista);
         }
     }
-    
-    private void calcularSaldo(){
+
+    private void calcularSaldo() {
         BigDecimal valorTotal = tabelaLista.getItems().stream()
-                .map(d -> new BigDecimal(d.getValor()))
+                .map(d -> d.getValor())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        labelDespesasAgendadasTotal.setText(idioma.getMensagem("valor_total")+": "+idioma.getMensagem("moeda")+" "+valorTotal.toString());
+        labelDespesasAgendadasTotal.setText(idioma.getMensagem("valor_total") + ": " + idioma.getMensagem("moeda") + " " + valorTotal.toString());
     }
-    
+
     @Override
     public void acaoCadastrar(int botao) {
-        if(botao==1){
+        if (botao == 1) {
             DespesaFormularioControlador Controlador = Janela.abrir(Despesa.FXML_FORMULARIO, TITULO);
             Controlador.cadastrar(this);
         }
     }
-    
+
     @Override
     public void acaoAlterar(int tabela) {
-        if(tabela==1){
-            itens = tabelaLista.getSelectionModel().getSelectedItems();
-            if(Validar.alteracao(itens, alterar)){
-                DespesaFormularioControlador Controlador = Janela.abrir(Despesa.FXML_FORMULARIO, TITULO);
-                Controlador.alterar(itens.get(0));
-            }
-        }else if(tabela==2){
-            listaContaController.alterarConta(TITULO);
-        }else if(tabela==3){
-            listaGrupoController.alterarGrupo(TITULO);
+        switch (tabela) {
+            case 1:
+                itens = tabelaLista.getSelectionModel().getSelectedItems();
+                if (Validar.alteracao(itens, alterar)) {
+                    DespesaFormularioControlador Controlador = Janela.abrir(Despesa.FXML_FORMULARIO, TITULO);
+                    Controlador.alterar(itens.get(0));
+                }   break;
+            case 2:
+                listaContaController.alterarConta(TITULO);
+                break;
+            case 3:
+                listaGrupoController.alterarGrupo(TITULO);
+                break;
+            default:
+                break;
         }
     }
-    
+
     @Override
     public void acaoExcluir(int botao) {
         itens = tabelaLista.getSelectionModel().getSelectedItems();
-        if(Validar.exclusao(itens, excluir)){
+        if (Validar.exclusao(itens, excluir)) {
             itens.forEach((Despesa p) -> p.excluir());
             Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
             acaoFiltrar(true);
         }
     }
-    
-    public LocalDate getData(){
+
+    public LocalDate getData() {
         return data;
     }
-    
-    public void setData(int mes, int ano){
+
+    public void setData(int mes, int ano) {
         data = data.withMonth(mes);
         data = data.withYear(ano);
         atualizarTitulo(true);
@@ -207,15 +203,16 @@ public final class DespesasAgendadasControlador implements Initializable, Contro
 
     @Override
     public void acaoGerenciar(int botao) {
-        if(botao==2){
+        if (botao == 2) {
             data = data.minusMonths(1);
             atualizarTitulo(true);
-        }else if(botao==3){
+        } else if (botao == 3) {
             data = data.plusMonths(1);
             atualizarTitulo(true);
         }
+        areaTransferencia.setData(data);
     }
-    
+
     @Override
     public void acaoVoltar() {
         Kernel.principal.acaoVoltar();
@@ -223,7 +220,7 @@ public final class DespesasAgendadasControlador implements Initializable, Contro
 
     @Override
     public void acaoAjuda() {
-        Ajuda.getInstance().setObjetos(voltar,titulo,anterior,proximo,labelCartaoCredito,listaCartaoCredito,cadastrar,alterar,excluir,tabelaLista,barraInferior,listaGrupoController.getGridPane(),listaContaController.getGridPane());
+        Ajuda.getInstance().setObjetos(voltar, titulo, anterior, proximo, labelCartaoCredito, listaCartaoCredito, cadastrar, alterar, excluir, tabelaLista, barraInferior, listaGrupoController.getGridPane(), listaContaController.getGridPane());
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_desp_agen_1"));
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_desp_agen_2"));
         Ajuda.getInstance().capitulo(titulo, Posicao.BAIXO, idioma.getMensagem("tuto_desp_agen_3"));
@@ -235,7 +232,7 @@ public final class DespesasAgendadasControlador implements Initializable, Contro
         Ajuda.getInstance().capitulo(excluir, Posicao.BAIXO, idioma.getMensagem("tuto_desp_agen_9"));
         Ajuda.getInstance().capitulo(tabelaLista, Posicao.CENTRO, idioma.getMensagem("tuto_desp_agen_10"));
         Ajuda.getInstance().capitulo(barraInferior, Posicao.TOPO, idioma.getMensagem("tuto_desp_agen_11"));
-        Ajuda.getInstance().capitulo(Arrays.asList(listaContaController.getGridPane(),listaGrupoController.getGridPane()), 
+        Ajuda.getInstance().capitulo(Arrays.asList(listaContaController.getGridPane(), listaGrupoController.getGridPane()),
                 Posicao.CENTRO, idioma.getMensagem("tuto_desp_agen_12"));
         Ajuda.getInstance().apresentarProximo();
     }

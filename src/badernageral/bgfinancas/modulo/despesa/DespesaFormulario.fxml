@@ -7,9 +7,10 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.DespesaFormularioControlador">
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.DespesaFormularioControlador">
    <content>
       <GridPane fx:id="tabela" gridLinesVisible="false" hgap="10.0" vgap="10.0">
          <children>
@@ -18,9 +19,19 @@
             <Label fx:id="labelConta" focusTraversable="false" text="Conta:" GridPane.rowIndex="1" />
             <fx:include fx:id="conta" source="../../template/botao/BotaoListaCategoria.fxml" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="labelValor" focusTraversable="false" text="Valor:" GridPane.rowIndex="2" />
-            <TextField fx:id="valor" layoutX="104.0" layoutY="83.0" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <TextField fx:id="valor" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" />
+                  <Label fx:id="ajuda1" />
+               </children>
+            </HBox>
             <Label fx:id="labelQuantidade" focusTraversable="false" layoutX="40.0" layoutY="47.0" text="Quantidade:" GridPane.rowIndex="3" />
-            <TextField fx:id="quantidade" layoutX="104.0" layoutY="83.0" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <TextField fx:id="quantidade" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" />
+                  <Label fx:id="ajuda2" />
+               </children>
+            </HBox>
             <Label fx:id="labelData" focusTraversable="false" layoutX="40.0" layoutY="87.0" text="Data:" GridPane.rowIndex="4" />
             <DatePicker fx:id="data" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" />

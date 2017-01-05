@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -24,6 +24,7 @@ import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.ControladorFormulario;
 import badernageral.bgfinancas.biblioteca.contrato.Item;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import badernageral.bgfinancas.biblioteca.utilitario.Erro;
 import badernageral.bgfinancas.biblioteca.utilitario.Validar;
 import badernageral.bgfinancas.idioma.Linguagem;
@@ -32,6 +33,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
@@ -45,12 +47,16 @@ public final class ModalDespesaControlador implements Initializable, Controlador
     @FXML private Text campo_2;
     @FXML private TextField entrada_1;
     @FXML private TextField entrada_2;
+    @FXML private Label ajuda1;
+    @FXML private Label ajuda2;
     @FXML private Button ok;
     @FXML private Button cancelar;
     private String[] resultado;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Calculadora.preparar(entrada_1, ajuda1);
+        Calculadora.preparar(entrada_2, ajuda2);
         ok.setText(Linguagem.getInstance().getMensagem("ok"));
         cancelar.setText(Linguagem.getInstance().getMensagem("cancelar"));
         ok.setTooltip(new Tooltip(Linguagem.getInstance().getMensagem("ok")+" (ALT+ENTER)"));

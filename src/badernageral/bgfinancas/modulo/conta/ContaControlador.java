@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -56,7 +56,7 @@ public final class ContaControlador implements Initializable, Controlador {
         cenaController.setTabela(tabelaLista);
         tabela.prepararTabela(tabelaLista);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("nome"), "nome");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("saldo"), "valor"), true);
+        tabela.setColunaColorida(tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("saldo"), "valor"));
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("tipo"), "saldoTotal");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("ativada"), "ativada");
         acaoFiltrar(false);

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -30,9 +30,12 @@ import badernageral.bgfinancas.biblioteca.tipo.Funcao;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.biblioteca.utilitario.Erro;
 import badernageral.bgfinancas.biblioteca.utilitario.Validar;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
@@ -131,7 +134,7 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
     }
     
     @Override
-    public Usuario consultar() {
+    public Transferencia consultar() {
         System.out.println(idioma.getMensagem("nao_implementado"));
         return null;
     }
@@ -163,7 +166,7 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
             if(idContaDestino.getValor() != null){
                 this.and(idContaDestino, "=");
             }
-            this.orderby("DESC", data, hora);
+            this.orderByDesc(data, hora);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Transferencia> Linhas = new ArrayList<>();
@@ -201,24 +204,20 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
         return descricao.getValor();
     }
     
-    public String getValor() {
-        return valor.getValor();
+    public BigDecimal getValor() {
+        return new BigDecimal(valor.getValor());
     }
     
-    public String getData() {
-        return Datas.getDataExibicao(data.getValor());
-    }
-    
-    public LocalDate getDataLocal() {
+    public LocalDate getData() {
         return Datas.getLocalDate(data.getValor());
     }
-    
-    public String getHora() {
-        return hora.getValor();
+
+    public LocalTime getHora() {
+        return Datas.getLocalTime(hora.getValor());
     }
-    
-    public String getDataHora(){
-        return getData()+" "+getHora();
+
+    public LocalDateTime getDataHora() {
+        return Datas.getLocalDateTime(getData(), getHora());
     }
     
     public String getNomeContaOrigem() {
@@ -260,8 +259,8 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
         return getThis();
     }
         
-    public void setData(LocalDate data) {
-        this.data.setValor(Datas.toSqlData(data));
+    public void setData(String data) {
+        this.data.setValor(data);
     }
     
     public void setHora(String hora) {
@@ -318,7 +317,7 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
             this.groupBy(nomeCategoria);
-            this.orderby(nomeCategoria);
+            this.orderByAsc(nomeCategoria);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Transferencia> linhas = new ArrayList<>();
@@ -366,7 +365,7 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
                 this.or(idContaDestino, "=", ")");
             }
             this.groupBy(coluna);
-            this.orderby(coluna);
+            this.orderByAsc(coluna);
             ResultSet rs = this.query();
             if(rs != null){
                 List<XYChart.Series<String,Number>> categorias = new ArrayList<>();
@@ -390,5 +389,5 @@ public final class Transferencia extends Banco<Transferencia> implements Modelo,
     protected Transferencia getThis() {
         return this;
     }
-
+    
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -80,8 +80,8 @@ public final class GrupoItemControlador implements Initializable, Controlador {
         labelCategoria.setText(idioma.getMensagem("adicionar_categoria")+":");
         tabelaGrupo.prepararTabelaSelecao(listaGrupos, 1);
         tabelaGrupo.adicionarColuna(listaGrupos, idioma.getMensagem("cota"), "nome");
-        tabelaGrupo.setColunaDinheiro(tabelaGrupo.adicionarColuna(listaGrupos, idioma.getMensagem("valor"), "valor"), false);
-        tabelaGrupo.setColunaDinheiro(tabelaGrupo.adicionarColuna(listaGrupos, idioma.getMensagem("saldo"), "saldo"), true);
+        tabelaGrupo.adicionarColunaNumero(listaGrupos, idioma.getMensagem("valor"), "valor");
+        tabelaGrupo.setColunaColorida(tabelaGrupo.adicionarColunaNumero(listaGrupos, idioma.getMensagem("saldo"), "saldo"));
         tabelaPane.getChildren().add(tabelaLista);
         tabela.prepararTabela(tabelaLista, 2);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("despesa")+" / "+idioma.getMensagem("categoria"), "nomeItem");

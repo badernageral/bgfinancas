@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -33,6 +33,7 @@ public abstract class Banco<T extends Banco<T>> {
     private final Conexao banco = Conexao.getInstance();
     private final List<String> parametros = new ArrayList<>();
     private StringBuilder sql = new StringBuilder();
+    private boolean orderBy = false;
     
     protected abstract T getThis();
     
@@ -79,6 +80,7 @@ public abstract class Banco<T extends Banco<T>> {
     }
     
     protected T select(Coluna... colunas){
+        orderBy = false;
         sql = new StringBuilder();
         sql.append("SELECT ");
         for(Coluna coluna : colunas) {
@@ -191,12 +193,21 @@ public abstract class Banco<T extends Banco<T>> {
         return getThis();
     }
     
-    protected T orderby(Coluna... colunas){
-        return orderby("ASC", colunas);
+    protected T orderByAsc(Coluna... colunas){
+        return orderBy("ASC", colunas);
     }
     
-    protected T orderby(String ordem, Coluna... colunas){
-        sql.append(" ORDER BY ");
+    protected T orderByDesc(Coluna... colunas){
+        return orderBy("DESC", colunas);
+    }
+   
+    private T orderBy(String ordem, Coluna... colunas){
+        if(!orderBy){
+            sql.append(" ORDER BY ");
+            orderBy = true;
+        }else{
+            sql.append(", ");
+        }
         for(Coluna coluna : colunas) {
             sql.append(coluna.getTabelaColuna(false)).append(" ").append(ordem).append(", ");
         }

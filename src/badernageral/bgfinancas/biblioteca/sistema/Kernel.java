@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -23,7 +23,7 @@ package badernageral.bgfinancas.biblioteca.sistema;
 import badernageral.bgfinancas.biblioteca.contrato.Controlador;
 import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.Configuracao;
-import badernageral.bgfinancas.principal.Main;
+import badernageral.bgfinancas.principal.Master;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -45,7 +45,7 @@ public final class Kernel {
     
     private static final String TITULO = Linguagem.getInstance().getMensagem("sistema");
     
-    public static Main main;
+    public static Master master;
     public static Stage palco;
     public static Stage palcoModal;
     public static Scene cena;

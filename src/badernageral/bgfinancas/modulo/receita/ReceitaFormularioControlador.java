@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -33,6 +33,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Acao;
 import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Operacao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -65,10 +66,11 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
     @FXML private BotaoListaCategoria contaController;
     @FXML private TextField descricao;
     @FXML private TextField valor;
+    @FXML private Label ajuda;
     @FXML private DatePicker data;
     @FXML private BotaoFormulario botaoController;
     
-    private Receita Modelo;
+    private Receita modelo;
     
     private Acao acao;
     private ReceitaControlador controlador = null;
@@ -77,6 +79,7 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("receita"));
         Botao.prepararBotaoModal(this, botaoController, itemController, contaController);
+        Calculadora.preparar(valor, ajuda);
         labelItem.setText(idioma.getMensagem("item")+":");
         labelConta.setText(idioma.getMensagem("conta")+":");
         labelData.setText(idioma.getMensagem("data")+":");
@@ -130,21 +133,21 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
     }
     
     public void alterar(Receita modelo){
-        Modelo = modelo;
+        this.modelo = modelo;
         botaoController.setTextBotaoFinalizar(idioma.getMensagem("alterar"));
-        ReceitaItem item = new ReceitaItem().setIdItem(Modelo.getIdItem()).consultar();
+        ReceitaItem item = new ReceitaItem().setIdItem(modelo.getIdItem()).consultar();
         if(item != null){
             itemController.setItemSelecionado(item);
         }
-        Conta conta = new Conta().setIdCategoria(Modelo.getIdConta()).consultar();
+        Conta conta = new Conta().setIdCategoria(modelo.getIdConta()).consultar();
         if(conta != null){
             contaController.setCategoriaSelecionada(conta);
         }
         itemController.getComboItem().setDisable(true);
         itemController.getBotaoCadastrar().setDisable(true);
-        data.setValue(Modelo.getDataLocal());
-        descricao.setText(Modelo.getDescricao());
-        valor.setText(Modelo.getValor());
+        data.setValue(modelo.getData());
+        descricao.setText(modelo.getDescricao());
+        valor.setText(modelo.getValor().toString());
     }
 
     @Override
@@ -158,22 +161,22 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }else{
-                Boolean contaMudou = !(Modelo.getIdConta().equals(contaController.getIdCategoria()));
+                Boolean contaMudou = !(modelo.getIdConta().equals(contaController.getIdCategoria()));
                 if(contaMudou){
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, Modelo.getIdConta(), Modelo.getValor());
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), Modelo.getValor());
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdConta(), modelo.getValor().toString());
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), modelo.getValor().toString());
                 }
-                Modelo.setIdConta(contaController.getComboCategoria().getValue());
-                Boolean valorMudou = !(Modelo.getValor().equals(valor.getText()));
+                modelo.setIdConta(contaController.getComboCategoria().getValue());
+                Boolean valorMudou = !(modelo.getValor().equals(valor.getText()));
                 if(valorMudou){
-                    BigDecimal valorDiferenca = new BigDecimal(Modelo.getValor());
+                    BigDecimal valorDiferenca = modelo.getValor();
                     valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, Modelo.getIdConta(), valorDiferenca.toString());
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdConta(), valorDiferenca.toString());
                 }
-                Modelo.setValor(valor.getText());
-                Modelo.setDescricao(descricao.getText());
-                Modelo.setData(data.getValue());
-                Modelo.alterar();
+                modelo.setValor(valor.getText());
+                modelo.setDescricao(descricao.getText());
+                modelo.setData(Datas.toSqlData(data.getValue()));
+                modelo.alterar();
                 Kernel.principal.acaoReceita();
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
@@ -183,10 +186,10 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
     
     private boolean validarFormulario(){
         try {
+            Validar.textFieldDecimal(valor);
             Validar.autoFiltro(itemController.getAutoFiltro(), itemController.getComboItem());
             Validar.comboBox(contaController.getComboCategoria());
             Validar.datePicker(data);
-            Validar.textFieldDecimal(valor);
             return true;
         } catch (Erro ex) {
             return false;

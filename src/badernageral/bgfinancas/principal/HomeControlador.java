@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -54,6 +54,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public final class HomeControlador implements Initializable, Controlador {
     
@@ -106,7 +107,7 @@ public final class HomeControlador implements Initializable, Controlador {
     @FXML private Label labelAgenda;
     @FXML private Label labelValorTotalAgenda;
     @FXML private TableView<Agenda> tabelaListaAgenda;
-    private BigDecimal valorTotalAgenda = BigDecimal.ZERO;
+    private BigDecimal valorTotalAgenda;
     private final Tabela<Agenda> tabelaAgenda = new Tabela<>();
     
     // Outros
@@ -128,9 +129,8 @@ public final class HomeControlador implements Initializable, Controlador {
         tabelaConta.prepararTabela(tabelaListaConta, 1);
         prepararColunaTipoConta(tabelaConta.adicionarColuna(tabelaListaConta, "", "saldoTotal"));
         tabelaConta.adicionarColuna(tabelaListaConta, idioma.getMensagem("nome"), "nome");
-        tabelaConta.setColunaDinheiro(tabelaConta.adicionarColuna(tabelaListaConta, idioma.getMensagem("saldo"), "valor"), true);
-        labelContas.setText(idioma.getMensagem("contas"));
-        
+        tabelaConta.setColunaColorida(tabelaConta.adicionarColunaNumero(tabelaListaConta, idioma.getMensagem("saldo"), "valor"));
+        labelContas.setText(idioma.getMensagem("contas"));        
     }
     
     private void prepararColunaTipoConta(TableColumn colunaTipoConta){
@@ -157,16 +157,16 @@ public final class HomeControlador implements Initializable, Controlador {
         labelDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
         tabelaDespesasAgendadas.prepararTabela(tabelaListaDespesasAgendadas, 2);
         tabelaDespesasAgendadas.adicionarColuna(tabelaListaDespesasAgendadas, idioma.getMensagem("nome"), "nomeItem").setMinWidth(150);
-        tabelaDespesasAgendadas.setColunaDinheiro(tabelaDespesasAgendadas.adicionarColuna(tabelaListaDespesasAgendadas, idioma.getMensagem("valor"), "valor"), false);
-        tabelaDespesasAgendadas.adicionarColuna(tabelaListaDespesasAgendadas, idioma.getMensagem("data"), "data");
+        tabelaDespesasAgendadas.adicionarColunaNumero(tabelaListaDespesasAgendadas, idioma.getMensagem("valor"), "valor");
+        tabelaDespesasAgendadas.adicionarColunaData(tabelaListaDespesasAgendadas, idioma.getMensagem("data"), "data");
     }
     
     private void inicializarAgenda(){
         tabelaAgenda.prepararTabela(tabelaListaAgenda, 6);
         tabelaAgenda.adicionarColuna(tabelaListaAgenda, idioma.getMensagem("tipo"), "nomeCategoria");
         tabelaAgenda.adicionarColuna(tabelaListaAgenda, idioma.getMensagem("descricao"), "nome");
-        tabelaAgenda.adicionarColuna(tabelaListaAgenda, idioma.getMensagem("data"), "data");
-        tabelaAgenda.setColunaDinheiro(tabelaAgenda.adicionarColuna(tabelaListaAgenda, idioma.getMensagem("valor"), "valor"), true);
+        tabelaAgenda.adicionarColunaData(tabelaListaAgenda, idioma.getMensagem("data"), "data");
+        tabelaAgenda.setColunaColorida(tabelaAgenda.adicionarColunaNumero(tabelaListaAgenda, idioma.getMensagem("valor"), "valor"));
         labelAgenda.setText(idioma.getMensagem("lembretes"));
     }
     
@@ -197,30 +197,30 @@ public final class HomeControlador implements Initializable, Controlador {
         tabRelatorioDespesasAgendadas.setGraphic(iconeDespesasAgendadas);
         tabelaRelatorioDespesas.prepararTabela(tabelaListaRelatorioDespesas, 3);
         tabelaRelatorioDespesas.adicionarColuna(tabelaListaRelatorioDespesas, idioma.getMensagem("categoria"), "nomeCategoria");
-        tabelaRelatorioDespesas.setColunaDinheiro(tabelaRelatorioDespesas.adicionarColuna(tabelaListaRelatorioDespesas, idioma.getMensagem("valor"), "valor"), true);
+        tabelaRelatorioDespesas.setColunaColorida(tabelaRelatorioDespesas.adicionarColunaNumero(tabelaListaRelatorioDespesas, idioma.getMensagem("valor"), "valor"));
         tabelaRelatorioReceitas.prepararTabela(tabelaListaRelatorioReceitas, 3);
         tabelaRelatorioReceitas.adicionarColuna(tabelaListaRelatorioReceitas, idioma.getMensagem("categoria"), "nomeCategoria");
-        tabelaRelatorioReceitas.setColunaDinheiro(tabelaRelatorioReceitas.adicionarColuna(tabelaListaRelatorioReceitas, idioma.getMensagem("valor"), "valor"), true);
+        tabelaRelatorioReceitas.setColunaColorida(tabelaRelatorioReceitas.adicionarColunaNumero(tabelaListaRelatorioReceitas, idioma.getMensagem("valor"), "valor"));
         tabelaRelatorioTransferencias.prepararTabela(tabelaListaRelatorioTransferencias, 3);
         tabelaRelatorioTransferencias.adicionarColuna(tabelaListaRelatorioTransferencias, idioma.getMensagem("categoria"), "nomeCategoria");
-        tabelaRelatorioTransferencias.setColunaDinheiro(tabelaRelatorioTransferencias.adicionarColuna(tabelaListaRelatorioTransferencias, idioma.getMensagem("valor"), "valor"), true);
+        tabelaRelatorioTransferencias.setColunaColorida(tabelaRelatorioTransferencias.adicionarColunaNumero(tabelaListaRelatorioTransferencias, idioma.getMensagem("valor"), "valor"));
         tabelaGrupos.prepararTabela(tabelaListaRelatorioGrupos, 3);
         tabelaGrupos.adicionarColuna(tabelaListaRelatorioGrupos, idioma.getMensagem("cota"), "nome");
-        tabelaGrupos.setColunaDinheiro(tabelaGrupos.adicionarColuna(tabelaListaRelatorioGrupos, idioma.getMensagem("valor"), "valor"), false);
-        tabelaGrupos.setColunaDinheiro(tabelaGrupos.adicionarColuna(tabelaListaRelatorioGrupos, idioma.getMensagem("saldo"), "saldo"), true);
+        tabelaGrupos.adicionarColunaNumero(tabelaListaRelatorioGrupos, idioma.getMensagem("valor"), "valor");
+        tabelaGrupos.setColunaColorida(tabelaGrupos.adicionarColunaNumero(tabelaListaRelatorioGrupos, idioma.getMensagem("saldo"), "saldo"));
         tabelaRelatorioDespesasAgendadas.prepararTabela(tabelaListaRelatorioDespesasAgendadas, 3);
         tabelaRelatorioDespesasAgendadas.adicionarColuna(tabelaListaRelatorioDespesasAgendadas, idioma.getMensagem("categoria"), "nomeCategoria");
-        tabelaRelatorioDespesasAgendadas.setColunaDinheiro(tabelaRelatorioDespesasAgendadas.adicionarColuna(tabelaListaRelatorioDespesasAgendadas, idioma.getMensagem("valor"), "valor"), true);
+        tabelaRelatorioDespesasAgendadas.setColunaColorida(tabelaRelatorioDespesasAgendadas.adicionarColunaNumero(tabelaListaRelatorioDespesasAgendadas, idioma.getMensagem("valor"), "valor"));
     }
     
     private void calcularSaldoContas(){
         valorPoupanca = tabelaListaConta.getItems().stream()
                 .filter(c -> c.getSaldoTotal().equals(idioma.getMensagem("poupanca")))
-                .map(c -> new BigDecimal(c.getValor()))
+                .map(c -> c.getValor())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         valorCredito = tabelaListaConta.getItems().stream()
                 .filter(c -> c.getSaldoTotal().equals(idioma.getMensagem("credito")))
-                .map(c -> new BigDecimal(c.getValor()))
+                .map(c -> c.getValor())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         labelPoupancaTotal.setText(idioma.getMensagem("total_poupanca")+": "+idioma.getMensagem("moeda")+" "+valorPoupanca);
         labelCreditoTotal.setText(idioma.getMensagem("total_credito")+": "+idioma.getMensagem("moeda")+" "+valorCredito);
@@ -228,7 +228,7 @@ public final class HomeControlador implements Initializable, Controlador {
     
     private void calcularValorDespesasAgendadas(){
         BigDecimal valorTotal = tabelaListaDespesasAgendadas.getItems().stream()
-                .map(d -> new BigDecimal(d.getValor()))
+                .map(d -> d.getValor())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal creditoRestante = valorCredito.subtract(valorTotal);
         labelDespesasAgendadasTotal.setText(idioma.getMensagem("despesas")+": "+idioma.getMensagem("moeda")+" "+valorTotal.toString());
@@ -266,17 +266,17 @@ public final class HomeControlador implements Initializable, Controlador {
         switch(aba.intValue()){
             case 0:
                 tabelaListaRelatorioDespesas.getItems().stream().forEach(item -> {
-                    valorTotalRelatorio = valorTotalRelatorio.add(new BigDecimal(item.getValor()));
+                    valorTotalRelatorio = valorTotalRelatorio.add(item.getValor());
                 });
                 break;
             case 1:
                 tabelaListaRelatorioReceitas.getItems().stream().forEach(item -> {
-                    valorTotalRelatorio = valorTotalRelatorio.add(new BigDecimal(item.getValor()));
+                    valorTotalRelatorio = valorTotalRelatorio.add(item.getValor());
                 });
                 break;
             case 2:
                 tabelaListaRelatorioTransferencias.getItems().stream().forEach(item -> {
-                    valorTotalRelatorio = valorTotalRelatorio.add(new BigDecimal(item.getValor()));
+                    valorTotalRelatorio = valorTotalRelatorio.add(item.getValor());
                 });
                 break;
             default:
@@ -293,9 +293,10 @@ public final class HomeControlador implements Initializable, Controlador {
     }
     
     private void atualizarAgenda(){
+        valorTotalAgenda = BigDecimal.ZERO;
         tabelaListaAgenda.setItems(new Agenda().listar());
         tabelaListaAgenda.getItems().stream().forEach(item -> {
-            valorTotalAgenda = valorTotalAgenda.add(new BigDecimal(item.getValor()));
+            valorTotalAgenda = valorTotalAgenda.add(item.getValor());
         });
         labelValorTotalAgenda.setText(idioma.getMensagem("moeda")+" "+valorTotalAgenda.toString());
     }

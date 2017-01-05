@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -60,8 +60,8 @@ public final class AgendaControlador implements Initializable, Controlador {
         tabela.prepararTabela(tabelaLista);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("tipo"), "nomeCategoria");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("descricao"), "nome");
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("data"), "data");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("valor"), "valor"), true);
+        tabela.adicionarColunaData(tabelaLista, idioma.getMensagem("data"), "data");
+        tabela.setColunaColorida(tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("valor"), "valor"));
         acaoFiltrar(false);
     }
     

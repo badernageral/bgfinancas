@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -114,7 +114,7 @@ public final class DespesaCategoria extends Categoria<DespesaCategoria> implemen
             if(nome.getValor() != null){
                 this.where(nome, "LIKE");
             }
-            this.orderby(nome);
+            this.orderByAsc(nome);
             ResultSet rs = this.query();            
             if(rs != null){
                 List<DespesaCategoria> Linhas = new ArrayList<>();

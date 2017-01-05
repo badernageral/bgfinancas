@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -16,17 +16,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-*/
-
+ */
 package badernageral.bgfinancas.principal;
 
 import badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
+import badernageral.bgfinancas.biblioteca.sistema.Atualizacao;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.PilhaVoltar;
-import badernageral.bgfinancas.biblioteca.tipo.Status;
-import badernageral.bgfinancas.biblioteca.utilitario.Versao;
+import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.Agenda;
 import badernageral.bgfinancas.modelo.AgendaTipo;
@@ -48,75 +47,122 @@ import badernageral.bgfinancas.modelo.Usuario;
 import badernageral.bgfinancas.modelo.Utilitario;
 import badernageral.bgfinancas.modulo.despesa.DespesasAgendadasControlador;
 import badernageral.bgfinancas.modulo.utilitario.Backup;
-import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URI;
+import java.io.IOException;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.time.Period;
+import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public final class PrincipalControlador implements Initializable {
-    
+
     private final Linguagem idioma = Linguagem.getInstance();
-    
+
     private boolean ajuda = false;
-    
-    @FXML private BorderPane layoutGeral;
-    @FXML private StackPane layoutCentro;
-    
-    @FXML private Menu menuGerenciar;
-    @FXML private Menu menuMovimentar;
-    @FXML private Menu menuUtilitarios;
-    @FXML private Menu menuAjuda;
-    @FXML private MenuItem gerenciarContas;
-    @FXML private MenuItem gerenciarAgenda;
-    @FXML private MenuItem gerenciarGrupos;
-    @FXML private MenuItem gerenciarCartoesCredito;
-    @FXML private MenuItem gerenciarDespesasAgendadas;
-    @FXML private MenuItem gerenciarUsuarios;
-    @FXML private MenuItem movimentarDespesa;
-    @FXML private MenuItem movimentarReceita;
-    @FXML private MenuItem movimentarTransferencia;
-    @FXML private MenuItem movimentarGuia;
-    @FXML private MenuItem utilitariosConfiguracoes;
-    @FXML private MenuItem utilitariosRelatorios;
-    @FXML private MenuItem utilitariosExportarBackup;
-    @FXML private MenuItem utilitariosImportarBackup;
-    @FXML private MenuItem ajudaTutorial;
-    @FXML private MenuItem ajudaSobreSistema;
-    @FXML private MenuItem ajudaVerificarAtualizacoes;
-    
-    @FXML private Button botaoHome;
-    @FXML private Button botaoDespesas;
-    @FXML private Button botaoReceitas;
-    @FXML private Button botaoTransferencias;
-    @FXML private Button botaoDespesasAgendadas;
-    @FXML private Button botaoAgenda;
-    @FXML private Button botaoGrupo;
-    @FXML private Button botaoCartaoCredito;
-    @FXML private Button botaoContas;
-    @FXML private Button botaoUsuarios;
-    @FXML private Button botaoRelatorios;
-    @FXML private Button botaoGuia;
-    
-    @FXML private Button botaoAjuda;
-    @FXML private Button botaoAjudaProximo;
-    @FXML private Button botaoAjudaAnterior;
-    @FXML private ProgressIndicator ajudaProgresso;
-    
-    private void traduzirMenu(){
+
+    @FXML
+    private BorderPane layoutGeral;
+    @FXML
+    private StackPane layoutCentro;
+
+    @FXML
+    private Menu menuGerenciar;
+    @FXML
+    private Menu menuMovimentar;
+    @FXML
+    private Menu menuUtilitarios;
+    @FXML
+    private Menu menuAjuda;
+    @FXML
+    private MenuItem gerenciarContas;
+    @FXML
+    private MenuItem gerenciarAgenda;
+    @FXML
+    private MenuItem gerenciarGrupos;
+    @FXML
+    private MenuItem gerenciarCartoesCredito;
+    @FXML
+    private MenuItem gerenciarDespesasAgendadas;
+    @FXML
+    private MenuItem gerenciarUsuarios;
+    @FXML
+    private MenuItem movimentarDespesa;
+    @FXML
+    private MenuItem movimentarReceita;
+    @FXML
+    private MenuItem movimentarTransferencia;
+    @FXML
+    private MenuItem movimentarGuia;
+    @FXML
+    private MenuItem utilitariosConfiguracoes;
+    @FXML
+    private MenuItem utilitariosRelatorios;
+    @FXML
+    private MenuItem utilitariosExportarBackup;
+    @FXML
+    private MenuItem utilitariosImportarBackup;
+    @FXML
+    private MenuItem ajudaTutorial;
+    @FXML
+    private MenuItem ajudaSobreSistema;
+    @FXML
+    private MenuItem ajudaVerificarAtualizacoes;
+
+    @FXML
+    private Button botaoHome;
+    @FXML
+    private Button botaoDespesas;
+    @FXML
+    private Button botaoReceitas;
+    @FXML
+    private Button botaoTransferencias;
+    @FXML
+    private Button botaoDespesasAgendadas;
+    @FXML
+    private Button botaoAgenda;
+    @FXML
+    private Button botaoGrupo;
+    @FXML
+    private Button botaoCartaoCredito;
+    @FXML
+    private Button botaoContas;
+    @FXML
+    private Button botaoUsuarios;
+    @FXML
+    private Button botaoRelatorios;
+    @FXML
+    private Button botaoCalculadora;
+    @FXML
+    private Button botaoGuia;
+
+    @FXML
+    private Button botaoAjuda;
+    @FXML
+    private Button botaoAjudaProximo;
+    @FXML
+    private Button botaoAjudaAnterior;
+    @FXML
+    private ProgressIndicator ajudaProgresso;
+
+    private void traduzirMenu() {
         menuGerenciar.setText(idioma.getMensagem("gerenciar"));
         menuMovimentar.setText(idioma.getMensagem("movimentar"));
         menuUtilitarios.setText(idioma.getMensagem("utilitarios"));
@@ -139,8 +185,8 @@ public final class PrincipalControlador implements Initializable {
         ajudaSobreSistema.setText(idioma.getMensagem("sobre_sistema"));
         ajudaVerificarAtualizacoes.setText(idioma.getMensagem("verificar_atualizacoes"));
     }
-    
-    private void tooltipBotoes(){
+
+    private void tooltipBotoes() {
         botaoHome.setTooltip(new Tooltip(idioma.getMensagem("principal")));
         botaoDespesas.setTooltip(new Tooltip(idioma.getMensagem("despesas")));
         botaoReceitas.setTooltip(new Tooltip(idioma.getMensagem("receitas")));
@@ -152,34 +198,35 @@ public final class PrincipalControlador implements Initializable {
         botaoContas.setTooltip(new Tooltip(idioma.getMensagem("contas")));
         botaoUsuarios.setTooltip(new Tooltip(idioma.getMensagem("usuarios")));
         botaoRelatorios.setTooltip(new Tooltip(idioma.getMensagem("relatorios")));
+        botaoCalculadora.setTooltip(new Tooltip(idioma.getMensagem("calculadora")));
         botaoGuia.setTooltip(new Tooltip(idioma.getMensagem("guia")));
         botaoAjuda.setTooltip(new Tooltip(idioma.getMensagem("ajuda")));
         botaoAjudaProximo.setTooltip(new Tooltip(idioma.getMensagem("proximo")));
         botaoAjudaAnterior.setTooltip(new Tooltip(idioma.getMensagem("anterior")));
     }
-    
-    public void acaoGuia(){
+
+    public void acaoGuia() {
         Janela.abrir(Utilitario.FXML_GUIA, idioma.getMensagem("guia"));
     }
-    
-    public void acaoAjuda(){
-        if(ajuda){
+
+    public void acaoAjuda() {
+        if (ajuda) {
             desativarAjuda();
-        }else{
+        } else {
             ativarAjuda();
             Kernel.controlador.acaoAjuda();
         }
     }
-    
-    public void acaoAjudaAnterior(){
+
+    public void acaoAjudaAnterior() {
         Ajuda.getInstance().apresentarAnterior();
     }
-    
-    public void acaoAjudaProximo(){
+
+    public void acaoAjudaProximo() {
         Ajuda.getInstance().apresentarProximo();
     }
-    
-    public void desativarAjuda(){
+
+    public void desativarAjuda() {
         ajuda = false;
         botaoAjuda.getStyleClass().remove("botaoAjudaSair");
         botaoAjuda.getStyleClass().add("botaoAjuda");
@@ -189,8 +236,8 @@ public final class PrincipalControlador implements Initializable {
         botaoAjuda.setTooltip(new Tooltip(idioma.getMensagem("ajuda")));
         Ajuda.getInstance().desativarAjuda();
     }
-    
-    private void ativarAjuda(){
+
+    private void ativarAjuda() {
         ajuda = true;
         botaoAjuda.getStyleClass().remove("botaoAjuda");
         botaoAjuda.getStyleClass().add("botaoAjudaSair");
@@ -199,132 +246,142 @@ public final class PrincipalControlador implements Initializable {
         botaoAjudaAnterior.setVisible(true);
         botaoAjuda.setTooltip(new Tooltip(idioma.getMensagem("sair")));
     }
-    
+
     public void acaoSobreSistema() {
-        Janela.abrir(Kernel.RAIZ+"/modulo/ajuda/SobreSistema.fxml", idioma.getMensagem("sobre_sistema"));
+        Janela.abrir(Kernel.RAIZ + "/modulo/ajuda/SobreSistema.fxml", idioma.getMensagem("sobre_sistema"));
     }
-    
+
     public void acaoVerificarAtualizacoes() {
-        try {
-            URL url = new URL("http://badernageral.github.io/ultima_versao_bgfinancas.txt");
-            BufferedReader arquivo = new BufferedReader(new InputStreamReader(url.openStream()));
-            String versao_atual = arquivo.readLine();
-            arquivo.close();
-            if(Versao.isAtualizada(Configuracao.getPropriedade("versao"), versao_atual)){
-                Janela.showMensagem(Status.SUCESSO, idioma.getMensagem("sistema_atualizado"));
-            }else{
-                if(Janela.showPergunta(idioma.getMensagem("sistema_desatualizado"))){
-                    Desktop.getDesktop().browse(new URI("https://github.com/badernageral/bgfinancas/releases"));
-                }
-            }
-        } catch (UnknownHostException ex){
-            Janela.showMensagem(Status.ERRO, idioma.getMensagem("sem_internet"));
-        } catch (Exception ex) {
-            Janela.showException(ex);
+        Atualizacao task = new Atualizacao(true, ajudaVerificarAtualizacoes);
+    }
+
+    private void verificarAtualizacoes() {
+        if (DAYS.between(Datas.getLocalDate(Configuracao.getPropriedade("data_atualizacao")), LocalDate.now()) >= 30) {
+            Configuracao.setPropriedade("data_atualizacao", Datas.toSqlData(LocalDate.now()));
+            Atualizacao task = new Atualizacao(false, ajudaVerificarAtualizacoes);
         }
     }
-    
+
     public void acaoConfiguracao() {
         Janela.abrir(Configuracao.FXML_FORMULARIO, idioma.getMensagem("configuracoes"));
     }
-    
-    public void acaoRelatorios(){
+
+    public void acaoRelatorios() {
         carregarJanela(Relatorio.FXML);
     }
-    
-    public void acaoExportarBackup(){
+
+    public void acaoExportarBackup() {
         new Backup().exportarBackup();
     }
-    
-    public void acaoImportarBackup(){
+
+    public void acaoImportarBackup() {
         new Backup().importarBackup();
     }
-    
+
     public void acaoHome() {
         carregarJanela(Kernel.FXML_HOME);
     }
-    
+
     public void acaoCartaoCredito() {
         carregarJanela(CartaoCredito.FXML);
     }
-    
+
     public void acaoConta() {
         carregarJanela(Conta.FXML);
     }
-    
+
     public void acaoAgenda() {
         carregarJanela(Agenda.FXML);
     }
-    
+
     public void acaoAgendaTipo() {
         carregarJanela(AgendaTipo.FXML);
     }
-    
+
     public void acaoGrupoItem() {
         carregarJanela(GrupoItem.FXML);
     }
-    
+
     public void acaoDespesa() {
         carregarJanela(Despesa.FXML);
     }
-    
+
     public void acaoDespesaCadastroMultiplo() {
         carregarJanela(Despesa.FXML_CADASTRO_MULTIPLO);
     }
-    
+
     public void acaoDespesaItem() {
         carregarJanela(DespesaItem.FXML);
     }
-    
+
     public void acaoDespesaCategoria() {
         carregarJanela(DespesaCategoria.FXML);
     }
-    
+
     public void acaoReceita() {
         carregarJanela(Receita.FXML);
     }
-    
+
     public void acaoReceitaItem() {
         carregarJanela(ReceitaItem.FXML);
     }
-    
+
     public void acaoReceitaCategoria() {
         carregarJanela(ReceitaCategoria.FXML);
     }
-    
+
     public void acaoTransferencia() {
         carregarJanela(Transferencia.FXML);
     }
-    
+
     public void acaoTransferenciaItem() {
         carregarJanela(TransferenciaItem.FXML);
     }
-    
+
     public void acaoTransferenciaCategoria() {
         carregarJanela(TransferenciaCategoria.FXML);
     }
-    
+
     public void acaoDespesasAgendadas() {
         carregarJanela(Despesa.FXML_DESPESAS_AGENDADAS);
     }
-    
+
     public void acaoCartoesCredito() {
         carregarJanela(CartaoCredito.FXML);
     }
-    
+
     public void acaoDespesasAgendadas(int mes, int ano) {
         DespesasAgendadasControlador c = carregarJanela(Despesa.FXML_DESPESAS_AGENDADAS);
         c.setData(mes, ano);
     }
-    
+
     public void acaoUsuario() {
         carregarJanela(Usuario.FXML);
     }
-    
+
     public void acaoVoltar() {
         carregarJanela(PilhaVoltar.voltar());
     }
-    
+
+    public void acaoCalculadora() {
+        try {
+            Pane painel = new FXMLLoader().load(getClass().getResourceAsStream(Utilitario.FXML_CALCULADORA));
+            Scene cena = new Scene(painel);
+            cena.getStylesheets().add(getClass().getResource(Kernel.CSS_PRINCIPAL).toExternalForm());
+            cena.getStylesheets().add(getClass().getResource(Kernel.CSS_AJUDA).toExternalForm());
+            cena.getStylesheets().add(getClass().getResource(Kernel.CSS_TOOLTIP).toExternalForm());
+            Stage palco = new Stage();
+            palco.setScene(cena);
+            palco.setTitle(idioma.getMensagem("calculadora"));
+            palco.getIcons().add(new Image("/badernageral/bgfinancas/recursos/imagem/outros/calculadora.png"));
+            palco.initStyle(StageStyle.UTILITY);
+            palco.show();
+            palco.requestFocus();
+        } catch (IOException ex) {
+            Janela.showException(ex);
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         traduzirMenu();
@@ -334,6 +391,7 @@ public final class PrincipalControlador implements Initializable {
         Kernel.layoutGeral = this.layoutGeral;
         Kernel.layoutCentro = this.layoutCentro;
         carregarJanela(Kernel.FXML_HOME);
+        verificarAtualizacoes();
     }
 
     private <T> T carregarJanela(String arquivoFXML) {
@@ -352,5 +410,5 @@ public final class PrincipalControlador implements Initializable {
             return null;
         }
     }
-    
+
 }

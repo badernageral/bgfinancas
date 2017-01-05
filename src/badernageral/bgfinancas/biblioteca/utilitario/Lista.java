@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -16,44 +16,47 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-*/
-
+ */
 package badernageral.bgfinancas.biblioteca.utilitario;
 
+import badernageral.bgfinancas.biblioteca.contrato.Item;
 import badernageral.bgfinancas.idioma.Linguagem;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
 public final class Lista {
-    
-    private Lista(){ }
-    
+
+    private Lista() {
+    }
+
     private static final Linguagem idioma = Linguagem.getInstance();
-    
-    public static void setSimNao(ComboBox<String> combo){
+
+    public static void setSimNao(ComboBox<String> combo) {
         combo.setPromptText(idioma.getMensagem("selecione"));
         combo.getItems().add(idioma.getMensagem("sim"));
         combo.getItems().add(idioma.getMensagem("nao"));
     }
-    
+
     public static String getSimNao(String valor) {
         String sim = idioma.getMensagem("sim");
         String nao = idioma.getMensagem("nao");
-        if(valor.length()>1){
+        if (valor.length() > 1) {
             return valor.equals(sim) ? "1" : "0";
-        }else{
+        } else {
             return valor.equals("1") ? sim : nao;
         }
     }
-    
+
     public static String getSimNao(Object valor) {
-        if(valor!=null){
+        if (valor != null) {
             return Lista.getSimNao(valor.toString());
-        }else{
+        } else {
             return null;
         }
     }
-    
-    public static void setPoupancaCredito(ComboBox<String> combo){
+
+    public static void setPoupancaCredito(ComboBox<String> combo) {
         combo.setPromptText(idioma.getMensagem("selecione"));
         combo.getItems().add(idioma.getMensagem("poupanca"));
         combo.getItems().add(idioma.getMensagem("credito"));
@@ -62,19 +65,50 @@ public final class Lista {
     public static String getPoupancaCredito(String valor) {
         String sim = idioma.getMensagem("poupanca");
         String nao = idioma.getMensagem("credito");
-        if(valor.length()>1){
+        if (valor.length() > 1) {
             return valor.equals(sim) ? "1" : "0";
-        }else{
+        } else {
             return valor.equals("1") ? sim : nao;
         }
     }
-    
+
     public static String getPoupancaCredito(Object valor) {
-        if(valor!=null){
+        if (valor != null) {
             return Lista.getPoupancaCredito(valor.toString());
-        }else{
+        } else {
             return null;
         }
     }
-    
+
+    public static <T> ObservableList<T> filtrar(String filtro, ObservableList<T> itens) {
+        ObservableList<T> lista_itens = FXCollections.observableArrayList();
+        itens.stream().filter(item -> Outros.removerAcentos(item.toString().toLowerCase()).contains(filtro)).forEach(item -> {
+            lista_itens.add(item);
+        });
+        return lista_itens;
+    }
+
+    public static <T> ObservableList<T> ordenar(String filtro, ObservableList<T> itens) {
+        itens.sort((a, b) -> {
+            Item iA = (Item) a;
+            Item iB = (Item) b;
+            String nomeA = Outros.removerAcentos(iA.getNome().toLowerCase());
+            String nomeB = Outros.removerAcentos(iB.getNome().toLowerCase());
+            if (nomeA.contains(filtro) && !nomeB.contains(filtro)) {
+                return -1;
+            }
+            if (!nomeA.contains(filtro) && nomeB.contains(filtro)) {
+                return 1;
+            }
+            if (nomeA.startsWith(filtro) && !nomeB.startsWith(filtro)) {
+                return -1;
+            }
+            if (!nomeA.startsWith(filtro) && nomeB.startsWith(filtro)) {
+                return 1;
+            }
+            return Outros.removerAcentos(iA.toString()).compareTo(Outros.removerAcentos(iB.toString()));
+        });
+        return itens;
+    }
+
 }

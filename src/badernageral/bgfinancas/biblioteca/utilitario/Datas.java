@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,10 +20,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package badernageral.bgfinancas.biblioteca.utilitario;
 
+import badernageral.bgfinancas.biblioteca.sistema.Janela;
+import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.idioma.Linguagem;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 public final class Datas {
     
@@ -43,15 +47,46 @@ public final class Datas {
         }
     }
     
-    public static String getDataExibicao(String data){
-        LocalDate dataLocal = Datas.getLocalDate(data);
-        return dataLocal.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+    public static LocalDate getLocalDate(String data){
+        try{
+            return LocalDate.parse(data);
+        }catch(Exception ex){
+            Janela.showException(ex);
+            return null;
+        }
     }
     
-    public static LocalDate getLocalDate(String data){
-        String[] arrData = data.split("-");
-        LocalDate dataFinal = LocalDate.of(Integer.parseInt(arrData[0]), Integer.parseInt(arrData[1]), Integer.parseInt(arrData[2]));
-        return dataFinal;
+    public static LocalTime getLocalTime(String hora){
+        try{
+            if(hora.length()>7){
+                return LocalTime.parse(hora);
+            }else{
+                return LocalTime.parse("0"+hora);
+            }
+        }catch(Exception ex){
+            Janela.showException(ex);
+            return null;
+        }
+    }
+    
+    public static LocalDateTime getLocalDateTime(LocalDate data, LocalTime hora) {
+        try{
+            return LocalDateTime.of(data, hora);
+        }catch(Exception ex){
+            Janela.showException(ex);
+            return null;
+        }
+    }
+    
+    public static LocalDate getLocalDate(int dia, int mes, int ano){
+        LocalDate data = LocalDate.of(ano, mes, 1);
+        try{
+            data = data.withDayOfMonth(dia);
+        }catch(DateTimeException ex){
+            Janela.showMensagem(Status.ERRO, Linguagem.getInstance().getMensagem("dia_mes_invalido"));
+            data = data.withDayOfMonth(dia-3);
+        }
+        return data;
     }
     
     public static String getHoraAtual(){

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -25,6 +25,7 @@ import badernageral.bgfinancas.biblioteca.contrato.Item;
 import badernageral.bgfinancas.biblioteca.contrato.Modelo;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -105,7 +106,7 @@ public final class Agenda extends Item<Agenda> implements Modelo {
             if(idCategoria.getValor() != null){
                 this.and(idCategoria, "=");
             }
-            this.orderby(data, nomeCategoria, nome);
+            this.orderByAsc(data, nomeCategoria, nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Agenda> Linhas = new ArrayList<>();
@@ -123,15 +124,11 @@ public final class Agenda extends Item<Agenda> implements Modelo {
         }
     }
     
-    public String getValor() {
-        return valor.getValor();
+    public BigDecimal getValor() {
+        return new BigDecimal(valor.getValor());
     }
     
-    public String getData() {
-        return Datas.getDataExibicao(data.getValor());
-    }
-    
-    public LocalDate getDataLocal() {
+    public LocalDate getData() {
         return Datas.getLocalDate(data.getValor());
     }
     

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -146,6 +146,10 @@ public final class Configuracao extends Banco<Configuracao> implements Modelo {
             if(Configuracao.getPropriedade("login") == null){
                 new Configuracao("login", "1").cadastrar();
             }
+            // Configuracao: data_atualizacao
+            if(Configuracao.getPropriedade("data_atualizacao") == null){
+                new Configuracao("data_atualizacao", Datas.toSqlData(LocalDate.now().minusMonths(1))).cadastrar();
+            }
         } catch (SQLException ex) {
             Janela.showException(ex);
         }
@@ -158,6 +162,12 @@ public final class Configuracao extends Banco<Configuracao> implements Modelo {
         }else{
             return null;
         }
+    }
+    
+    public static void setPropriedade(String propriedade, String valor){
+        Configuracao conf = new Configuracao().setNome(propriedade).consultar();
+        conf.setValor(valor);
+        conf.alterar();
     }
 
 }

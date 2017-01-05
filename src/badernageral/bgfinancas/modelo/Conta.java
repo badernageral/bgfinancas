@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -132,7 +132,7 @@ public final class Conta extends Categoria<Conta> implements Modelo {
             }else if(ativada.getValor() != null){
                 this.where(ativada, "=");
             }
-            this.orderby(nome);
+            this.orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Conta> Linhas = new ArrayList<>();
@@ -153,7 +153,7 @@ public final class Conta extends Categoria<Conta> implements Modelo {
     public void alterarSaldo(Operacao operacao, String id_conta, String valor){
         idCategoria.setValor(id_conta);
         Conta c = consultar();
-        BigDecimal novoValor = new BigDecimal(c.getValor());
+        BigDecimal novoValor = c.getValor();
         if(operacao==Operacao.INCREMENTAR){
             novoValor = novoValor.add(new BigDecimal(valor));
         }else{
@@ -169,7 +169,7 @@ public final class Conta extends Categoria<Conta> implements Modelo {
             combo.getItems().clear();
             combo.setPromptText(idioma.getMensagem("selecione"));
             ativada.setValor("1");
-            this.select(idCategoria, nome, valor, ativada, saldoTotal).where(ativada, "=").orderby(nome);
+            this.select(idCategoria, nome, valor, ativada, saldoTotal).where(ativada, "=").orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
@@ -181,8 +181,8 @@ public final class Conta extends Categoria<Conta> implements Modelo {
         }
     }
     
-    public String getValor() {
-        return valor.getValor();
+    public BigDecimal getValor() {
+        return new BigDecimal(valor.getValor());
     }
     
     public String getAtivada() {

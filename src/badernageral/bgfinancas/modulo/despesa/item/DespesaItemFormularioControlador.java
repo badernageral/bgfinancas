@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -124,22 +124,26 @@ public final class DespesaItemFormularioControlador implements Initializable, Co
         if(validarFormulario()){
             if(acao == Acao.CADASTRAR){
                 DespesaItem item = new DespesaItem(null, categoriaController.getIdCategoria(), nome.getText(), null);
-                item.cadastrar();
-                if(controlador==null && controladorF==null){
-                    Kernel.controlador.acaoFiltrar(true);
-                    Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
-                    Animacao.fadeInOutClose(formulario);
+                if(item.consultar()!=null){
+                    Janela.showTooltip(Status.ERRO, idioma.getMensagem("nome_igual"), Duracao.CURTA);
                 }else{
-                    item = new DespesaItem().setNome(item.getNome()).setNomeCategoria(item.getNomeCategoria()).consultar();
-                    if(controlador!=null){
-                        controlador.acaoFiltrar(false);
+                    item.cadastrar();
+                    if(controlador==null && controladorF==null){
+                        Kernel.controlador.acaoFiltrar(true);
+                        Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                         Animacao.fadeInOutClose(formulario);
-                        controlador.adicionar(item.toString());
                     }else{
-                        Animacao.fadeOutClose(formulario);
-                        controladorF.selecionarComboItem(0, item);
-                    }
-                } 
+                        item = new DespesaItem().setNome(item.getNome()).setNomeCategoria(item.getNomeCategoria()).consultar();
+                        if(controlador!=null){
+                            controlador.acaoFiltrar(false);
+                            Animacao.fadeInOutClose(formulario);
+                            controlador.adicionar(item.toString());
+                        }else{
+                            Animacao.fadeOutClose(formulario);
+                            controladorF.selecionarComboItem(0, item);
+                        }
+                    } 
+                }
             }else if(acao == Acao.ALTERAR){
                 DespesaItem item = new DespesaItem(modelo.getIdItem(), categoriaController.getIdCategoria(), nome.getText(), null);
                 item.alterar();

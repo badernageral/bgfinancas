@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -30,9 +30,12 @@ import badernageral.bgfinancas.biblioteca.tipo.Funcao;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.biblioteca.utilitario.Erro;
 import badernageral.bgfinancas.biblioteca.utilitario.Validar;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
@@ -70,6 +73,9 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     private final Coluna nomeCategoria = new Coluna(ReceitaCategoria.TABELA, "nome", "", "nome_categoria");
     
     private final Coluna sumValor = new Coluna(TABELA, "valor", "sum_valor", Funcao.SOMAR);
+    
+    private String tipo = idioma.getMensagem("receita");
+    private String status = idioma.getMensagem("efetuado");
     
     public Receita(){ }
     
@@ -151,7 +157,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             if(idConta.getValor() != null){
                 this.and(idConta, "=");
             }
-            this.orderby("DESC", data, hora);
+            this.orderByDesc(data, hora);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Receita> Linhas = new ArrayList<>();
@@ -185,24 +191,20 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         return descricao.getValor();
     }
     
-    public String getValor() {
-        return valor.getValor();
+    public BigDecimal getValor() {
+        return new BigDecimal(valor.getValor());
     }
     
-    public String getData() {
-        return badernageral.bgfinancas.biblioteca.utilitario.Datas.getDataExibicao(data.getValor());
+    public LocalDate getData() {
+        return Datas.getLocalDate(data.getValor());
     }
-    
-    public LocalDate getDataLocal() {
-        return badernageral.bgfinancas.biblioteca.utilitario.Datas.getLocalDate(data.getValor());
+
+    public LocalTime getHora() {
+        return Datas.getLocalTime(hora.getValor());
     }
-    
-    public String getHora() {
-        return hora.getValor();
-    }
-    
-    public String getDataHora(){
-        return getData()+" "+getHora();
+
+    public LocalDateTime getDataHora() {
+        return Datas.getLocalDateTime(getData(), getHora());
     }
     
     public String getNomeConta() {
@@ -235,8 +237,8 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         return getThis();
     }
         
-    public void setData(LocalDate data) {
-        this.data.setValor(Datas.toSqlData(data));
+    public void setData(String data) {
+        this.data.setValor(data);
     }
     
     public void setHora(String hora) {
@@ -288,7 +290,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
             this.groupBy(nomeCategoria);
-            this.orderby(nomeCategoria);
+            this.orderByAsc(nomeCategoria);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Receita> linhas = new ArrayList<>();
@@ -334,7 +336,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
                 this.and(idConta, "=");
             }
             this.groupBy(coluna);
-            this.orderby(coluna);
+            this.orderByAsc(coluna);
             ResultSet rs = this.query();
             if(rs != null){
                 List<XYChart.Series<String,Number>> categorias = new ArrayList<>();
@@ -357,6 +359,41 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     @Override
     protected Receita getThis() {
         return this;
+    }
+
+    public ObservableList<Extrato> getExtrato(LocalDate inicio, LocalDate fim) {
+        try {
+            this.select(idItem, data, hora, nomeCategoria, nomeItem, valor);
+            this.inner(idItem, idItemInner);
+            this.inner(idCategoria, idCategoriaInner);
+            data.setValor(Datas.toSqlData(inicio));
+            this.where(data, ">=");
+            data.setValor(Datas.toSqlData(fim));
+            this.and(data, "<=");
+            this.orderByAsc(data,hora);
+            ResultSet rs = this.query();
+            if (rs != null) {
+                List<Extrato> objetos = new ArrayList<>();
+                while (rs.next()) {
+                    Extrato e = new Extrato(
+                            idioma.getMensagem("receita"),
+                            rs.getString(data.getColuna()),
+                            rs.getString(hora.getColuna()),
+                            rs.getString(nomeCategoria.getAliasColuna()),
+                            rs.getString(nomeItem.getAliasColuna()),
+                            rs.getString(valor.getColuna())
+                    );
+                    objetos.add(e);
+                }
+                ObservableList<Extrato> resultado = FXCollections.observableList(objetos);
+                return resultado;
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            Janela.showException(ex);
+            return null;
+        }
     }
 
 }

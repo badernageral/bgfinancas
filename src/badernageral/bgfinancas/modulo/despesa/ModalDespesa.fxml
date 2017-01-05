@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,18 +20,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 -->
 
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.effect.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.ModalDespesaControlador">
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.despesa.ModalDespesaControlador">
     <content>
         <VBox alignment="CENTER">
            <children>
@@ -50,9 +51,19 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                  </padding>
                  <children>
                     <Text fx:id="campo_1" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensagem" wrappingWidth="150.0" />
-                    <TextField fx:id="entrada_1" onAction="#acaoFinalizar" GridPane.rowIndex="1" />
+                  <HBox GridPane.rowIndex="1">
+                     <children>
+                          <TextField fx:id="entrada_1" onAction="#acaoFinalizar" />
+                        <Label fx:id="ajuda1" />
+                     </children>
+                  </HBox>
                     <Text fx:id="campo_2" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensagem" wrappingWidth="150.0" GridPane.rowIndex="2" />
-                    <TextField fx:id="entrada_2" onAction="#acaoFinalizar" GridPane.rowIndex="3" />
+                  <HBox GridPane.rowIndex="3">
+                     <children>
+                          <TextField fx:id="entrada_2" onAction="#acaoFinalizar" />
+                        <Label fx:id="ajuda2" />
+                     </children>
+                  </HBox>
                  </children>
               </GridPane>
               <GridPane hgap="5.0" layoutX="10.0" layoutY="67.0" vgap="5.0">

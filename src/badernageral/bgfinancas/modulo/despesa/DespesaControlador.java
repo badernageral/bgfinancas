@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -59,10 +59,10 @@ public final class DespesaControlador implements Initializable, Controlador {
         tabela.prepararTabela(tabelaLista);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("categoria"), "nomeCategoria");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("item"), "nomeItem");
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("quantidade"), "quantidade");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("valor"), "valor"), false);
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("quantidade"), "quantidade");
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("valor"), "valor");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("conta"), "nomeConta");
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("data"), "dataHora");
+        tabela.adicionarColunaDataHora(tabelaLista, idioma.getMensagem("data"), "dataHora");
         new DespesaCategoria().montarSelectCategoria(cenaController.getChoiceCategoria());
         acaoFiltrar(false);
         cenaController.adicionarNovoBotaoCadastrar();
@@ -116,7 +116,7 @@ public final class DespesaControlador implements Initializable, Controlador {
         if(Validar.exclusao(itens,cenaController.getBotaoExcluir())){
             itens.forEach((Despesa d) -> {
                     d.excluir();
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, d.getIdConta(), d.getValor());
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, d.getIdConta(), d.getValor().toString());
             });
             Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
             acaoFiltrar(true);

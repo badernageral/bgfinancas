@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,159 +20,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package badernageral.bgfinancas.principal;
 
-import badernageral.bgfinancas.biblioteca.sistema.Atalho;
-import badernageral.bgfinancas.biblioteca.sistema.Kernel;
-import badernageral.bgfinancas.biblioteca.banco.Conexao;
-import badernageral.bgfinancas.biblioteca.banco.Database;
-import badernageral.bgfinancas.biblioteca.sistema.Janela;
-import badernageral.bgfinancas.biblioteca.tipo.Status;
-import badernageral.bgfinancas.biblioteca.utilitario.Datas;
-import badernageral.bgfinancas.idioma.Linguagem;
-import badernageral.bgfinancas.modelo.Configuracao;
-import badernageral.bgfinancas.modelo.Despesa;
-import badernageral.bgfinancas.modelo.Usuario;
-import badernageral.bgfinancas.modulo.usuario.UsuarioFormularioControlador;
-import badernageral.bgfinancas.modulo.utilitario.ConfiguracaoFormularioControlador;
-import java.awt.SplashScreen;
-import java.io.IOException;
-import java.time.LocalDate;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import com.sun.javafx.application.LauncherImpl;
 
-public class Main extends Application {
-
-    private final Conexao banco = Conexao.getInstance();
-    private final Linguagem idioma = Linguagem.getInstance();
-    private ConfiguracaoFormularioControlador confControlador = null;
-    private UsuarioFormularioControlador userControlador = null;
-    private final SplashScreen splash = SplashScreen.getSplashScreen();
-
-    @Override
-    public void start(Stage palco) {
-        Kernel.main = this;
-        Kernel.palco = palco;
-        Database.verificarBanco();
-        idioma.carregarIdioma();
-        if(new Usuario().listar().isEmpty()){
-            iniciarPrimeiroAcesso();
-        }else{
-            if(Configuracao.getPropriedade("login").equals("1")){
-                iniciarLogin();
-            }else{
-                try {
-                    palco.setScene(criarCena(criarPainelPrincipal(),null));
-                    notificarDespesasAgendadas();
-                } catch (Exception ex) {
-                    Janela.showException(ex);
-                }
-            }
-        }
-        carregarIcone();
-        splash.close();
-        palco.show();
-    }
-
-    private void iniciarLogin() {
-        try {
-            Kernel.palco.setScene(criarCena(criarPainelLogin(),null));
-            Kernel.palco.initStyle(StageStyle.TRANSPARENT);
-        } catch (IOException ex) {
-            Janela.showException(ex);
-        }
-    }
-    
-    private void iniciarPrimeiroAcesso() {
-        try {
-            Kernel.palco.setScene(criarCena(null,criarPainelConfiguracoes()));
-            Kernel.palco.initStyle(StageStyle.TRANSPARENT);
-            confControlador.setPrimeiroAcesso();
-        } catch (IOException ex) {
-            Janela.showException(ex);
-        }
-    }
-    
-    public void continuarPrimeiroAcesso() {
-        try {
-            idioma.carregarIdioma();
-            Database.popularBanco();
-            Kernel.palco.setScene(criarCena(null,criarPainelCadastroUsuario()));
-            userControlador.setPrimeiroAcesso();
-        } catch (IOException ex) {
-            Janela.showException(ex);
-        }
-    }
-
-    public void reiniciar() {
-        try {
-            idioma.carregarIdioma();
-            Kernel.palco.hide();
-            Kernel.palco = new Stage();
-            Kernel.palco.setScene(criarCena(criarPainelPrincipal(),null));
-            Kernel.palco.show();
-            carregarIcone();
-            notificarDespesasAgendadas();
-        } catch (Exception ex) {
-            Janela.showException(ex);
-        }
-    }
-    
-    private void notificarDespesasAgendadas(){
-        if(new Despesa().isDespesasAtrasadas()){
-            Janela.showMensagem(Status.ADVERTENCIA, idioma.getMensagem("despesas_atrasadas"));
-            Configuracao data_notificacao = new Configuracao().setNome("data_notificacao").consultar();
-            data_notificacao.setValor(Datas.toSqlData(LocalDate.now()));
-            data_notificacao.alterar();
-        }
-    }
-
-    private Scene criarCena(Pane painel, TitledPane tpainel) {
-        Scene cena = (painel!=null) ? new Scene(painel) : new Scene(tpainel);
-        cena.getStylesheets().add(getClass().getResource(Kernel.CSS_PRINCIPAL).toExternalForm());
-        cena.getStylesheets().add(getClass().getResource(Kernel.CSS_AJUDA).toExternalForm());
-        cena.getStylesheets().add(getClass().getResource(Kernel.CSS_TOOLTIP).toExternalForm());
-        Kernel.cena = cena;
-        Atalho.setAtalhos();
-        return cena;
-    }
-
-    private Pane criarPainelLogin() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        Pane painel = loader.load(getClass().getResourceAsStream(Kernel.FXML_LOGIN));
-        return painel;
-    }
-    
-    private TitledPane criarPainelConfiguracoes() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        TitledPane painel = loader.load(getClass().getResourceAsStream(Configuracao.FXML_FORMULARIO));
-        confControlador = loader.getController();
-        return painel;
-    }
-    
-    private TitledPane criarPainelCadastroUsuario() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        TitledPane painel = loader.load(getClass().getResourceAsStream(Usuario.FXML_FORMULARIO));
-        userControlador = loader.getController();
-        return painel;
-    }
-
-    private Pane criarPainelPrincipal() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        Pane painel = loader.load(getClass().getResourceAsStream(Kernel.FXML_PRINCIPAL));
-        return painel;
-    }
-    
-    private void carregarIcone(){
-        Kernel.palco.getIcons().add(new Image("/badernageral/bgfinancas/recursos/imagem/layout/icone.png"));
-    }
+public class Main {
 
     public static void main(String[] args) {
-        launch(args);
+        LauncherImpl.launchApplication(Master.class, Splash.class, args);
     }
 
 }

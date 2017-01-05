@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -106,7 +106,7 @@ public final class Usuario extends Banco<Usuario> implements Modelo {
                 this.where(nome, "LIKE");
                 this.or(usuario, "LIKE");
             }
-            this.orderby(nome);
+            this.orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Usuario> Linhas = new ArrayList<>();

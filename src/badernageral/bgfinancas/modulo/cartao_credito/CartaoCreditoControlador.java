@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -56,9 +56,9 @@ public final class CartaoCreditoControlador implements Initializable, Controlado
         cenaController.setTabela(tabelaLista);
         tabela.prepararTabela(tabelaLista);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("nome"), "nome");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("limite"), "limite"), false);
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("saldo"), "saldo"), true);
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("dia_vencimento"), "vencimento");
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("limite"), "limite");
+        tabela.setColunaColorida(tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("saldo"), "saldo"));
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("dia_vencimento"), "vencimento");
         acaoFiltrar(false);
     }
     

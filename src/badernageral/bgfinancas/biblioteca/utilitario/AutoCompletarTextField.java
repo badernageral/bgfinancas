@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -16,8 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-*/
-
+ */
 package badernageral.bgfinancas.biblioteca.utilitario;
 
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
@@ -40,8 +39,8 @@ import javafx.scene.input.KeyCode;
 public final class AutoCompletarTextField<T extends Categoria> extends TextField {
 
     private final ContextMenu popup;
-    private final ObservableList<T> itens;
-    private final ObservableList<T> lista_itens;
+    private ObservableList<T> itens;
+    private ObservableList<T> lista_itens;
     private final Controlador controlador;
     private final ControladorFiltro controladorF;
 
@@ -49,7 +48,6 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
         super();
         popup = new ContextMenu();
         itens = FXCollections.observableArrayList();
-        lista_itens = FXCollections.observableArrayList();
         controlador = _controlador;
         controladorF = _controladorF;
         setPromptText(Linguagem.getInstance().getMensagem("autofiltro"));
@@ -58,23 +56,10 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
             if (getText().length() == 0) {
                 popup.hide();
             } else {
-                lista_itens.clear();
                 String textoConsultado = Outros.removerAcentos(getText().toLowerCase());
-                itens.stream().filter(item -> Outros.removerAcentos(item.toString().toLowerCase()).contains(textoConsultado)).forEach(item -> {
-                    lista_itens.add(item);
-                });
+                lista_itens = Lista.filtrar(textoConsultado, itens);
                 if (lista_itens.size() > 0) {
-                    lista_itens.sort((a, b)  -> {
-                        Item iA = (Item) a;
-                        Item iB = (Item) b;
-                        String nomeA = Outros.removerAcentos(iA.getNome().toLowerCase());
-                        String nomeB = Outros.removerAcentos(iB.getNome().toLowerCase());
-                        if(nomeA.contains(textoConsultado) && !nomeB.contains(textoConsultado)) { return -1; }
-                        if(!nomeA.contains(textoConsultado) && nomeB.contains(textoConsultado)) { return 1; }
-                        if(nomeA.startsWith(textoConsultado) && !nomeB.startsWith(textoConsultado)) { return -1; }
-                        if(!nomeA.startsWith(textoConsultado) && nomeB.startsWith(textoConsultado)) { return 1; }
-                        return Outros.removerAcentos(iA.toString()).compareTo(Outros.removerAcentos(iB.toString()));
-                    });
+                    lista_itens = Lista.ordenar(textoConsultado, lista_itens);
                     popularPopup(lista_itens);
                     if (!popup.isShowing()) {
                         popup.show(AutoCompletarTextField.this, Side.BOTTOM, 0, 0);
@@ -87,10 +72,10 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
         focusedProperty().addListener((ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean aBoolean2) -> {
             popup.hide();
         });
-        if(controlador!=null){
+        if (controlador != null) {
             setOnKeyReleased(event -> {
-                if(event.getCode()==KeyCode.ENTER){
-                    if(!getText().equals("")){
+                if (event.getCode() == KeyCode.ENTER) {
+                    if (!getText().equals("")) {
                         controlador.acaoCadastrar(1);
                     }
                 }
@@ -113,7 +98,7 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
             menuItem.setOnAction(actionEvent -> {
                 setText(item.toString());
                 popup.hide();
-                if(controlador!=null){
+                if (controlador != null) {
                     controladorF.adicionar(null);
                 }
             });

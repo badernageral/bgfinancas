@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,9 +20,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package badernageral.bgfinancas.biblioteca.ajuda;
 
+import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
+import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Posicao;
+import badernageral.bgfinancas.biblioteca.tipo.Status;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
+import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.template.barra.BarraPadrao;
 import badernageral.bgfinancas.template.cena.CenaItem;
 import badernageral.bgfinancas.template.cena.CenaMovimento;
@@ -36,6 +40,8 @@ import java.util.stream.Collectors;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Font;
@@ -240,6 +246,15 @@ public final class Ajuda {
     
     public static Ajuda getInstance(){
         return instance;  
+    }
+    
+    public static void estilizarBotaoDica(Control campo, Label ajuda, String dica, Duracao duracao){
+        ajuda.getStyleClass().add("labelAjuda");
+        ajuda.setPrefWidth(24);
+        ajuda.setPrefHeight(24);
+        ajuda.setOnMouseClicked(e -> { 
+            Janela.showTooltip(Status.ADVERTENCIA, dica, campo, duracao);
+        });
     }
     
 }

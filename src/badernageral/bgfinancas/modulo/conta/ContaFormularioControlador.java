@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -33,6 +33,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.tipo.Acao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -56,6 +57,7 @@ public final class ContaFormularioControlador implements Initializable, Controla
     @FXML private Label labelSaldoTotal;
     @FXML private TextField nome;
     @FXML private TextField valor;
+    @FXML private Label ajuda;
     @FXML private ComboBox<String> ativada;
     @FXML private ComboBox<String> saldoTotal;
     
@@ -66,6 +68,7 @@ public final class ContaFormularioControlador implements Initializable, Controla
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("conta"));
         Botao.prepararBotaoModal(this, botaoController);
+        Calculadora.preparar(valor, ajuda);
         labelNome.setText(idioma.getMensagem("nome")+":");
         labelValor.setText(idioma.getMensagem("saldo_atual")+":");
         labelAtivada.setText(idioma.getMensagem("ativada")+":");
@@ -118,16 +121,15 @@ public final class ContaFormularioControlador implements Initializable, Controla
         this.modelo = modelo;
         botaoController.getBotaoFinalizar().setText(idioma.getMensagem("alterar"));
         nome.setText(modelo.getNome());
-        valor.setText(modelo.getValor());
+        valor.setText(modelo.getValor().toString());
         ativada.getSelectionModel().select(modelo.getAtivada());
         saldoTotal.getSelectionModel().select(modelo.getSaldoTotal());
     }
     
     private boolean validarFormulario(){
         try {
-            Validar.textField(nome);
-            Validar.textField(valor);
             Validar.textFieldDecimal(valor);
+            Validar.textField(nome);
             Validar.comboBox(saldoTotal);
             Validar.comboBox(ativada);
             return true;

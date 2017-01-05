@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -47,7 +47,7 @@ public class Backup {
     public void exportarBackup(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(idioma.getMensagem("exportar_backup"));
-        fileChooser.setInitialFileName("BGFinancasBackup");
+        fileChooser.setInitialFileName("BGFinancasBackup.bgf");
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("BGFinanças Backup", ".bgf")
         );
@@ -89,7 +89,7 @@ public class Backup {
                 Janela.showMensagem(Status.SUCESSO, idioma.getMensagem("backup_importado_sucesso"));
                 banco.conectar();
                 Database.verificarBanco();
-                Kernel.main.reiniciar();
+                Kernel.master.reiniciar();
             } catch (IOException ex) {
                 Janela.showException(ex);
             }

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -44,7 +44,7 @@ public final class TransferenciaItem extends Item<TransferenciaItem> implements 
     public TransferenciaItem(){
         this(null, null, "", "");
     }
-
+    
     public TransferenciaItem(String idItem, String idCategoria, String nome, String categoria){
         this.idItem = new Coluna(TABELA, "id_item", idItem);
         this.idCategoria = new Coluna(TABELA, "id_categoria", idCategoria);
@@ -122,7 +122,7 @@ public final class TransferenciaItem extends Item<TransferenciaItem> implements 
             if(idCategoria.getValor() != null){
                 this.and(idCategoria, "=");
             }
-            this.orderby(nomeCategoria, nome);
+            this.orderByAsc(nomeCategoria, nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<TransferenciaItem> Linhas = new ArrayList<>();

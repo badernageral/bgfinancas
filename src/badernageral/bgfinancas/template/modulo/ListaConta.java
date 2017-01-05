@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -48,7 +48,7 @@ public final class ListaConta implements Initializable {
         Linguagem idioma = Linguagem.getInstance();
         tabelaConta.prepararTabela(tabelaListaConta, 2);
         tabelaConta.adicionarColuna(tabelaListaConta, idioma.getMensagem("nome"), "nome");
-        tabelaConta.setColunaDinheiro(tabelaConta.adicionarColuna(tabelaListaConta, idioma.getMensagem("saldo"), "valor"), true);
+        tabelaConta.setColunaColorida(tabelaConta.adicionarColunaNumero(tabelaListaConta, idioma.getMensagem("saldo"), "valor"));
         labelContas.setText(idioma.getMensagem("contas"));
     }
     

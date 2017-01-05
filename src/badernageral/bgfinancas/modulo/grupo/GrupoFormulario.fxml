@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,23 +20,28 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 -->
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.grupo.GrupoFormularioControlador">
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.grupo.GrupoFormularioControlador">
    <content>
       <GridPane hgap="10.0" vgap="10.0">
          <children>
             <Label fx:id="labelNome" text="Nome:" />
             <TextField fx:id="nome" onAction="#acaoFinalizar" GridPane.columnIndex="1" />
             <Label fx:id="labelValor" text="Valor:" GridPane.rowIndex="1" />
-            <TextField fx:id="valor" onAction="#acaoFinalizar" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="valor" onAction="#acaoFinalizar" />
+                  <Label fx:id="ajuda" />
+               </children>
+            </HBox>
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <columnConstraints>

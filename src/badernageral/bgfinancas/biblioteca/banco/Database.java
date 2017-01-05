@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -177,12 +177,13 @@ public final class Database {
         if(versao.equals("3.4")){
             versao = setValorVersao("3.5");
         }
+        if(versao.equals("3.5")){
+            versao = setValorVersao("3.6");
+        }
     }
     
     private static String setValorVersao(String versao){
-        Configuracao confVersao = new Configuracao().setNome("versao").consultar();
-        confVersao.setValor(versao);
-        confVersao.alterar();
+        Configuracao.setPropriedade("versao", versao);
         return versao;
     }
     

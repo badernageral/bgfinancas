@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -25,8 +25,6 @@ import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
 import badernageral.bgfinancas.idioma.Linguagem;
 import java.math.BigDecimal;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -101,49 +99,10 @@ public final class Validar {
     }
     
     public static void textFieldDecimal(TextField campo) throws Erro{
-        Validar.calcularValorCampo(campo);
         try{
-            Validar.textField(campo);
             BigDecimal valor = new BigDecimal(campo.getText());
         }catch(NumberFormatException ex){
-            Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("use_ponto_decimais"), campo, Duracao.NORMAL);
-            campo.requestFocus();
-            throw new Erro();
-        }
-    }
-    
-    private static void calcularValorCampo(TextField campo) throws Erro{
-        Pattern regex = Pattern.compile("(\\d+\\.\\d+|\\d+)([\\+\\*\\-\\/])(\\d+\\.\\d+|\\d+)");
-        Matcher res = regex.matcher(campo.getText());
-        if (res.matches()){
-            BigDecimal a = new BigDecimal(res.group(1));
-            BigDecimal b = new BigDecimal(res.group(3));
-            switch(res.group(2)){
-                case "*":
-                    campo.setText(a.multiply(b).toString());
-                    break;
-                case "/":
-                    campo.setText(a.divide(b).toString());
-                    break;
-                case "+":
-                    campo.setText(a.add(b).toString());
-                    break;
-                case "-":
-                    campo.setText(a.subtract(b).toString());
-                    break;
-            }
-            throw new Erro();
-        }
-    }
-    
-    public static void textFieldInteiro(TextField campo) throws Erro{
-        try{
-            Validar.textField(campo);
-            Integer.parseInt(campo.getText());
-        }catch(NumberFormatException ex){
-            Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("use_inteiros"), campo, Duracao.NORMAL);
-            campo.requestFocus();
-            throw new Erro();
+            Calculadora.calcular(campo);
         }
     }
     

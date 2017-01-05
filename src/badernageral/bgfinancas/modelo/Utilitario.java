@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -30,6 +30,7 @@ public final class Utilitario extends Banco<Utilitario> {
     private static final String MODULO = Kernel.RAIZ+"/modulo/utilitario";
     
     public static final String FXML_GUIA = MODULO+"/GuiaFormulario.fxml";
+    public static final String FXML_CALCULADORA = MODULO+"/CalculadoraFormulario.fxml";
 
     public Utilitario(){ }
     

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package badernageral.bgfinancas.modulo.despesa;
 
+import badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.ControladorFormulario;
 import badernageral.bgfinancas.biblioteca.utilitario.Animacao;
@@ -33,6 +34,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Acao;
 import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Operacao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.modelo.CartaoCredito;
 import java.net.URL;
@@ -56,6 +58,8 @@ import java.time.LocalDate;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -72,13 +76,16 @@ public final class DespesaFormularioControlador implements Initializable, Contro
     @FXML private BotaoListaItem itemController;
     @FXML private BotaoListaCategoria contaController;
     @FXML private DatePicker data;
-    @FXML private TextField quantidade;
     @FXML private TextField valor;
+    @FXML private TextField quantidade;
+    @FXML private Label ajuda1;
+    @FXML private Label ajuda2;
     @FXML private BotaoFormulario botaoController;
     
     private final CheckBox checkAgendar = new CheckBox();
     private final CheckBox checkCartaoCredito = new CheckBox();
-    private final TextField qtdMeses = new TextField();
+    private final Spinner qtdMeses = new Spinner();
+    private final Label ajuda = new Label();
     private final ComboBox<Categoria> listaCartaoCredito = new ComboBox<>();
     private final Button botaoListaCartaoCredito = new Button();
     private final Label labelCartaoCredito = new Label(idioma.getMensagem("cartao_credito")+":");
@@ -94,6 +101,8 @@ public final class DespesaFormularioControlador implements Initializable, Contro
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("despesa"));
         Botao.prepararBotaoModal(this, botaoController, itemController, contaController);
+        Calculadora.preparar(valor, ajuda1);
+        Calculadora.preparar(quantidade, ajuda2);
         labelItem.setText(idioma.getMensagem("item")+":");
         labelConta.setText(idioma.getMensagem("conta")+":");
         labelData.setText(idioma.getMensagem("data")+":");
@@ -167,7 +176,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         acao = Acao.CADASTRAR;
         this.controlador = controlador;
         if(controlador!=null){
-            data.setValue(LocalDate.now().withMonth(controlador.getData().getMonthValue()));
+            data.setValue(LocalDate.now().withMonth(controlador.getData().getMonthValue()).withYear(controlador.getData().getYear()));
         }else{
             data.setValue(LocalDate.now());
         }
@@ -177,10 +186,12 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         tabela.add(botaoController.getStackPane(), 1, 6);
         Label labelAgendada = new Label(idioma.getMensagem("agendar")+":");
         tabela.add(labelAgendada, 0, 5);
-        qtdMeses.setPromptText(idioma.getMensagem("numero_meses"));
-        qtdMeses.setOnAction(e -> acaoFinalizar());
+        qtdMeses.setPrefWidth(100);
+        qtdMeses.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
+        qtdMeses.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        Ajuda.estilizarBotaoDica(qtdMeses, ajuda, idioma.getMensagem("numero_meses"), Duracao.CURTA);
         HBox grupoAgendar = new HBox();
-        grupoAgendar.getChildren().addAll(checkAgendar,qtdMeses);
+        grupoAgendar.getChildren().addAll(checkAgendar,qtdMeses,ajuda);
         tabela.add(grupoAgendar, 1, 5);
         prepararCartaoCredito(true);
         if(controlador!=null){
@@ -189,6 +200,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
             eventoDespesaAgendada();
         }else{
             qtdMeses.setVisible(false);
+            ajuda.setVisible(false);
         }
         checkAgendar.setOnAction(e -> {
             eventoDespesaAgendada();
@@ -204,7 +216,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         });
         listaCartaoCredito.setOnAction(e -> {
             CartaoCredito c = new CartaoCredito().setIdCategoria(listaCartaoCredito.getSelectionModel().getSelectedItem().getIdCategoria()).consultar();
-            data.setValue(data.getValue().withDayOfMonth(Integer.parseInt(c.getVencimento())));
+            data.setValue(data.getValue().withDayOfMonth(c.getVencimento().intValue()));
         });
     }
     
@@ -212,14 +224,15 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         tabela.getChildren().remove(botaoController.getStackPane());
         if(checkAgendar.isSelected()){
             qtdMeses.setVisible(true);
+            ajuda.setVisible(true);
             listaCartaoCredito.setVisible(false);
             botaoListaCartaoCredito.setVisible(false);
             tabela.add(labelCartaoCredito, 0, 6);
             tabela.add(grupoCartaoCredito, 1, 6);
             tabela.add(botaoController.getStackPane(), 1, 7);
         }else{
-            qtdMeses.setText("");
             qtdMeses.setVisible(false);
+            ajuda.setVisible(false);
             checkCartaoCredito.setSelected(false);
             tabela.getChildren().remove(labelCartaoCredito);
             tabela.getChildren().remove(grupoCartaoCredito);
@@ -240,9 +253,9 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         }
         itemController.getComboItem().setDisable(true);
         itemController.getBotaoCadastrar().setDisable(true);
-        data.setValue(modelo.getDataLocal());
-        quantidade.setText(modelo.getQuantidade());
-        valor.setText(modelo.getValor());
+        data.setValue(modelo.getData());
+        quantidade.setText(modelo.getQuantidade().toString());
+        valor.setText(modelo.getValor().toString());
         if(modelo.getAgendada().equals("1")){
             Button bPagar = new Button(idioma.getMensagem("pagar"));
             botaoController.getGrupoBotao().getChildren().add(0, bPagar);
@@ -268,7 +281,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
             if(acao == Acao.CADASTRAR){
                 if(checkAgendar.isSelected()){
                     LocalDate dataCadastro = data.getValue();
-                    int j = Integer.parseInt(qtdMeses.getText());
+                    int j = Integer.parseInt(qtdMeses.getValue().toString());
                     for(int i=1;i<=j;i++){
                         String cartaoCredito = null;
                         if(checkCartaoCredito.isSelected()){
@@ -292,13 +305,12 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                 if(!modelo.getAgendada().equals("1")){
                     Boolean contaMudou = !(modelo.getIdConta().equals(contaController.getIdCategoria()));
                     if(contaMudou){
-                        new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdConta(), modelo.getValor());
-                        new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), modelo.getValor());
+                        new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdConta(), modelo.getValor().toString());
+                        new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), modelo.getValor().toString());
                     }
-                    modelo.setIdConta(contaController.getComboCategoria().getValue());
                     Boolean valorMudou = !(modelo.getValor().equals(valor.getText()));
                     if(valorMudou){
-                        BigDecimal valorDiferenca = new BigDecimal(modelo.getValor());
+                        BigDecimal valorDiferenca = modelo.getValor();
                         valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
                         new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdConta(), valorDiferenca.toString());
                     }
@@ -311,9 +323,10 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                 if(listaCartaoCredito.getSelectionModel().getSelectedItem()!=null){
                     modelo.setIdCartaoCredito(listaCartaoCredito.getSelectionModel().getSelectedItem());
                 }
+                modelo.setIdConta(contaController.getComboCategoria().getValue());
                 modelo.setValor(valor.getText());
                 modelo.setQuantidade(quantidade.getText());
-                modelo.setData(data.getValue());
+                modelo.setData(Datas.toSqlData(data.getValue()));
                 modelo.alterar();
                 Kernel.controlador.acaoFiltrar(true);
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
@@ -324,13 +337,12 @@ public final class DespesaFormularioControlador implements Initializable, Contro
     
     private boolean validarFormulario(){
         try {
+            Validar.textFieldDecimal(valor);
+            Validar.textFieldDecimal(quantidade);
             Validar.autoFiltro(itemController.getAutoFiltro(), itemController.getComboItem());
             Validar.comboBox(contaController.getComboCategoria());
             Validar.datePicker(data);
-            Validar.textFieldDecimal(quantidade);
-            Validar.textFieldDecimal(valor);
             if(checkAgendar.isSelected()){
-                Validar.textFieldInteiro(qtdMeses);
                 if(checkCartaoCredito.isSelected()){
                     Validar.comboBox(listaCartaoCredito);
                 }

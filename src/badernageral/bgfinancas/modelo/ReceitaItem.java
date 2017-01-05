@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -122,7 +122,7 @@ public final class ReceitaItem extends Item<ReceitaItem> implements Modelo {
             if(idCategoria.getValor() != null){
                 this.and(idCategoria, "=");
             }
-            this.orderby(nomeCategoria, nome);
+            this.orderByAsc(nomeCategoria, nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<ReceitaItem> Linhas = new ArrayList<>();

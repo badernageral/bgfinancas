@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,16 +20,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 -->
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.transferencia.TransferenciaFormularioControlador">
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="badernageral.bgfinancas.modulo.transferencia.TransferenciaFormularioControlador">
    <content>
       <GridPane hgap="10.0" vgap="10.0">
          <children>
@@ -44,7 +46,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             <Label fx:id="labelData" focusTraversable="false" layoutX="40.0" layoutY="87.0" text="Data:" GridPane.rowIndex="4" />
             <DatePicker fx:id="data" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="labelValor" focusTraversable="false" text="Valor:" GridPane.rowIndex="5" />
-            <TextField fx:id="valor" layoutX="104.0" layoutY="83.0" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <TextField fx:id="valor" maxWidth="-Infinity" minWidth="-Infinity" onAction="#acaoFinalizar" prefWidth="100.0" />
+                  <Label fx:id="ajuda" />
+               </children>
+            </HBox>
             <fx:include fx:id="botao" source="../../template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
          <columnConstraints>

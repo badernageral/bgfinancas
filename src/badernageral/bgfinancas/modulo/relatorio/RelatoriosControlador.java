@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -23,12 +23,15 @@ package badernageral.bgfinancas.modulo.relatorio;
 import badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
 import badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import badernageral.bgfinancas.biblioteca.contrato.Controlador;
+import badernageral.bgfinancas.modelo.Extrato;
 import badernageral.bgfinancas.biblioteca.contrato.Grafico;
 import badernageral.bgfinancas.biblioteca.sistema.Botao;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.sistema.Kernel;
+import badernageral.bgfinancas.biblioteca.sistema.Tabela;
 import badernageral.bgfinancas.biblioteca.tipo.Posicao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.idioma.Linguagem;
 import badernageral.bgfinancas.modelo.CartaoCredito;
 import badernageral.bgfinancas.modelo.Conta;
 import badernageral.bgfinancas.modelo.Despesa;
@@ -47,6 +50,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
@@ -59,11 +63,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public final class RelatoriosControlador implements Initializable, Controlador {
     
@@ -80,6 +88,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     @FXML private DatePicker inicio;
     @FXML private DatePicker fim;
     @FXML private Button atualizar;
+    @FXML private Button imprimir;
     @FXML private GridPane tabela;
     @FXML private GridPane barraSuperior;
     
@@ -98,13 +107,19 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     private final LineChart<String,Number> graficoLinhas = new LineChart<>(xAxisLinhas,yAxisLinhas);
     
     private final ListView<DespesaCategoria> listaCategorias = new ListView<>();
+    
+    private final TableView<Despesa> listaDespesas = new TableView<>();
+    private final Tabela<Despesa> tabelaDespesas = new Tabela<>();
+    
+    private final TableView<Extrato> listaExtrato = new TableView<>();
+    private final Tabela<Extrato> tabelaExtrato = new Tabela<>();
                    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Kernel.setTitulo(TITULO);
         Botao.prepararBotaoVoltar(voltar);
         labelRelatorio.setText(idioma.getMensagem("selecione_relatorio")+":");
-        List<String> tipoRelatorio = Arrays.asList(idioma.getMensagem("despesas"),idioma.getMensagem("despesas_tempo"),idioma.getMensagem("despesas_agendadas"),idioma.getMensagem("receitas"),idioma.getMensagem("transferencias"));
+        List<String> tipoRelatorio = Arrays.asList(idioma.getMensagem("despesas"),idioma.getMensagem("lista_despesas"),idioma.getMensagem("despesas_tempo"),idioma.getMensagem("despesas_agendadas"),idioma.getMensagem("receitas"),idioma.getMensagem("transferencias"),idioma.getMensagem("extrato"));
         relatorio.setItems(FXCollections.observableList(tipoRelatorio));
         relatorio.getSelectionModel().select(0);
         labelInicio.setText(idioma.getMensagem("inicio")+":");
@@ -112,8 +127,49 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         LocalDate hoje = LocalDate.now();
         inicio.setValue(hoje.withDayOfMonth(1));
         fim.setValue(hoje.withDayOfMonth(hoje.lengthOfMonth()));
+        prepararTabelas();
         prepararTipoTempo();
         prepararFiltro();
+        imprimir.setVisible(false);
+    }
+    
+    private void prepararTabelas(){
+        tabelaDespesas.prepararTabela(listaDespesas);
+        tabelaDespesas.adicionarColuna(listaDespesas, idioma.getMensagem("categoria"), "nomeCategoria");
+        tabelaDespesas.adicionarColuna(listaDespesas, idioma.getMensagem("item"), "nomeItem");
+        tabelaDespesas.adicionarColunaNumero(listaDespesas, idioma.getMensagem("quantidade"), "quantidade");
+        tabelaDespesas.adicionarColunaNumero(listaDespesas, idioma.getMensagem("valor"), "valor");
+        tabelaExtrato.prepararTabela(listaExtrato);
+        TableColumn<Extrato,String> tipo = tabelaExtrato.adicionarColuna(listaExtrato, idioma.getMensagem("tipo"), "tipo");
+        tabelaExtrato.adicionarColunaDataHora(listaExtrato, idioma.getMensagem("data"), "dataHora");
+        tabelaExtrato.adicionarColuna(listaExtrato, idioma.getMensagem("categoria"), "nomeCategoria");
+        tabelaExtrato.adicionarColuna(listaExtrato, idioma.getMensagem("item"), "nomeItem");
+        tabelaExtrato.adicionarColunaNumero(listaExtrato, idioma.getMensagem("valor"), "valor");
+        TableColumn<Extrato,String> status = tabelaExtrato.adicionarColuna(listaExtrato, idioma.getMensagem("status"), "status");
+        status.setCellFactory(e -> new TableCell<Extrato, String>(){
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item==null ? null : item);
+                if (item != null) {
+                    setTextFill(item.equals(idioma.getMensagem("agendado")) ? Color.RED : Color.BLACK);
+                }
+            }
+        });
+        tipo.setCellFactory(e -> new TableCell<Extrato, String>(){
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item==null ? null : item);
+                if (item != null) {
+                    setTextFill(item.equals(idioma.getMensagem("despesa")) ? Color.GREEN : Color.BLUE);
+                }
+            }
+        });
+    }
+    
+    public void acaoImprimir() {
+        // a ser implementado
     }
     
     private void prepararTipoTempo(){
@@ -162,16 +218,22 @@ public final class RelatoriosControlador implements Initializable, Controlador {
                 relatorioGraficoBarras(new Despesa().setAgendada("0"));
                 break;
             case 1:
-                relatorioGraficoLinhas();
+                relatorioListaDespesas();
                 break;
             case 2:
-                relatorioGraficoBarras(new Despesa().setAgendada("1"));
+                relatorioGraficoLinhas();
                 break;
             case 3:
-                relatorioGraficoBarras(new Receita());
+                relatorioGraficoBarras(new Despesa().setAgendada("1"));
                 break;
             case 4:
+                relatorioGraficoBarras(new Receita());
+                break;
+            case 5:
                 relatorioGraficoBarras(new Transferencia());
+                break;
+            case 6:
+                relatorioExtrato();
                 break;
             default:
                 Janela.showMensagem(Status.ERRO, idioma.getMensagem("nao_encontrado"));
@@ -183,6 +245,8 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         tabela.getChildren().remove(graficoSecundario);
         tabela.getChildren().remove(graficoLinhas);
         tabela.getChildren().remove(listaCategorias);
+        tabela.getChildren().remove(listaDespesas);
+        tabela.getChildren().remove(listaExtrato);
     }
     
     private String getValorTotal(ObservableList<Series<String,Number>> series){
@@ -206,6 +270,24 @@ public final class RelatoriosControlador implements Initializable, Controlador {
             }
         }
         return 1;
+    }
+    
+    private void relatorioListaDespesas(){
+        tabela.add(listaDespesas, 0, 1);
+        GridPane.setColumnSpan(listaDespesas, GridPane.REMAINING);
+        listaDespesas.setItems(new Despesa().listarPeriodoAgrupado(inicio.getValue(), fim.getValue()));
+    }
+    
+    private void relatorioExtrato(){
+        tabela.add(listaExtrato, 0, 1);
+        GridPane.setColumnSpan(listaExtrato, GridPane.REMAINING);
+        ObservableList<Extrato> despesas = new Despesa().getExtrato(inicio.getValue(), fim.getValue());
+        ObservableList<Extrato> receitas = new Receita().getExtrato(inicio.getValue(), fim.getValue());
+        listaExtrato.setItems(despesas);
+        listaExtrato.getItems().addAll(receitas);
+        listaExtrato.getItems().sort((Extrato a, Extrato b) -> {
+            return a.getDataHora().compareTo(b.getDataHora());
+        });
     }
     
     private void relatorioGraficoBarras(Grafico objeto){
@@ -261,7 +343,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         }
     }
     
-    private void relatorioGraficoLinhas(){        
+    private void relatorioGraficoLinhas(){   
         listaCategorias.setEditable(true);
         if(listaCategorias.getItems().size()<=0){
             ObservableList<DespesaCategoria> categorias = new DespesaCategoria().listar();
@@ -343,7 +425,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
 
     @Override
     public void acaoAjuda() {
-        Ajuda.getInstance().setObjetos(voltar,labelRelatorio,relatorio,labelContaCartao,listaContaCartao,labelInicio,inicio,labelFim,fim,atualizar,graficoPrincipal,graficoSecundario,listaCategorias,graficoLinhas);
+        Ajuda.getInstance().setObjetos(voltar,labelRelatorio,relatorio,labelContaCartao,listaContaCartao,labelInicio,inicio,labelFim,fim,atualizar,graficoPrincipal,graficoSecundario,listaCategorias,graficoLinhas,listaDespesas,listaExtrato);
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_relat_1"));
         Ajuda.getInstance().capitulo(relatorio, Posicao.BAIXO, idioma.getMensagem("tuto_relat_2"));
         Ajuda.getInstance().capitulo(listaContaCartao, Posicao.BAIXO, idioma.getMensagem("tuto_relat_3"));

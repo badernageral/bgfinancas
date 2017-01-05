@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -24,7 +24,6 @@ import badernageral.bgfinancas.biblioteca.banco.Coluna;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 
@@ -41,7 +40,7 @@ public abstract class Item<T extends Item<T>> extends Categoria<T> {
             if(combo.getPromptText().equals("")){
                 combo.setPromptText(idioma.getMensagem("selecione"));
             }
-            this.select(idItem, idCategoria, nome, nomeCategoria).inner(idCategoria, idCategoriaInner).orderby(nome);
+            this.select(idItem, idCategoria, nome, nomeCategoria).inner(idCategoria, idCategoriaInner).orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){
@@ -58,7 +57,7 @@ public abstract class Item<T extends Item<T>> extends Categoria<T> {
             Choice.getItems().clear();
             T Todas = instanciar("todas", idioma.getMensagem("todas"));
             Choice.getItems().add(Todas);
-            this.select(idItem, idCategoria, nome, nomeCategoria).inner(idCategoria, idCategoriaInner).orderby(nome);
+            this.select(idItem, idCategoria, nome, nomeCategoria).inner(idCategoria, idCategoriaInner).orderByAsc(nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){

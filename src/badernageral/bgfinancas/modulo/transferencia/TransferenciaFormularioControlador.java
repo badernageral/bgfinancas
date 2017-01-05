@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -33,6 +33,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Acao;
 import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Operacao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -67,10 +68,11 @@ public final class TransferenciaFormularioControlador implements Initializable, 
     @FXML private ComboBox<Categoria> contaDestino;
     @FXML private TextField descricao;
     @FXML private TextField valor;
+    @FXML private Label ajuda;
     @FXML private DatePicker data;
     @FXML private BotaoFormulario botaoController;
     
-    private Transferencia Modelo;
+    private Transferencia modelo;
     
     private Acao acao;
     private TransferenciaControlador controlador = null;
@@ -79,6 +81,7 @@ public final class TransferenciaFormularioControlador implements Initializable, 
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("transferencia"));
         Botao.prepararBotaoModal(this, botaoController, itemController);
+        Calculadora.preparar(valor, ajuda);
         labelItem.setText(idioma.getMensagem("item")+":");
         labelContaOrigem.setText(idioma.getMensagem("conta_origem")+":");
         labelContaDestino.setText(idioma.getMensagem("conta_destino")+":");
@@ -125,25 +128,25 @@ public final class TransferenciaFormularioControlador implements Initializable, 
     }
     
     public void alterar(Transferencia modelo){
-        Modelo = modelo;
+        this.modelo = modelo;
         botaoController.setTextBotaoFinalizar(idioma.getMensagem("alterar"));
-        TransferenciaItem item = new TransferenciaItem().setIdItem(Modelo.getIdItem()).consultar();
+        TransferenciaItem item = new TransferenciaItem().setIdItem(modelo.getIdItem()).consultar();
         if(item != null){
             itemController.setItemSelecionado(item);
         }
-        Conta contaOri = new Conta().setIdCategoria(Modelo.getIdContaOrigem()).consultar();
+        Conta contaOri = new Conta().setIdCategoria(modelo.getIdContaOrigem()).consultar();
         if(contaOri != null){
             contaOrigem.getSelectionModel().select(contaOri);
         }
-        Conta contaDes = new Conta().setIdCategoria(Modelo.getIdContaDestino()).consultar();
+        Conta contaDes = new Conta().setIdCategoria(modelo.getIdContaDestino()).consultar();
         if(contaDes != null){
             contaDestino.getSelectionModel().select(contaDes);
         }
         itemController.getComboItem().setDisable(true);
         itemController.getBotaoCadastrar().setDisable(true);
-        data.setValue(Modelo.getDataLocal());
-        descricao.setText(Modelo.getDescricao());
-        valor.setText(Modelo.getValor());
+        data.setValue(modelo.getData());
+        descricao.setText(modelo.getDescricao());
+        valor.setText(modelo.getValor().toString());
     }
 
     @Override
@@ -160,29 +163,29 @@ public final class TransferenciaFormularioControlador implements Initializable, 
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }else{
-                Boolean contaOrigemMudou = !(Modelo.getIdContaOrigem().equals(idContaOrigem));
+                Boolean contaOrigemMudou = !(modelo.getIdContaOrigem().equals(idContaOrigem));
                 if(contaOrigemMudou){
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, Modelo.getIdContaOrigem(), Modelo.getValor());
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, idContaOrigem, Modelo.getValor());
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdContaOrigem(), modelo.getValor().toString());
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, idContaOrigem, modelo.getValor().toString());
                 }
-                Modelo.setIdContaOrigem(contaOrigem.getValue());
-                Boolean contaDestinoMudou = !(Modelo.getIdContaDestino().equals(idContaDestino));
+                modelo.setIdContaOrigem(contaOrigem.getValue());
+                Boolean contaDestinoMudou = !(modelo.getIdContaDestino().equals(idContaDestino));
                 if(contaDestinoMudou){
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, Modelo.getIdContaDestino(), Modelo.getValor());
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, idContaDestino, Modelo.getValor());
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdContaDestino(), modelo.getValor().toString());
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, idContaDestino, modelo.getValor().toString());
                 }
-                Modelo.setIdContaDestino(contaDestino.getValue());
-                Boolean valorMudou = !(Modelo.getValor().equals(valor.getText()));
+                modelo.setIdContaDestino(contaDestino.getValue());
+                Boolean valorMudou = !(modelo.getValor().equals(valor.getText()));
                 if(valorMudou){
-                    BigDecimal valorDiferenca = new BigDecimal(Modelo.getValor());
+                    BigDecimal valorDiferenca = modelo.getValor();
                     valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, Modelo.getIdContaOrigem(), valorDiferenca.toString());
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, Modelo.getIdContaDestino(), valorDiferenca.toString());
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdContaOrigem(), valorDiferenca.toString());
+                    new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdContaDestino(), valorDiferenca.toString());
                 }
-                Modelo.setValor(valor.getText());
-                Modelo.setDescricao(descricao.getText());
-                Modelo.setData(data.getValue());
-                Modelo.alterar();
+                modelo.setValor(valor.getText());
+                modelo.setDescricao(descricao.getText());
+                modelo.setData(Datas.toSqlData(data.getValue()));
+                modelo.alterar();
                 Kernel.principal.acaoTransferencia();
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
@@ -192,12 +195,12 @@ public final class TransferenciaFormularioControlador implements Initializable, 
     
     private boolean validarFormulario(){
         try {
+            Validar.textFieldDecimal(valor);
             Validar.autoFiltro(itemController.getAutoFiltro(), itemController.getComboItem());
             Validar.comboBox(contaOrigem);
             Validar.comboBox(contaDestino);
             Validar.igualdade(contaOrigem, contaDestino);
             Validar.datePicker(data);
-            Validar.textFieldDecimal(valor);
             return true;
         } catch (Erro ex) {
             return false;

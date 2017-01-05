@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -49,8 +49,8 @@ public final class ListaGrupo implements Initializable {
         Linguagem idioma = Linguagem.getInstance();
         tabelaGrupo.prepararTabela(tabelaListaGrupo, 3);
         tabelaGrupo.adicionarColuna(tabelaListaGrupo, idioma.getMensagem("cota"), "nome");
-        tabelaGrupo.setColunaDinheiro(tabelaGrupo.adicionarColuna(tabelaListaGrupo, idioma.getMensagem("valor"), "valor"), false);
-        tabelaGrupo.setColunaDinheiro(tabelaGrupo.adicionarColuna(tabelaListaGrupo, idioma.getMensagem("saldo"), "saldo"), true);
+        tabelaGrupo.adicionarColunaNumero(tabelaListaGrupo, idioma.getMensagem("valor"), "valor");
+        tabelaGrupo.setColunaColorida(tabelaGrupo.adicionarColunaNumero(tabelaListaGrupo, idioma.getMensagem("saldo"), "saldo"));
         labelGrupos.setText(idioma.getMensagem("cotas_despesas"));
     }
     

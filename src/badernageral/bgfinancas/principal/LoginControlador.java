@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -83,7 +83,7 @@ public final class LoginControlador implements Initializable, ControladorFormula
             }
         };
         task.setOnSucceeded((WorkerStateEvent event) -> {
-            Kernel.main.reiniciar();
+            Kernel.master.reiniciar();
         });
         Thread th = new Thread(task);
         th.start();

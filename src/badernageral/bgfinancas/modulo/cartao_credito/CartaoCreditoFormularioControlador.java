@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -32,6 +32,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.sistema.Janela;
 import badernageral.bgfinancas.biblioteca.tipo.Acao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.Calculadora;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -54,6 +55,7 @@ public final class CartaoCreditoFormularioControlador implements Initializable, 
     @FXML private Label labelVencimento;
     @FXML private TextField nome;
     @FXML private TextField limite;
+    @FXML private Label ajuda;
     @FXML private ComboBox<String> vencimento;
     
     private ControladorFormulario controlador = null;
@@ -63,6 +65,7 @@ public final class CartaoCreditoFormularioControlador implements Initializable, 
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("cartao_credito"));
         Botao.prepararBotaoModal(this, botaoController);
+        Calculadora.preparar(limite, ajuda);
         labelNome.setText(idioma.getMensagem("nome")+":");
         labelLimite.setText(idioma.getMensagem("limite")+":");
         labelVencimento.setText(idioma.getMensagem("dia_vencimento")+":");
@@ -114,15 +117,14 @@ public final class CartaoCreditoFormularioControlador implements Initializable, 
         this.modelo = modelo;
         botaoController.getBotaoFinalizar().setText(idioma.getMensagem("alterar"));
         nome.setText(modelo.getNome());
-        limite.setText(modelo.getLimite());
-        vencimento.getSelectionModel().select(modelo.getVencimento());
+        limite.setText(modelo.getLimite().toString());
+        vencimento.getSelectionModel().select(modelo.getVencimento().toString());
     }
     
     private boolean validarFormulario(){
         try {
-            Validar.textField(nome);
-            Validar.textField(limite);
             Validar.textFieldDecimal(limite);
+            Validar.textField(nome);
             Validar.comboBox(vencimento);
             return true;
         } catch (Erro ex) {

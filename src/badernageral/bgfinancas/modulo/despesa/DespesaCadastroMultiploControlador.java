@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2015 Jose Robson Mariano Alves
+Copyright 2012-2017 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -34,6 +34,7 @@ import badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import badernageral.bgfinancas.biblioteca.tipo.Operacao;
 import badernageral.bgfinancas.biblioteca.tipo.Posicao;
 import badernageral.bgfinancas.biblioteca.tipo.Status;
+import badernageral.bgfinancas.biblioteca.utilitario.AreaTransferencia;
 import badernageral.bgfinancas.biblioteca.utilitario.AutoCompletarTextField;
 import badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import badernageral.bgfinancas.biblioteca.utilitario.Erro;
@@ -83,6 +84,8 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
     private ObservableList<Despesa> itens;
     private BigDecimal saldoTotal;
     
+    private AreaTransferencia areaTransferencia = new AreaTransferencia();
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Kernel.setTitulo(TITULO);
@@ -91,8 +94,8 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         tabela.prepararTabela(tabelaLista, 1);
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("categoria"), "nomeCategoria");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("item"), "nomeItem");
-        tabela.adicionarColuna(tabelaLista, idioma.getMensagem("quantidade"), "quantidade");
-        tabela.setColunaDinheiro(tabela.adicionarColuna(tabelaLista, idioma.getMensagem("valor"), "valor"), false);
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("quantidade"), "quantidade");
+        tabela.adicionarColunaNumero(tabelaLista, idioma.getMensagem("valor"), "valor");
         data.setValue(LocalDate.now());
         acaoFiltrar(false);
         item.getStyleClass().add("semFoco");
@@ -105,6 +108,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         labelConta.setText(idioma.getMensagem("conta")+":");
         finalizar.setText(idioma.getMensagem("cadastrar"));
         item.setPromptText(idioma.getMensagem("autofiltro"));
+        areaTransferencia.criarMenu(this, tabelaLista, false);
     }
     
     private String[] modalDespesa(Acao acao, String campo_1, String valor_1, String campo_2, String valor_2){
@@ -157,7 +161,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         BigDecimal valorTotal = new BigDecimal("0.00");
         if(itens!=null){
             for(Despesa d : itens){
-                BigDecimal valor = new BigDecimal(d.getValor());
+                BigDecimal valor = d.getValor();
                 valorTotal = valorTotal.add(valor);
             }
         }
@@ -194,7 +198,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
             Categoria c = conta.getSelectionModel().getSelectedItem();
             for(Despesa i : itens){
                 i.setIdConta(c);
-                i.setData(d);
+                i.setData(Datas.toSqlData(d));
                 i.setHora(Datas.getHoraAtual());
                 i.cadastrar();
             }
@@ -227,7 +231,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         if(tabela==1){
             int index = tabelaLista.getSelectionModel().getSelectedIndex();
             Despesa despesa = tabelaLista.getSelectionModel().getSelectedItem();
-            String[] valor = modalDespesa(Acao.ALTERAR, idioma.getMensagem("valor")+":", despesa.getValor(), idioma.getMensagem("quantidade")+":", despesa.getQuantidade());
+            String[] valor = modalDespesa(Acao.ALTERAR, idioma.getMensagem("valor")+":", despesa.getValor().toString(), idioma.getMensagem("quantidade")+":", despesa.getQuantidade().toString());
             if(valor != null){
                 despesa.setValor(valor[0]);
                 despesa.setQuantidade(valor[1]);
