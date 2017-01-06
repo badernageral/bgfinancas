@@ -22,7 +22,7 @@ Features
 Requirements
 --
 
-Linux: openjfx & openjdk-8
+Linux: openjfx & openjdk-8-jre
 
 Others: Java 8u40 or later.
 
@@ -45,4 +45,4 @@ BG Finanças is open source licensed under the GNU GPL v3.0
 
 Screenshot
 --
-![alt tag](http://badernageral.github.io/screenshot.png)
+![screenshot-tag](http://badernageral.github.io/screenshot2.png)
