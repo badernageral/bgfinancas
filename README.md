@@ -7,8 +7,9 @@ Links
 
 Website: http://badernageral.github.io/
 
-Downloads: https://github.com/badernageral/bgfinancas/releases
+Issues: https://github.com/badernageral/bgfinancas/issues
 
+Downloads: https://github.com/badernageral/bgfinancas/releases
 
 Features
 --
@@ -28,16 +29,27 @@ Others: Java 8u40 or later.
 
 Installation
 --
+Compiled releases:
+* At releases page you can find installers for windows, linux and others systems.
+* Releases: https://github.com/badernageral/bgfinancas/releases
+
 Source code:
+* Clone the repository
+```
+user@debian:~$ git clone https://github.com/badernageral/bgfinancas.git
+```
+* Enter the folder
+```
+user@debian:~$ cd bgfinancas
+```
 * Use command line **ant** from the source code folder to compile it.
 ```
 user@debian:~/bgfinancas$ ant
 ```
 * To execute just run the generated jar.
-
-Compiled releases:
-* At releases page you can find executable file for windows and tarball file for others systems (linux, mac os).
-
+```
+user@debian:~/bgfinancas$ java -jar jar/bgfinancas.jar
+```
 License
 --
 
@@ -45,4 +57,4 @@ BG Finanças is open source licensed under the GNU GPL v3.0
 
 Screenshot
 --
-![screenshot-tag](http://badernageral.github.io/screenshot2.png)
+![screenshot](http://badernageral.github.io/screenshot.png)
