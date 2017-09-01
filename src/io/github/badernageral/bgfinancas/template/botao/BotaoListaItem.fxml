@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2012-2017 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.template.botao.BotaoListaItem">
+    <children>
+        <HBox>
+            <children>
+                <ComboBox fx:id="item" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="300.0" styleClass="ListaComBotao" GridPane.columnIndex="1" />
+                <Button fx:id="cadastrar" contentDisplay="CENTER" minWidth="40.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0" GridPane.columnIndex="1">
+                    <styleClass>
+                        <String fx:value="Botao" />
+                        <String fx:value="BotaoFim" />
+                        <String fx:value="BotaoCadastrar" />
+                    </styleClass>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</StackPane>

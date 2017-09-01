@@ -29,14 +29,14 @@
         </copy>
         <jar destfile="${dir.jar}/bgfinancas.jar" basedir="${dir.build}">
             <manifest>
-                <attribute name="Main-Class" value="badernageral.bgfinancas.principal.Main"/>
-                <attribute name="Class-Path" value="lib/hsqldb-2.3.4.jar"/>
+                <attribute name="Main-Class" value="io.github.badernageral.bgfinancas.principal.Main"/>
+                <attribute name="Class-Path" value="lib/hsqldb-2.4.0.jar"/>
 	    </manifest>
         </jar>
     </target>
 
     <target name="run">
-        <java fork="true" classname="badernageral.bgfinancas.principal.Main">
+        <java fork="true" classname="io.github.badernageral.bgfinancas.principal.Main">
             <classpath>
                 <path refid="classpath"/>
                 <path location="${dir.jar}/bgfinancas.jar"/>

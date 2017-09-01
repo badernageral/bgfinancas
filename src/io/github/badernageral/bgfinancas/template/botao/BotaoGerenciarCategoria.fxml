@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2012-2017 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.template.botao.BotaoGerenciarCategoria">
+    <children>
+        <HBox>
+           <children>
+               <VBox alignment="CENTER">
+                    <children>
+                       <Label fx:id="labelCategoria" text="Categoria:" />
+                    </children>
+                    <padding>
+                       <Insets right="8.0" />
+                    </padding>
+                </VBox>
+                <ChoiceBox fx:id="categoria" styleClass="ListaComBotao" GridPane.columnIndex="2" />
+                <Button fx:id="gerenciar" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0">
+                    <styleClass>
+                        <String fx:value="Botao" />
+                        <String fx:value="BotaoFim" />
+                        <String fx:value="BotaoGerenciar" />
+                    </styleClass>
+                </Button>
+           </children>
+        </HBox>
+    </children>
+</StackPane>

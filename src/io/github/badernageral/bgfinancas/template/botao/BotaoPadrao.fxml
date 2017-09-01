@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2012-2017 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<HBox fx:id="painelBotoes" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.template.botao.BotaoPadrao">
+   <children>
+       <Button fx:id="voltar" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="35.0">
+            <styleClass>
+               <String fx:value="Botao" />
+               <String fx:value="BotaoVoltar" />
+            <String fx:value="BotaoInicio" />
+            </styleClass>
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+        </Button>
+      <Label fx:id="titulo" prefHeight="25.0" styleClass="Titulo" text="Titulo">
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+      </Label>
+        <Button fx:id="cadastrar" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0">
+            <styleClass>
+               <String fx:value="Botao" />
+               <String fx:value="BotaoMeio" />
+            <String fx:value="BotaoCadastrar" />
+            </styleClass>
+        </Button>
+      <Button fx:id="cadastrar_2" contentDisplay="CENTER" layoutX="95.0" layoutY="10.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0">
+         <styleClass>
+            <String fx:value="Botao" />
+            <String fx:value="BotaoMeio" />
+            <String fx:value="BotaoCadastrar2" />
+         </styleClass>
+      </Button>
+        <Button fx:id="alterar" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="35.0">
+            <styleClass>
+               <String fx:value="Botao" />
+               <String fx:value="BotaoMeio" />
+               <String fx:value="BotaoAlterar" />
+            </styleClass>
+        </Button>
+        <Button fx:id="excluir" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="40.0">
+            <styleClass>
+               <String fx:value="Botao" />
+               <String fx:value="BotaoFim" />
+               <String fx:value="BotaoExcluir" />
+            </styleClass>
+        </Button>
+   </children>
+</HBox>

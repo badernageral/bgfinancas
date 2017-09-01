@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2012-2017 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.modulo.utilitario.ConfiguracaoFormularioControlador">
+   <content>
+      <GridPane hgap="10.0" vgap="10.0">
+         <children>
+            <Label fx:id="labelIdioma" text="Idioma:" />
+            <Label fx:id="labelMoeda" text="Moeda:" GridPane.rowIndex="1" />
+            <Label fx:id="labelLogin" text="Login:" GridPane.rowIndex="2" />
+            <ComboBox fx:id="idiomas" maxWidth="1.7976931348623157E308" onAction="#mudarIdioma" GridPane.columnIndex="1" />
+            <TextField fx:id="moeda" maxWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="login" maxWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <fx:include fx:id="botao" source="/io/github/badernageral/bgfinancas/template/botao/BotaoFormulario.fxml" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="200.0" />
+         </columnConstraints>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+   </content>
+</TitledPane>
