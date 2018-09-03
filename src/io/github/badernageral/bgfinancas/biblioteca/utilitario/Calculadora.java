@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -25,8 +25,6 @@ import io.github.badernageral.bgfinancas.biblioteca.sistema.Janela;
 import io.github.badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import io.github.badernageral.bgfinancas.biblioteca.tipo.Status;
 import io.github.badernageral.bgfinancas.idioma.Linguagem;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javax.script.ScriptEngine;

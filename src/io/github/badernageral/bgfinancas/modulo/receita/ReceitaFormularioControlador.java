@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package io.github.badernageral.bgfinancas.modulo.receita;
 
+import io.github.badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.ControladorFormulario;
 import io.github.badernageral.bgfinancas.biblioteca.utilitario.Animacao;
@@ -49,14 +50,24 @@ import io.github.badernageral.bgfinancas.modelo.Conta;
 import io.github.badernageral.bgfinancas.modelo.Receita;
 import io.github.badernageral.bgfinancas.modelo.ReceitaItem;
 import io.github.badernageral.bgfinancas.modulo.conta.ContaFormularioControlador;
+import io.github.badernageral.bgfinancas.modulo.planejamento.PlanejamentoControlador;
 import io.github.badernageral.bgfinancas.modulo.receita.item.ReceitaItemFormularioControlador;
 import io.github.badernageral.bgfinancas.template.botao.BotaoListaItem;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 public final class ReceitaFormularioControlador implements Initializable, ControladorFormulario {
        
     @FXML private TitledPane formulario;
+    @FXML private GridPane tabela;
     @FXML private Label labelItem;
     @FXML private Label labelConta;
     @FXML private Label labelDescricao;
@@ -66,20 +77,26 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
     @FXML private BotaoListaCategoria contaController;
     @FXML private TextField descricao;
     @FXML private TextField valor;
-    @FXML private Label ajuda;
+    @FXML private Label ajuda1;
     @FXML private DatePicker data;
     @FXML private BotaoFormulario botaoController;
+    
+    private final CheckBox checkAgendar = new CheckBox();
+    private final Spinner qtdMeses = new Spinner();
+    private final ToggleButton valorParcela = new ToggleButton();
+    private final Label ajuda = new Label();
+    private Boolean confirmar = false;
     
     private Receita modelo;
     
     private Acao acao;
-    private ReceitaControlador controlador = null;
+    private PlanejamentoControlador controlador = null;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         formulario.setText(idioma.getMensagem("receita"));
         Botao.prepararBotaoModal(this, botaoController, itemController, contaController);
-        Calculadora.preparar(valor, ajuda);
+        Calculadora.preparar(valor, ajuda1);
         labelItem.setText(idioma.getMensagem("item")+":");
         labelConta.setText(idioma.getMensagem("conta")+":");
         labelData.setText(idioma.getMensagem("data")+":");
@@ -125,11 +142,63 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
         Animacao.fadeInInvisivel(contaController.getComboCategoria(), formulario);
     }
     
-    public void cadastrar(ReceitaControlador controlador){
+    public void cadastrar(PlanejamentoControlador controlador){
         acao = Acao.CADASTRAR;
         this.controlador = controlador;
-        data.setValue(LocalDate.now());
+        if(controlador!=null){
+            data.setValue(LocalDate.now().withMonth(controlador.getData().getMonthValue()).withYear(controlador.getData().getYear()));
+        }else{
+            data.setValue(LocalDate.now());
+        }
         botaoController.setTextBotaoFinalizar(idioma.getMensagem("cadastrar"));
+        tabela.getChildren().remove(botaoController.getStackPane());
+        tabela.add(botaoController.getStackPane(), 1, 6);
+        Label labelAgendada = new Label(idioma.getMensagem("agendar")+":");
+        tabela.add(labelAgendada, 0, 5);
+        qtdMeses.setPrefWidth(100);
+        qtdMeses.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
+        qtdMeses.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        Ajuda.estilizarBotaoDica(qtdMeses, ajuda, idioma.getMensagem("ajuda_parcela_agendada"), Duracao.MUITO_LONGA);
+        valorParcela.getStyleClass().add("Botao");
+        valorParcela.getStyleClass().add("BotaoFim");
+        valorParcela.setText("/");
+        valorParcela.setOnAction(e -> {
+            if(valorParcela.isSelected()){
+                valorParcela.setText("=");
+            }else{
+                valorParcela.setText("/");
+            }
+        });
+        HBox grupoAgendar = new HBox();
+        grupoAgendar.getChildren().addAll(checkAgendar,qtdMeses,valorParcela,ajuda);
+        tabela.add(grupoAgendar, 1, 5);
+        if(controlador!=null){
+            checkAgendar.setSelected(true);
+            checkAgendar.setDisable(true);
+            eventoReceitaAgendada();
+        }else{
+            qtdMeses.setVisible(false);
+            valorParcela.setVisible(false);
+            ajuda.setVisible(false);
+        }
+        checkAgendar.setOnAction(e -> {
+            eventoReceitaAgendada();
+        });
+    }
+    
+    private void eventoReceitaAgendada(){
+        tabela.getChildren().remove(botaoController.getStackPane());
+        if(checkAgendar.isSelected()){
+            qtdMeses.setVisible(true);
+            valorParcela.setVisible(true);
+            ajuda.setVisible(true);
+            tabela.add(botaoController.getStackPane(), 1, 7);
+        }else{
+            qtdMeses.setVisible(false);
+            valorParcela.setVisible(false);
+            ajuda.setVisible(false);
+            tabela.add(botaoController.getStackPane(), 1, 6);
+        }
     }
     
     public void alterar(Receita modelo){
@@ -148,36 +217,71 @@ public final class ReceitaFormularioControlador implements Initializable, Contro
         data.setValue(modelo.getData());
         descricao.setText(modelo.getDescricao());
         valor.setText(modelo.getValor().toString());
+        if(modelo.getAgendada().equals("1")){
+            Button bConfirmar = new Button(idioma.getMensagem("confirmar"));
+            botaoController.getGrupoBotao().getChildren().add(0, bConfirmar);
+            bConfirmar.setOnAction(e -> {
+                confirmar = true;
+                acaoFinalizar();
+            });
+        }
     }
 
     @Override
     public void acaoFinalizar(){
         if(validarFormulario()){
             if(acao == Acao.CADASTRAR){
-                Receita item = new Receita(null, contaController.getIdCategoria(), itemController.getIdItem(), descricao.getText(), valor.getText(), data.getValue(), Datas.getHoraAtual());
-                item.cadastrar();
-                new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), valor.getText());
-                Kernel.principal.acaoReceita();
+                if(checkAgendar.isSelected()){
+                    LocalDate dataCadastro = data.getValue();
+                    int j = Integer.parseInt(qtdMeses.getValue().toString());
+                    for(int i=1;i<=j;i++){
+                        String dvalor = valor.getText();
+                        if(!valorParcela.isSelected()){
+                            dvalor = new BigDecimal(dvalor).divide(new BigDecimal(j), 2, RoundingMode.HALF_UP).toString();
+                        }
+                        Receita item = new Receita(null, contaController.getIdCategoria(), itemController.getIdItem(), descricao.getText(), dvalor, dataCadastro, Datas.getHoraAtual(), "1");
+                        if(j>1){ item.setParcela(i+"/"+j); }
+                        item.cadastrar();
+                        dataCadastro = dataCadastro.plusMonths(1);
+                    }
+                    if(controlador!=null){
+                        Kernel.controlador.acaoFiltrar(true);
+                    }else{
+                        Kernel.principal.acaoPlanejamento(data.getValue().getMonthValue(), data.getValue().getYear());
+                    }
+                }else{
+                    Receita item = new Receita(null, contaController.getIdCategoria(), itemController.getIdItem(), descricao.getText(), valor.getText(), data.getValue(), Datas.getHoraAtual(), "0");
+                    item.cadastrar();
+                    new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), valor.getText());
+                    Kernel.principal.acaoReceita();
+                }
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }else{
-                Boolean contaMudou = !(modelo.getIdConta().equals(contaController.getIdCategoria()));
-                if(contaMudou){
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdConta(), modelo.getValor().toString());
-                    new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), modelo.getValor().toString());
+                if(!modelo.getAgendada().equals("1")){
+                    Boolean contaMudou = !(modelo.getIdConta().equals(contaController.getIdCategoria()));
+                    if(contaMudou){
+                        new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdConta(), modelo.getValor().toString());
+                        new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), modelo.getValor().toString());
+                    }
+                    Boolean valorMudou = !(modelo.getValor().equals(valor.getText()));
+                    if(valorMudou){
+                        BigDecimal valorDiferenca = modelo.getValor();
+                        valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
+                        new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdConta(), valorDiferenca.toString());
+                    }
+                }else{
+                    if(confirmar){
+                        modelo.setAgendada("0");
+                        new Conta().alterarSaldo(Operacao.INCREMENTAR, contaController.getIdCategoria(), valor.getText());
+                    }
                 }
                 modelo.setIdConta(contaController.getComboCategoria().getValue());
-                Boolean valorMudou = !(modelo.getValor().equals(valor.getText()));
-                if(valorMudou){
-                    BigDecimal valorDiferenca = modelo.getValor();
-                    valorDiferenca = valorDiferenca.subtract(new BigDecimal(valor.getText()));
-                    new Conta().alterarSaldo(Operacao.DECREMENTAR, modelo.getIdConta(), valorDiferenca.toString());
-                }
                 modelo.setValor(valor.getText());
                 modelo.setDescricao(descricao.getText());
                 modelo.setData(Datas.toSqlData(data.getValue()));
                 modelo.alterar();
-                Kernel.principal.acaoReceita();
+                Kernel.controlador.acaoFiltrar(true);
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
                 Animacao.fadeInOutClose(formulario);
             }

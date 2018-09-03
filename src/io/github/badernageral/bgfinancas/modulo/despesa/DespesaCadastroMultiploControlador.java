@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -39,6 +39,7 @@ import io.github.badernageral.bgfinancas.biblioteca.utilitario.AutoCompletarText
 import io.github.badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import io.github.badernageral.bgfinancas.biblioteca.utilitario.Erro;
 import io.github.badernageral.bgfinancas.biblioteca.utilitario.Validar;
+import io.github.badernageral.bgfinancas.modelo.CartaoCredito;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -56,8 +57,14 @@ import io.github.badernageral.bgfinancas.modelo.Conta;
 import io.github.badernageral.bgfinancas.modelo.Despesa;
 import io.github.badernageral.bgfinancas.modelo.DespesaItem;
 import io.github.badernageral.bgfinancas.modulo.despesa.item.DespesaItemFormularioControlador;
+import java.math.RoundingMode;
 import java.util.Arrays;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 public final class DespesaCadastroMultiploControlador implements Initializable, Controlador, ControladorFiltro {
     
@@ -78,13 +85,23 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
     @FXML private Label labelConta;
     @FXML private Label labelDespesaValor;
     @FXML private Label labelValorTotal;
+    @FXML private Label labelDespesaAgendada;
     @FXML private ListaConta listaContaController;
     @FXML private TableView<Despesa> tabelaLista;
     private final Tabela<Despesa> tabela = new Tabela<>();
     private ObservableList<Despesa> itens;
     private BigDecimal saldoTotal;
     
-    private AreaTransferencia areaTransferencia = new AreaTransferencia();
+    @FXML private HBox grupoAgendar;
+    @FXML private CheckBox checkDespesaAgendada;
+    private final CheckBox checkCartaoCredito = new CheckBox();
+    private final Spinner qtdMeses = new Spinner();
+    private final ToggleButton valorParcela = new ToggleButton();
+    private final Label ajuda = new Label();
+    private final ComboBox<Categoria> listaCartaoCredito = new ComboBox<>();
+    private final Label labelCartaoCredito = new Label(idioma.getMensagem("cartao_credito")+":");
+    
+    private AreaTransferencia<Despesa> areaTransferencia = new AreaTransferencia();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -106,9 +123,69 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
         labelDespesaValor.setText(idioma.getMensagem("valor")+":");
         labelData.setText(idioma.getMensagem("data")+":");
         labelConta.setText(idioma.getMensagem("conta")+":");
+        labelDespesaAgendada.setText(idioma.getMensagem("agendar")+":");
         finalizar.setText(idioma.getMensagem("cadastrar"));
         item.setPromptText(idioma.getMensagem("autofiltro"));
         areaTransferencia.criarMenu(this, tabelaLista, false);
+        prepararDespesaAgendada();
+        checkDespesaAgendada.setOnAction(e -> {
+            eventoDespesaAgendada();
+        });
+        checkCartaoCredito.setOnAction(e -> {
+            eventoCartaoCredito();
+        });
+    }
+    
+    private void prepararDespesaAgendada(){
+        qtdMeses.setPrefWidth(100);
+        qtdMeses.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
+        zerarMeses();
+        Ajuda.estilizarBotaoDica(qtdMeses, ajuda, idioma.getMensagem("ajuda_parcela_agendada"), Duracao.MUITO_LONGA);
+        new CartaoCredito().montarSelectCategoria(listaCartaoCredito);
+        labelCartaoCredito.getStyleClass().add("paddingLabelRight");
+        listaCartaoCredito.getStyleClass().add("ListaComBotao");
+        valorParcela.getStyleClass().add("Botao");
+        valorParcela.getStyleClass().add("BotaoFim");
+        valorParcela.setText("/");
+        valorParcela.setOnAction(e -> {
+            if(valorParcela.isSelected()){
+                valorParcela.setText("=");
+            }else{
+                valorParcela.setText("/");
+            }
+        });
+    }
+    
+    private void zerarMeses(){
+        qtdMeses.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+    }
+    
+    private void eventoDespesaAgendada(){
+        if(checkDespesaAgendada.isSelected()){
+            grupoAgendar.getChildren().add(qtdMeses);
+            grupoAgendar.getChildren().add(valorParcela);
+            grupoAgendar.getChildren().add(ajuda);
+            grupoAgendar.getChildren().add(labelCartaoCredito);
+            grupoAgendar.getChildren().add(checkCartaoCredito);
+        }else{
+            grupoAgendar.getChildren().remove(qtdMeses);
+            grupoAgendar.getChildren().remove(valorParcela);
+            grupoAgendar.getChildren().remove(ajuda);
+            grupoAgendar.getChildren().remove(labelCartaoCredito);
+            grupoAgendar.getChildren().remove(checkCartaoCredito);
+            grupoAgendar.getChildren().remove(listaCartaoCredito);
+            listaCartaoCredito.getSelectionModel().select(null);
+            checkCartaoCredito.setSelected(false);
+            zerarMeses();
+        }
+    }
+    
+    private void eventoCartaoCredito(){
+        if(checkCartaoCredito.isSelected()){
+            grupoAgendar.getChildren().add(listaCartaoCredito);
+        }else{
+            grupoAgendar.getChildren().remove(listaCartaoCredito);
+        }
     }
     
     private String[] modalDespesa(Acao acao, String campo_1, String valor_1, String campo_2, String valor_2){
@@ -184,10 +261,8 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
                 Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("campo_nao_informado"), item, Duracao.CURTA);
                 item.requestFocus();
             }else{
-                if(Janela.showPergunta(idioma.getMensagem("item_nao_encontrado"))){
-                    DespesaItemFormularioControlador Controlador = Janela.abrir(DespesaItem.FXML_FORMULARIO, TITULO);
-                    Controlador.cadastrar(null, this, texto);
-                }
+                DespesaItemFormularioControlador Controlador = Janela.abrir(DespesaItem.FXML_FORMULARIO, TITULO);
+                Controlador.cadastrar(null, this, texto);
             }
         }
     }
@@ -197,13 +272,40 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
             itens = tabelaLista.getItems();
             LocalDate d = data.getValue();
             Categoria c = conta.getSelectionModel().getSelectedItem();
-            for(Despesa i : itens){
-                i.setIdConta(c);
-                i.setData(Datas.toSqlData(d));
-                i.setHora(Datas.getHoraAtual());
-                i.cadastrar();
+            if(checkDespesaAgendada.isSelected()){
+                    int j = Integer.parseInt(qtdMeses.getValue().toString());
+                    for(Despesa ia : itens){
+                        if(!valorParcela.isSelected()){
+                            BigDecimal valor = ia.getValor();
+                            valor = valor.divide(new BigDecimal(j), 2, RoundingMode.HALF_UP);
+                            ia.setValor(valor.toString());
+                        }
+                    }
+                    for(int i=1;i<=j;i++){
+                        String cartaoCredito = null;
+                        if(checkCartaoCredito.isSelected()){
+                            cartaoCredito = listaCartaoCredito.getSelectionModel().getSelectedItem().getIdCategoria();
+                        }
+                        for(Despesa ia : itens){
+                            ia.setIdConta(c);
+                            ia.setData(Datas.toSqlData(d));
+                            ia.setHora(Datas.getHoraAtual());
+                            ia.setAgendada("1");
+                            ia.setIdCartaoCredito(cartaoCredito);
+                            if(j>1){ ia.setParcela(i+"/"+j); }
+                            ia.cadastrar();
+                        }
+                        d = d.plusMonths(1);
+                    }
+            }else{
+                for(Despesa i : itens){
+                    i.setIdConta(c);
+                    i.setData(Datas.toSqlData(d));
+                    i.setHora(Datas.getHoraAtual());
+                    i.cadastrar();
+                }
+                new Conta().alterarSaldo(Operacao.DECREMENTAR, c.getIdCategoria(), saldoTotal.toString());
             }
-            new Conta().alterarSaldo(Operacao.DECREMENTAR, c.getIdCategoria(), saldoTotal.toString());
             limparFormulario();
             Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
         }
@@ -265,15 +367,16 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
 
     @Override
     public void acaoAjuda() {
-        Ajuda.getInstance().setObjetos(voltar,labelTitulo,labelData,data,labelConta,conta,finalizar,labelDespesa,item,cadastrarItem,excluir,tabelaLista,barraInferior,listaContaController.getGridPane());
+        Ajuda.getInstance().setObjetos(voltar,labelTitulo,labelData,data,labelConta,conta,finalizar,labelDespesa,item,cadastrarItem,excluir,tabelaLista,barraInferior,listaContaController.getGridPane(),grupoAgendar);
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_desp_mult_1"));
         Ajuda.getInstance().capitulo(data, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_2"));
         Ajuda.getInstance().capitulo(item, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_3"));
         Ajuda.getInstance().capitulo(cadastrarItem, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_4"));
         Ajuda.getInstance().capitulo(excluir, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_5"));
-        Ajuda.getInstance().capitulo(Arrays.asList(tabelaLista, barraInferior), Posicao.CENTRO, idioma.getMensagem("tuto_desp_mult_6"));
-        Ajuda.getInstance().capitulo(conta, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_7"));
-        Ajuda.getInstance().capitulo(finalizar, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_8"));
+        Ajuda.getInstance().capitulo(grupoAgendar, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_6"));
+        Ajuda.getInstance().capitulo(Arrays.asList(tabelaLista, barraInferior), Posicao.CENTRO, idioma.getMensagem("tuto_desp_mult_7"));
+        Ajuda.getInstance().capitulo(conta, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_8"));
+        Ajuda.getInstance().capitulo(finalizar, Posicao.BAIXO, idioma.getMensagem("tuto_desp_mult_9"));
         Ajuda.getInstance().apresentarProximo();
     }
     

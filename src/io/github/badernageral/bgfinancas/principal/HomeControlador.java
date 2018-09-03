@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -22,21 +22,25 @@ package io.github.badernageral.bgfinancas.principal;
 
 import io.github.badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Controlador;
+import static io.github.badernageral.bgfinancas.biblioteca.contrato.Controlador.idioma;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Janela;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Tabela;
 import io.github.badernageral.bgfinancas.biblioteca.tipo.Posicao;
 import io.github.badernageral.bgfinancas.biblioteca.utilitario.Animacao;
+import io.github.badernageral.bgfinancas.biblioteca.utilitario.Numeros;
 import io.github.badernageral.bgfinancas.idioma.Linguagem;
 import io.github.badernageral.bgfinancas.modelo.Agenda;
 import io.github.badernageral.bgfinancas.modelo.Conta;
 import io.github.badernageral.bgfinancas.modelo.Despesa;
 import io.github.badernageral.bgfinancas.modelo.Grupo;
+import io.github.badernageral.bgfinancas.modelo.Planejamento;
 import io.github.badernageral.bgfinancas.modelo.Receita;
 import io.github.badernageral.bgfinancas.modelo.Transferencia;
 import io.github.badernageral.bgfinancas.modulo.agenda.AgendaFormularioControlador;
 import io.github.badernageral.bgfinancas.modulo.conta.ContaFormularioControlador;
 import io.github.badernageral.bgfinancas.modulo.despesa.DespesaFormularioControlador;
+import io.github.badernageral.bgfinancas.modulo.receita.ReceitaFormularioControlador;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -61,7 +65,7 @@ public final class HomeControlador implements Initializable, Controlador {
     
     @FXML private GridPane gridContas;
     @FXML private GridPane gridRelatorio;
-    @FXML private GridPane gridDespesasAgendadas;
+    @FXML private GridPane gridPlanejamento;
     @FXML private GridPane gridAgenda;
     
     // Contas
@@ -94,13 +98,14 @@ public final class HomeControlador implements Initializable, Controlador {
     private LocalDate dataRelatorio = LocalDate.now();
     private BigDecimal valorTotalRelatorio = BigDecimal.ZERO;
     
-    // Despesas Agendadas
-    @FXML private Label labelDespesasAgendadas;
-    @FXML private Label labelDespesasAgendadasData;
-    @FXML private Label labelDespesasAgendadasTotal;
-    @FXML private Label labelDespesasAgendadasCredito;
-    @FXML private TableView<Despesa> tabelaListaDespesasAgendadas;
-    private final Tabela<Despesa> tabelaDespesasAgendadas = new Tabela<>();
+    // Planejamento
+    @FXML private Label labelPlanejamento;
+    @FXML private Label labelPlanejamentoData;
+    @FXML private Label labelPlanejamentoTotalDespesas;
+    @FXML private Label labelPlanejamentoTotalReceitas;
+    @FXML private Label labelPlanejamentoSaldo;
+    @FXML private TableView<Planejamento> tabelaListaPlanejamento;
+    private final Tabela<Planejamento> tabelaPlanejamento = new Tabela<>();
     
     // Agenda
     @FXML private Label labelAgenda;
@@ -119,7 +124,7 @@ public final class HomeControlador implements Initializable, Controlador {
         Kernel.setTitulo(Linguagem.getInstance().getMensagem("principal"));
         inicializarContas();
         inicializarRelatorio();
-        inicializarDespesasAgendadas();
+        inicializarPlanejamento();
         inicializarAgenda();
         atualizarTabela(true);
     }
@@ -152,12 +157,13 @@ public final class HomeControlador implements Initializable, Controlador {
         });
     }
     
-    private void inicializarDespesasAgendadas(){
-        labelDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
-        tabelaDespesasAgendadas.prepararTabela(tabelaListaDespesasAgendadas, 2);
-        tabelaDespesasAgendadas.adicionarColuna(tabelaListaDespesasAgendadas, idioma.getMensagem("nome"), "nomeItem").setMinWidth(150);
-        tabelaDespesasAgendadas.adicionarColunaNumero(tabelaListaDespesasAgendadas, idioma.getMensagem("valor"), "valor");
-        tabelaDespesasAgendadas.adicionarColunaData(tabelaListaDespesasAgendadas, idioma.getMensagem("data"), "data");
+    private void inicializarPlanejamento(){
+        labelPlanejamento.setText(idioma.getMensagem("planejamento"));
+        tabelaPlanejamento.prepararTabela(tabelaListaPlanejamento, 2);
+        Planejamento.prepararColunaTipo(tabelaPlanejamento.adicionarColuna(tabelaListaPlanejamento, "", "isDespesa"));
+        tabelaPlanejamento.adicionarColuna(tabelaListaPlanejamento, idioma.getMensagem("nome"), "nomeItem").setMinWidth(150);
+        tabelaPlanejamento.adicionarColunaNumero(tabelaListaPlanejamento, idioma.getMensagem("valor"), "valor");
+        tabelaPlanejamento.adicionarColunaData(tabelaListaPlanejamento, idioma.getMensagem("data"), "data");
     }
     
     private void inicializarAgenda(){
@@ -191,9 +197,9 @@ public final class HomeControlador implements Initializable, Controlador {
         ImageView iconeGrupos = new ImageView(imagemGrupos);
         tabRelatorioGrupos.setGraphic(iconeGrupos);
         tabRelatorioDespesasAgendadas.setText(idioma.getMensagem("despesas_agendadas"));
-        Image imagemDespesasAgendadas = new Image(Kernel.RAIZ+"/recursos/imagem/modulo/icon/despesa_agendada.png");
-        ImageView iconeDespesasAgendadas = new ImageView(imagemDespesasAgendadas);
-        tabRelatorioDespesasAgendadas.setGraphic(iconeDespesasAgendadas);
+        Image imagemPlanejamento = new Image(Kernel.RAIZ+"/recursos/imagem/modulo/icon/planejamento_mini.png");
+        ImageView iconePlanejamento = new ImageView(imagemPlanejamento);
+        tabRelatorioDespesasAgendadas.setGraphic(iconePlanejamento);
         tabelaRelatorioDespesas.prepararTabela(tabelaListaRelatorioDespesas, 3);
         tabelaRelatorioDespesas.adicionarColuna(tabelaListaRelatorioDespesas, idioma.getMensagem("categoria"), "nomeCategoria");
         tabelaRelatorioDespesas.setColunaColorida(tabelaRelatorioDespesas.adicionarColunaNumero(tabelaListaRelatorioDespesas, idioma.getMensagem("valor"), "valor"));
@@ -225,19 +231,24 @@ public final class HomeControlador implements Initializable, Controlador {
         labelCreditoTotal.setText(idioma.getMensagem("total_credito")+": "+idioma.getMensagem("moeda")+" "+valorCredito);
     }
     
-    private void calcularValorDespesasAgendadas(){
-        BigDecimal valorTotal = tabelaListaDespesasAgendadas.getItems().stream()
+    private void calcularValorPlanejamento(){
+        BigDecimal totalReceitas = tabelaListaPlanejamento.getItems().stream()
+                .filter(p -> !p.isDespesa())
                 .map(d -> d.getValor())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal creditoRestante = valorCredito.subtract(valorTotal);
-        labelDespesasAgendadasTotal.setText(idioma.getMensagem("despesas")+": "+idioma.getMensagem("moeda")+" "+valorTotal.toString());
-        labelDespesasAgendadasCredito.setText(idioma.getMensagem("credito_restante")+": "+idioma.getMensagem("moeda")+" "+creditoRestante.toString());
+        BigDecimal totalDespesas = tabelaListaPlanejamento.getItems().stream()
+                .filter(p -> p.isDespesa())
+                .map(d -> d.getValor())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        labelPlanejamentoTotalReceitas.setText(idioma.getMensagem("receitas") + ": " + idioma.getMensagem("moeda") + " " + totalReceitas.toString());
+        labelPlanejamentoTotalDespesas.setText(idioma.getMensagem("despesas") + ": " + idioma.getMensagem("moeda") + " " + totalDespesas.toString());
+        labelPlanejamentoSaldo.setText(idioma.getMensagem("saldo") + ": " + idioma.getMensagem("moeda") + " " + Numeros.arredondar(totalReceitas.subtract(totalDespesas)));
     }
     
     public void atualizarTabela(boolean animacao){
         atualizarContas();
         atualizarRelatorio();
-        atualizarDespesasAgendadas();
+        atualizarPlanejamento();
         atualizarAgenda();
         if(animacao){
             Animacao.fadeOutIn(home);
@@ -285,10 +296,10 @@ public final class HomeControlador implements Initializable, Controlador {
         labelValorTotalRelatorio.setText(idioma.getMensagem("moeda")+" "+valorTotalRelatorio.toString());
     }
     
-    public void atualizarDespesasAgendadas(){
-        tabelaListaDespesasAgendadas.setItems(new Despesa().setSomenteAgendamento().setMesAno(data.getMonthValue(), data.getYear()).listar());
-        labelDespesasAgendadasData.setText(idioma.getNomeMes(data.getMonthValue()).substring(0,3)+" / "+data.getYear());
-        calcularValorDespesasAgendadas();
+    public void atualizarPlanejamento(){
+        tabelaListaPlanejamento.setItems(new Planejamento().listar(data.getMonthValue(), data.getYear(), null));
+        labelPlanejamentoData.setText(idioma.getNomeMes(data.getMonthValue()).substring(0,3)+" / "+data.getYear());
+        calcularValorPlanejamento();
     }
     
     private void atualizarAgenda(){
@@ -312,12 +323,12 @@ public final class HomeControlador implements Initializable, Controlador {
     
     public void proximoMesDespesas(){
         data = data.plusMonths(1);
-        atualizarDespesasAgendadas();
+        atualizarPlanejamento();
     }
     
     public void anteriorMesDespesas(){
         data = data.minusMonths(1);
-        atualizarDespesasAgendadas();
+        atualizarPlanejamento();
     }
     
     public void acaoContas(){
@@ -328,8 +339,8 @@ public final class HomeControlador implements Initializable, Controlador {
         Kernel.principal.acaoRelatorios();
     }
     
-    public void acaoDespesasAgendadas(){
-        Kernel.principal.acaoDespesasAgendadas();
+    public void acaoPlanejamento(){
+        Kernel.principal.acaoPlanejamento();
     }
     
     public void acaoAgenda(){
@@ -343,20 +354,36 @@ public final class HomeControlador implements Initializable, Controlador {
 
     @Override
     public void acaoAlterar(int tabela) {
-        if(tabela==1){
-            ObservableList<Conta> itens = tabelaListaConta.getSelectionModel().getSelectedItems();
-            ContaFormularioControlador Controlador = Janela.abrir(Conta.FXML_FORMULARIO, idioma.getMensagem("contas"));
-            Controlador.alterar(itens.get(0));
-        }else if(tabela==6){
-            ObservableList<Agenda> itens = tabelaListaAgenda.getSelectionModel().getSelectedItems();
-            AgendaFormularioControlador Controlador = Janela.abrir(Agenda.FXML_FORMULARIO, idioma.getMensagem("lembretes"));
-            Controlador.alterar(itens.get(0));
-        }else if(tabela==2){
-            ObservableList<Despesa> itens = tabelaListaDespesasAgendadas.getSelectionModel().getSelectedItems();
-            DespesaFormularioControlador Controlador = Janela.abrir(Despesa.FXML_FORMULARIO, idioma.getMensagem("despesas_agendadas"));
-            Controlador.alterar(itens.get(0));
-        }else{
-            System.out.println(idioma.getMensagem("nao_implementado")+tabela);
+        switch (tabela) {
+            case 1:
+                {
+                    ObservableList<Conta> itens = tabelaListaConta.getSelectionModel().getSelectedItems();
+                    ContaFormularioControlador Controlador = Janela.abrir(Conta.FXML_FORMULARIO, idioma.getMensagem("contas"));
+                    Controlador.alterar(itens.get(0));
+                    break;
+                }
+            case 2:
+                {
+                    ObservableList<Planejamento> itens = tabelaListaPlanejamento.getSelectionModel().getSelectedItems();
+                    if(itens.get(0).isDespesa()){
+                        DespesaFormularioControlador Controlador = Janela.abrir(Despesa.FXML_FORMULARIO, idioma.getMensagem("planejamento"));
+                        Controlador.alterar(itens.get(0).getDespesa());
+                    }else{
+                        ReceitaFormularioControlador Controlador = Janela.abrir(Receita.FXML_FORMULARIO, idioma.getMensagem("planejamento"));
+                        Controlador.alterar(itens.get(0).getReceita());
+                    }
+                    break;
+                }
+            case 6:
+                {
+                    ObservableList<Agenda> itens = tabelaListaAgenda.getSelectionModel().getSelectedItems();
+                    AgendaFormularioControlador Controlador = Janela.abrir(Agenda.FXML_FORMULARIO, idioma.getMensagem("lembretes"));
+                    Controlador.alterar(itens.get(0));
+                    break;
+                }
+            default:
+                System.out.println(idioma.getMensagem("nao_implementado")+tabela);
+                break;
         }
     }
 
@@ -382,13 +409,13 @@ public final class HomeControlador implements Initializable, Controlador {
 
     @Override
     public void acaoAjuda() {
-        Ajuda.getInstance().setObjetos(gridContas, gridRelatorio, gridDespesasAgendadas, gridAgenda);
+        Ajuda.getInstance().setObjetos(gridContas, gridRelatorio, gridPlanejamento, gridAgenda);
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_home_1"));
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_home_2"));
         Ajuda.getInstance().capitulo(Posicao.TOPO, idioma.getMensagem("tuto_home_3"));
         Ajuda.getInstance().capitulo(gridContas, Posicao.BAIXO, idioma.getMensagem("tuto_home_4"));
         Ajuda.getInstance().capitulo(gridRelatorio, Posicao.BAIXO, idioma.getMensagem("tuto_home_5"));
-        Ajuda.getInstance().capitulo(gridDespesasAgendadas, Posicao.TOPO, idioma.getMensagem("tuto_home_6"));
+        Ajuda.getInstance().capitulo(gridPlanejamento, Posicao.TOPO, idioma.getMensagem("tuto_home_6"));
         Ajuda.getInstance().capitulo(gridAgenda, Posicao.TOPO, idioma.getMensagem("tuto_home_7"));
         Ajuda.getInstance().apresentarProximo();
     }

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -60,6 +60,8 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     private final Coluna valor = new Coluna(TABELA, "valor");
     private final Coluna data = new Coluna(TABELA, "data");
     private final Coluna hora = new Coluna(TABELA, "hora");
+    private final Coluna agendada = new Coluna(TABELA, "agendada");
+    private final Coluna parcela = new Coluna(TABELA, "parcela");
     
     private final Coluna idContaInner = new Coluna(Conta.TABELA, "id_conta");
     private final Coluna nomeConta = new Coluna(Conta.TABELA, "nome", "", "nome_conta");
@@ -76,6 +78,11 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     private String tipo = idioma.getMensagem("receita");
     private String status = idioma.getMensagem("efetuado");
     
+    private Boolean somenteAgendamento = false;
+    private Boolean especificarMesAno = false;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
+    
     public Receita(){ }
     
     public Receita(String idItem, String nomeItem, String nomeCategoria, String descricao, String valor){
@@ -84,9 +91,10 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         this.nomeCategoria.setValor(nomeCategoria);
         this.descricao.setValor(descricao);
         this.valor.setValor(valor);
+        this.agendada.setValor("0");
     }   
 
-    public Receita(String idReceita, String idConta, String idItem, String descricao, String valor, LocalDate data, String hora){
+    public Receita(String idReceita, String idConta, String idItem, String descricao, String valor, LocalDate data, String hora, String agendada){
         this.idReceita.setValor(idReceita);
         this.idConta.setValor(idConta);
         this.idItem.setValor(idItem);
@@ -94,33 +102,36 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         this.valor.setValor(valor);
         this.data.setValor(Datas.toSqlData(data));
         this.hora.setValor(hora);
+        this.agendada.setValor(agendada);
     }
     
     @Override
     protected Receita instanciar(ResultSet rs) throws SQLException{
-        Receita d = new Receita(
+        Receita r = new Receita(
             rs.getString(idReceita.getColuna()),
             rs.getString(idConta.getColuna()),
             rs.getString(idItem.getColuna()),
             rs.getString(descricao.getColuna()),
             rs.getString(valor.getColuna()),
             rs.getDate(data.getColuna()).toLocalDate(),
-            rs.getString(hora.getColuna())
+            rs.getString(hora.getColuna()),
+            rs.getString(agendada.getColuna())
         );
-        d.setNomeConta(rs.getString(nomeConta.getAliasColuna()));
-        d.setNomeItem(rs.getString(nomeItem.getAliasColuna()));
-        d.setNomeCategoria(rs.getString(nomeCategoria.getAliasColuna()));
-        return d;
+        r.setParcela(rs.getString(parcela.getColuna()));
+        r.setNomeConta(rs.getString(nomeConta.getAliasColuna()));
+        r.setNomeItem(rs.getString(nomeItem.getAliasColuna()));
+        r.setNomeCategoria(rs.getString(nomeCategoria.getAliasColuna()));
+        return r;
     }
       
     @Override
     public boolean cadastrar(){
-        return this.insert(idConta, idItem, descricao, valor, data, hora).commit();
+        return this.insert(idConta, idItem, descricao, valor, data, hora, agendada, parcela).commit();
     }
     
     @Override
     public boolean alterar(){
-        return this.update(idConta, descricao, valor, data).where(idReceita, "=").commit();
+        return this.update(idConta, descricao, valor, data, agendada).where(idReceita, "=").commit();
     }
     
     @Override
@@ -137,7 +148,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     @Override
     public ObservableList<Receita> listar(){
         try{
-            this.select(idReceita, idConta, idItem, descricao, valor, data, hora, nomeConta, nomeItem, nomeCategoria);
+            this.select(idReceita, idConta, idItem, descricao, valor, data, hora, agendada, parcela, nomeConta, nomeItem, nomeCategoria);
             this.inner(idConta, idContaInner);
             this.inner(idItem, idItemInner);
             this.inner(idCategoria, idCategoriaInner);
@@ -156,7 +167,23 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             if(idConta.getValor() != null){
                 this.and(idConta, "=");
             }
-            this.orderByDesc(data, hora);
+            agendada.setValor("1");
+            if (somenteAgendamento) {
+                this.and(agendada, "=");
+            } else {
+                this.and(agendada, "<>");
+            }
+            if (especificarMesAno) {
+                data.setValor(Datas.toSqlData(dataInicio));
+                this.and(data, ">=");
+                data.setValor(Datas.toSqlData(dataFim));
+                this.and(data, "<=");
+            }
+            if (somenteAgendamento) {
+                this.orderByAsc(data, nomeItem);
+            } else {
+                this.orderByDesc(data, hora);
+            }
             ResultSet rs = this.query();
             if(rs != null){
                 List<Receita> Linhas = new ArrayList<>();
@@ -171,6 +198,28 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         }catch(SQLException ex){
             Janela.showException(ex);
             return null;
+        }
+    }
+    
+    public boolean isReceitasAtrasadas() {
+        try {
+            this.select(idReceita);
+            agendada.setValor("1");
+            this.where(agendada, "=");
+            data.setValor(Datas.toSqlData(LocalDate.now()));
+            this.and(data, "<=");
+            data.setValor(Configuracao.getPropriedade("data_notificacao"));
+            this.and(data, ">");
+            this.orderByDesc(data, hora);
+            ResultSet rs = this.query();
+            if (rs != null) {
+                return rs.next();
+            } else {
+                return false;
+            }
+        } catch (SQLException ex) {
+            Janela.showException(ex);
+            return false;
         }
     }
     
@@ -206,12 +255,20 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         return Datas.getLocalDateTime(getData(), getHora());
     }
     
+    public String getAgendada() {
+        return agendada.getValor();
+    }
+    
     public String getNomeConta() {
         return nomeConta.getValor();
     }
     
     public String getNomeItem() {
-        return nomeItem.getValor();
+        if (agendada.getValor() != null && agendada.getValor().equals("1") && parcela.getValor() != null) {
+            return nomeItem.getValor() + " - " + parcela.getValor();
+        } else {
+            return nomeItem.getValor();
+        }
     }
     
     public String getNomeCategoria() {
@@ -235,6 +292,11 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         this.idConta.setValor(conta.getIdCategoria());
         return getThis();
     }
+    
+    public Receita setIdConta(String id_conta) {
+        this.idConta.setValor(id_conta);
+        return getThis();
+    }
         
     public void setData(String data) {
         this.data.setValor(data);
@@ -242,6 +304,15 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     
     public void setHora(String hora) {
         this.hora.setValor(hora);
+    }
+    
+    public Receita setAgendada(String agendada) {
+        this.agendada.setValor(agendada);
+        return getThis();
+    }
+    
+    public void setParcela(String parcela) {
+        this.parcela.setValor(parcela);
     }
     
     public void setNomeConta(String conta) {
@@ -261,6 +332,18 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         return this;
     }
     
+    public Receita setSomenteAgendamento() {
+        this.somenteAgendamento = true;
+        return getThis();
+    }
+    
+    public Receita setMesAno(int mes, int ano) {
+        this.especificarMesAno = true;
+        this.dataInicio = LocalDate.of(ano, mes, 1);
+        this.dataFim = dataInicio.withDayOfMonth(dataInicio.lengthOfMonth());
+        return getThis();
+    }
+    
     public Receita setFiltro(String filtro){
         descricao.setValor(filtro);
         nomeConta.setValor(filtro);
@@ -277,7 +360,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         return this;
     }
     
-    public ObservableList<Receita> getRelatorioMensal(LocalDate hoje){
+    public ObservableList<Receita> getRelatorioMensal(LocalDate hoje, Boolean somente_agendamento){
         try{
             LocalDate inicio = hoje.withDayOfMonth(1);
             LocalDate fim = hoje.withDayOfMonth(hoje.lengthOfMonth());
@@ -288,6 +371,12 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
+            agendada.setValor("1");
+            if (somente_agendamento) {
+                this.and(agendada, "=");
+            } else {
+                this.and(agendada, "<>");
+            }
             this.groupBy(nomeCategoria);
             this.orderByAsc(nomeCategoria);
             ResultSet rs = this.query();
@@ -310,6 +399,10 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
         }
     }
     
+    public ObservableList<Receita> getRelatorioMensal(LocalDate hoje) {
+        return getRelatorioMensal(hoje, false);
+    }
+    
     @Override
     public List<XYChart.Series<String,Number>> getRelatorioMensalBarras(LocalDate inicio, LocalDate fim, String nome_categoria, String id_categoria, Integer tipo_categoria){
         try{
@@ -328,6 +421,13 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
+            if (agendada.getValor().equals("1")) {
+                this.and(agendada, "=");
+            } else {
+                agendada.setValor("1");
+                this.and(agendada, "<>");
+                agendada.setValor("0");
+            }
             if(nome_categoria != null){
                 this.and(nomeCategoria, "=");
             }
@@ -362,7 +462,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
 
     public ObservableList<Extrato> getExtrato(LocalDate inicio, LocalDate fim, Categoria conta) {
         try {
-            this.select(idItem, data, hora, nomeCategoria, nomeItem, valor);
+            this.select(idItem, data, hora, nomeCategoria, nomeItem, parcela, valor, agendada);
             this.inner(idItem, idItemInner);
             this.inner(idCategoria, idCategoriaInner);
             data.setValor(Datas.toSqlData(inicio));
@@ -378,13 +478,22 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             if (rs != null) {
                 List<Extrato> objetos = new ArrayList<>();
                 while (rs.next()) {
+                    String status = idioma.getMensagem("efetuado");
+                    if(rs.getString(agendada.getColuna()).equals("1")){
+                        status = idioma.getMensagem("agendado");
+                    }
+                    String nomeReceita = rs.getString(nomeItem.getAliasColuna());
+                    if(rs.getString(parcela.getColuna())!=null){
+                        nomeReceita += " - "+rs.getString(parcela.getColuna());
+                    }
                     Extrato e = new Extrato(
                             idioma.getMensagem("receita"),
                             rs.getString(data.getColuna()),
                             rs.getString(hora.getColuna()),
                             rs.getString(nomeCategoria.getAliasColuna()),
-                            rs.getString(nomeItem.getAliasColuna()),
-                            rs.getString(valor.getColuna())
+                            nomeReceita,
+                            rs.getString(valor.getColuna()),
+                            status
                     );
                     objetos.add(e);
                 }

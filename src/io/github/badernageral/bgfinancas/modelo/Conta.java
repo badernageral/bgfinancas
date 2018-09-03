@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -131,7 +131,7 @@ public final class Conta extends Categoria<Conta> implements Modelo {
             }else if(ativada.getValor() != null){
                 this.where(ativada, "=");
             }
-            this.orderByAsc(nome);
+            this.orderByAsc(saldoTotal, nome);
             ResultSet rs = this.query();
             if(rs != null){
                 List<Conta> Linhas = new ArrayList<>();
@@ -168,7 +168,7 @@ public final class Conta extends Categoria<Conta> implements Modelo {
             combo.getItems().clear();
             combo.setPromptText(idioma.getMensagem("selecione"));
             ativada.setValor("1");
-            this.select(idCategoria, nome, valor, ativada, saldoTotal).where(ativada, "=").orderByAsc(nome);
+            this.select(idCategoria, nome, valor, ativada, saldoTotal).where(ativada, "=").orderByAsc(saldoTotal, nome);
             ResultSet rs = this.query();
             if(rs != null){
                 while(rs.next()){

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -126,7 +126,7 @@ public final class Validar {
     }
     
     public static boolean alteracao(ObservableList<?> lista, Button alterar){
-        if(lista.size()<1 || lista.get(0)==null){
+        if(lista.size()<=0 || lista.get(0)==null){
             Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("selecione_item_alterar"), alterar, Duracao.NORMAL);
             return false;
         }else if(lista.size()>1){

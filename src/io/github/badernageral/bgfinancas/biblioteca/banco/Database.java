@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -183,6 +183,11 @@ public final class Database {
         if(versao.equals("3.6")){
             banco.executeUpdate("ALTER TABLE cartao_credito ADD COLUMN ativado INTEGER DEFAULT 1");
             versao = setValorVersao("3.6.1");
+        }
+        if(versao.equals("3.6.1")){
+            banco.executeUpdate("ALTER TABLE receitas ADD COLUMN agendada INTEGER DEFAULT 0 NOT NULL");
+            banco.executeUpdate("ALTER TABLE receitas ADD COLUMN parcela VARCHAR_IGNORECASE(10)");
+            versao = setValorVersao("3.7");
         }
     }
     

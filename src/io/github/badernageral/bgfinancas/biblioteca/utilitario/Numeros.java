@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -36,7 +36,7 @@ public final class Numeros {
     }
     
     public static String arredondar(BigDecimal numero){
-        return numero.setScale(2, RoundingMode.UP).toString();
+        return numero.setScale(2, RoundingMode.HALF_UP).toString();
     }
     
     public static boolean isNumero(String numero){

@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -30,6 +30,7 @@ import io.github.badernageral.bgfinancas.biblioteca.utilitario.Datas;
 import io.github.badernageral.bgfinancas.idioma.Linguagem;
 import io.github.badernageral.bgfinancas.modelo.Configuracao;
 import io.github.badernageral.bgfinancas.modelo.Despesa;
+import io.github.badernageral.bgfinancas.modelo.Receita;
 import io.github.badernageral.bgfinancas.modelo.Usuario;
 import io.github.badernageral.bgfinancas.modulo.usuario.UsuarioFormularioControlador;
 import io.github.badernageral.bgfinancas.modulo.utilitario.ConfiguracaoFormularioControlador;
@@ -66,7 +67,7 @@ public class Main extends Application {
             }else{
                 try {
                     palco.setScene(criarCena(criarPainelPrincipal(),null));
-                    notificarDespesasAgendadas();
+                    notificarPlanejamento();
                 } catch (Exception ex) {
                     Janela.showException(ex);
                 }
@@ -114,15 +115,15 @@ public class Main extends Application {
             Kernel.palco.setScene(criarCena(criarPainelPrincipal(),null));
             Kernel.palco.show();
             carregarIcone();
-            notificarDespesasAgendadas();
+            notificarPlanejamento();
         } catch (Exception ex) {
             Janela.showException(ex);
         }
     }
     
-    private void notificarDespesasAgendadas(){
-        if(new Despesa().isDespesasAtrasadas()){
-            Janela.showMensagem(Status.ADVERTENCIA, idioma.getMensagem("despesas_atrasadas"));
+    private void notificarPlanejamento(){
+        if(new Despesa().isDespesasAtrasadas() || new Receita().isReceitasAtrasadas()){
+            Janela.showMensagem(Status.ADVERTENCIA, idioma.getMensagem("planejamento_atrasado"));
             Configuracao data_notificacao = new Configuracao().setNome("data_notificacao").consultar();
             data_notificacao.setValor(Datas.toSqlData(LocalDate.now()));
             data_notificacao.alterar();

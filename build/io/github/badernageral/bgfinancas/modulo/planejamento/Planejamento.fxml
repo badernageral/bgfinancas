@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+Copyright 2012-2018 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -11,7 +31,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<GridPane hgap="20.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.modulo.despesa.DespesasAgendadasControlador">
+<GridPane hgap="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.modulo.planejamento.PlanejamentoControlador">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="770.0" />
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="200.0" />
@@ -64,11 +84,18 @@
                       </HBox>
                   <HBox GridPane.columnIndex="5">
                      <children>
-                        <Button fx:id="cadastrar" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
+                        <Button fx:id="cadastrarDespesa" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
                            <styleClass>
                               <String fx:value="Botao" />
                               <String fx:value="BotaoMeio" />
                               <String fx:value="BotaoCadastrar" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="cadastrarReceita" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoMeio" />
+                              <String fx:value="BotaoCadastrar2" />
                            </styleClass>
                         </Button>
                         <Button fx:id="alterar" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
@@ -81,8 +108,15 @@
                         <Button fx:id="excluir" contentDisplay="CENTER" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0" GridPane.columnIndex="4">
                            <styleClass>
                               <String fx:value="Botao" />
-                              <String fx:value="BotaoFim" />
+                              <String fx:value="BotaoMeio" />
                               <String fx:value="BotaoExcluir" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="pagar" contentDisplay="CENTER" layoutX="80.0" layoutY="10.0" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0">
+                           <styleClass>
+                              <String fx:value="Botao" />
+                              <String fx:value="BotaoFim" />
+                              <String fx:value="BotaoGerenciar" />
                            </styleClass>
                         </Button>
                      </children>
@@ -100,7 +134,7 @@
                       <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80.0" />
                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" />
                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="200.0" minWidth="-Infinity" prefWidth="150.0" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="105.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="175.0" />
                   </columnConstraints>
                   <rowConstraints>
                       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" valignment="TOP" vgrow="SOMETIMES" />
@@ -117,13 +151,38 @@
                <children>
                   <HBox alignment="CENTER" GridPane.halignment="CENTER">
                      <children>
-                        <Label fx:id="labelDespesasAgendadasTotal" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Valor total">
+                        <Label fx:id="labelTotalReceitas" layoutX="356.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Receitas">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
                            <padding>
                               <Insets left="20.0" />
                            </padding>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="labelTotalDespesas" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Despesas">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="labelSaldo" layoutX="395.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="30.0" text="Saldo">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
                         </Label>
                      </children>
                   </HBox>

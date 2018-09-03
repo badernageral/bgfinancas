@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -29,7 +29,6 @@ import io.github.badernageral.bgfinancas.biblioteca.sistema.Botao;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Janela;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Kernel;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Tabela;
-import io.github.badernageral.bgfinancas.biblioteca.tipo.Duracao;
 import io.github.badernageral.bgfinancas.biblioteca.tipo.Posicao;
 import io.github.badernageral.bgfinancas.biblioteca.tipo.Status;
 import io.github.badernageral.bgfinancas.biblioteca.utilitario.Numeros;
@@ -64,6 +63,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -112,9 +112,13 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     private final CategoryAxis yAxisSecundario = new CategoryAxis();
     private final BarChart<String,Number> graficoSecundario = new BarChart<>(yAxisSecundario,xAxisSecundario);
     
-    private final CategoryAxis xAxisLinhas = new CategoryAxis();
-    private final NumberAxis yAxisLinhas = new NumberAxis();
-    private final LineChart<String,Number> graficoLinhas = new LineChart<>(xAxisLinhas,yAxisLinhas);
+    private final CategoryAxis xAxisTempoLinhas = new CategoryAxis();
+    private final NumberAxis yAxisTempoLinhas = new NumberAxis();
+    private final LineChart<String,Number> graficoTempoLinhas = new LineChart<>(xAxisTempoLinhas,yAxisTempoLinhas);
+    
+    private final CategoryAxis xAxisTempoBarras = new CategoryAxis();
+    private final NumberAxis yAxisTempoBarras = new NumberAxis();
+    private final StackedBarChart<Number,String> graficoTempoEmpilhado = new StackedBarChart<>(yAxisTempoBarras,xAxisTempoBarras);
     
     private final ListView<DespesaCategoria> listaCategorias = new ListView<>();
     
@@ -210,9 +214,12 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     }
     
     private void prepararTipoTempo(){
-        tipo.getItems().add(idioma.getMensagem("semanal"));
-        tipo.getItems().add(idioma.getMensagem("mensal"));
-        tipo.getItems().add(idioma.getMensagem("anual"));
+        tipo.getItems().add(idioma.getMensagem("semanal_linhas"));
+        tipo.getItems().add(idioma.getMensagem("mensal_linhas"));
+        tipo.getItems().add(idioma.getMensagem("anual_linhas"));
+        tipo.getItems().add(idioma.getMensagem("semanal_barras"));
+        tipo.getItems().add(idioma.getMensagem("mensal_barras"));
+        tipo.getItems().add(idioma.getMensagem("anual_barras"));
         tipo.getSelectionModel().select(1);
         tipo.setOnAction(e -> { carregarRelatorio(); });
     }
@@ -270,7 +277,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
                 relatorioListaDespesas();
                 break;
             case 2:
-                relatorioGraficoLinhas();
+                relatorioGraficoTempo();
                 break;
             case 3:
                 relatorioGraficoBarras(new Despesa().setAgendada("1"));
@@ -293,7 +300,8 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     private void removerGraficos(){
         tabela.getChildren().remove(graficoPrincipal);
         tabela.getChildren().remove(graficoSecundario);
-        tabela.getChildren().remove(graficoLinhas);
+        tabela.getChildren().remove(graficoTempoLinhas);
+        tabela.getChildren().remove(graficoTempoEmpilhado);
         tabela.getChildren().remove(listaCategorias);
         tabela.getChildren().remove(listaDespesas);
         tabela.getChildren().remove(listaExtrato);
@@ -410,7 +418,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         }
     }
     
-    private void relatorioGraficoLinhas(){   
+    private void relatorioGraficoTempo(){   
         listaCategorias.setEditable(true);
         if(listaCategorias.getItems().size()<=0){
             ObservableList<DespesaCategoria> categorias = new DespesaCategoria().listar();
@@ -418,28 +426,46 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         }
         listaCategorias.setCellFactory(CheckBoxListCell.forListView((DespesaCategoria param) -> {
             BooleanProperty observable = param.getSelecao();
-            observable.addListener((obs, wasSelected, isNowSelected) -> gerarGraficoLinhas() );
+            observable.addListener((obs, wasSelected, isNowSelected) -> gerarGraficoTempo() );
             return observable;
         }));
         ajustarColunas(25,75);
         tabela.add(listaCategorias, 0, 1);
-        tabela.add(graficoLinhas, 1, 1);  
-        gerarGraficoLinhas();
+        if(isBarras()){
+            tabela.add(graficoTempoEmpilhado, 1, 1);
+        }else{
+            tabela.add(graficoTempoLinhas, 1, 1);
+        }
+        gerarGraficoTempo();
     }
     
-    public void gerarGraficoLinhas(){
+    public void gerarGraficoTempo(){
         List<String> categoriasSelecionadas = new ArrayList<>();
         listaCategorias.getItems().stream().forEach((categoria) -> {
             if(categoria.isSelecionado()){
                 categoriasSelecionadas.add(categoria.getIdCategoria());
             }
         });
-        new Despesa().preencherRelatorioMensalLinhas(graficoLinhas, inicio.getValue(), fim.getValue(), categoriasSelecionadas, listaContaCartao.getSelectionModel().getSelectedItem(), tipo.getSelectionModel().getSelectedItem());
-        graficoLinhas.getData().stream().forEach((serie) -> {
-            serie.getData().stream().forEach((item) -> {
-                eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
+        if(isBarras()){
+            new Despesa().preencherRelatorioMensalTempoEmpilhado(graficoTempoEmpilhado, inicio.getValue(), fim.getValue(), categoriasSelecionadas, listaContaCartao.getSelectionModel().getSelectedItem(), tipo.getSelectionModel().getSelectedItem());
+            graficoTempoEmpilhado.getData().stream().forEach((serie) -> {
+                serie.getData().stream().forEach((item) -> {
+                    eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getXValue());
+                });
             });
-        });
+        }else{
+            new Despesa().preencherRelatorioMensalTempoLinhas(graficoTempoLinhas, inicio.getValue(), fim.getValue(), categoriasSelecionadas, listaContaCartao.getSelectionModel().getSelectedItem(), tipo.getSelectionModel().getSelectedItem());
+            graficoTempoLinhas.getData().stream().forEach((serie) -> {
+                serie.getData().stream().forEach((item) -> {
+                    eventosGrafico(item.getNode(), serie.getName()+" - "+idioma.getMensagem("moeda")+" "+item.getYValue());
+                });
+            });
+        }
+    }
+    
+    private boolean isBarras(){
+        String _tipo = tipo.getSelectionModel().getSelectedItem();
+        return _tipo.equals(idioma.getMensagem("semanal_barras")) || _tipo.equals(idioma.getMensagem("mensal_barras")) || _tipo.equals(idioma.getMensagem("anual_barras"));
     }
     
     private void ajustarColunas(int coluna1, int coluna2){
@@ -492,7 +518,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
 
     @Override
     public void acaoAjuda() {
-        Ajuda.getInstance().setObjetos(voltar,labelRelatorio,relatorio,labelContaCartao,listaContaCartao,labelInicio,inicio,labelFim,fim,atualizar,graficoPrincipal,graficoSecundario,listaCategorias,graficoLinhas);
+        Ajuda.getInstance().setObjetos(voltar,labelRelatorio,relatorio,labelContaCartao,listaContaCartao,labelInicio,inicio,labelFim,fim,atualizar,graficoPrincipal,graficoSecundario,listaCategorias,graficoTempoLinhas,graficoTempoEmpilhado);
         Ajuda.getInstance().capitulo(Posicao.CENTRO, idioma.getMensagem("tuto_relat_1"));
         Ajuda.getInstance().capitulo(relatorio, Posicao.BAIXO, idioma.getMensagem("tuto_relat_2"));
         Ajuda.getInstance().capitulo(listaContaCartao, Posicao.BAIXO, idioma.getMensagem("tuto_relat_3"));

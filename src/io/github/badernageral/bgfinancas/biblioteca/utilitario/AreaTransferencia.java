@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -19,9 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package io.github.badernageral.bgfinancas.biblioteca.utilitario;
 
+import io.github.badernageral.bgfinancas.biblioteca.contrato.Colavel;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Controlador;
 import io.github.badernageral.bgfinancas.idioma.Linguagem;
-import io.github.badernageral.bgfinancas.modelo.Despesa;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
@@ -31,13 +31,13 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 
-public class AreaTransferencia {
+public class AreaTransferencia<T extends Colavel> {
 
     private LocalDate data = LocalDate.now();
     private final Linguagem idioma = Linguagem.getInstance();
-    private final ObservableList<Despesa> areaTransferencia = FXCollections.observableList(new ArrayList<Despesa>());
+    private final ObservableList<T> areaTransferencia = FXCollections.observableList(new ArrayList<>());
 
-    public void criarMenu(Controlador controlador, TableView<Despesa> tabela, boolean cadastrar) {
+    public void criarMenu(Controlador controlador, TableView<T> tabela, boolean cadastrar) {
         ContextMenu menu = new ContextMenu();
         MenuItem copiar = new MenuItem(idioma.getMensagem("copiar"));
         MenuItem colar = new MenuItem(idioma.getMensagem("colar"));

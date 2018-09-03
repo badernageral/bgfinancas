@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -22,7 +22,6 @@ package io.github.badernageral.bgfinancas.biblioteca.utilitario;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Controlador;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.ControladorFiltro;
-import io.github.badernageral.bgfinancas.biblioteca.contrato.Item;
 import io.github.badernageral.bgfinancas.idioma.Linguagem;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,14 +57,10 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
             } else {
                 String textoConsultado = Outros.removerAcentos(getText().toLowerCase());
                 lista_itens = Lista.filtrar(textoConsultado, itens);
-                if (lista_itens.size() > 0) {
-                    lista_itens = Lista.ordenar(textoConsultado, lista_itens);
-                    popularPopup(lista_itens);
-                    if (!popup.isShowing()) {
-                        popup.show(AutoCompletarTextField.this, Side.BOTTOM, 0, 0);
-                    }
-                } else {
-                    popup.hide();
+                lista_itens = Lista.ordenar(textoConsultado, lista_itens);
+                popularPopup(lista_itens);
+                if (!popup.isShowing()) {
+                    popup.show(AutoCompletarTextField.this, Side.BOTTOM, 0, 0);
                 }
             }
         });
@@ -76,7 +71,11 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
             setOnKeyReleased(event -> {
                 if (event.getCode() == KeyCode.ENTER) {
                     if (!getText().equals("")) {
-                        controlador.acaoCadastrar(1);
+                        if(lista_itens.size()>0){
+                            controladorF.adicionar(lista_itens.get(0).toString());
+                        }else{
+                            controlador.acaoCadastrar(1);
+                        }
                     }
                 }
             });
@@ -104,6 +103,14 @@ public final class AutoCompletarTextField<T extends Categoria> extends TextField
             });
             popupItens.add(menuItem);
         }
+        Label itemLabel = new Label(Linguagem.getInstance().getMensagem("cadastrar")+": "+getText());
+        CustomMenuItem menuItem = new CustomMenuItem(itemLabel, true);
+        menuItem.setOnAction(actionEvent -> {
+            setText(getText());
+            popup.hide();
+            controlador.acaoCadastrar(1);
+        });
+        popupItens.add(menuItem);
         popup.getItems().clear();
         popup.getItems().addAll(popupItens);
     }

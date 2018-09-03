@@ -1,5 +1,5 @@
 /*
-Copyright 2012-2017 Jose Robson Mariano Alves
+Copyright 2012-2018 Jose Robson Mariano Alves
 
 This file is part of bgfinancas.
 
@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 package io.github.badernageral.bgfinancas.modulo.despesa;
 
+import io.github.badernageral.bgfinancas.modulo.planejamento.PlanejamentoControlador;
 import io.github.badernageral.bgfinancas.biblioteca.ajuda.Ajuda;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.ControladorFormulario;
@@ -55,6 +56,7 @@ import io.github.badernageral.bgfinancas.modulo.conta.ContaFormularioControlador
 import io.github.badernageral.bgfinancas.modulo.despesa.item.DespesaItemFormularioControlador;
 import io.github.badernageral.bgfinancas.template.botao.BotaoListaItem;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -62,6 +64,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
@@ -86,17 +89,18 @@ public final class DespesaFormularioControlador implements Initializable, Contro
     private final CheckBox checkAgendar = new CheckBox();
     private final CheckBox checkCartaoCredito = new CheckBox();
     private final Spinner qtdMeses = new Spinner();
+     private final ToggleButton valorParcela = new ToggleButton();
     private final Label ajuda = new Label();
     private final ComboBox<Categoria> listaCartaoCredito = new ComboBox<>();
     private final Button botaoListaCartaoCredito = new Button();
     private final Label labelCartaoCredito = new Label(idioma.getMensagem("cartao_credito")+":");
     private final HBox grupoCartaoCredito = new HBox();
-    private Boolean pagar = false;
+    private Boolean confirmar = false;
     
     private Despesa modelo;
     
     private Acao acao;
-    private DespesasAgendadasControlador controlador = null;
+    private PlanejamentoControlador controlador = null;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -173,7 +177,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         }
     }
     
-    public void cadastrar(DespesasAgendadasControlador controlador){
+    public void cadastrar(PlanejamentoControlador controlador){
         acao = Acao.CADASTRAR;
         this.controlador = controlador;
         if(controlador!=null){
@@ -190,9 +194,19 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         qtdMeses.setPrefWidth(100);
         qtdMeses.getStyleClass().add(Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL);
         qtdMeses.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
-        Ajuda.estilizarBotaoDica(qtdMeses, ajuda, idioma.getMensagem("numero_meses"), Duracao.CURTA);
+        Ajuda.estilizarBotaoDica(qtdMeses, ajuda, idioma.getMensagem("ajuda_parcela_agendada"), Duracao.MUITO_LONGA);
+        valorParcela.getStyleClass().add("Botao");
+        valorParcela.getStyleClass().add("BotaoFim");
+        valorParcela.setText("/");
+        valorParcela.setOnAction(e -> {
+            if(valorParcela.isSelected()){
+                valorParcela.setText("=");
+            }else{
+                valorParcela.setText("/");
+            }
+        });
         HBox grupoAgendar = new HBox();
-        grupoAgendar.getChildren().addAll(checkAgendar,qtdMeses,ajuda);
+        grupoAgendar.getChildren().addAll(checkAgendar,qtdMeses,valorParcela,ajuda);
         tabela.add(grupoAgendar, 1, 5);
         prepararCartaoCredito(true);
         if(controlador!=null){
@@ -207,6 +221,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
             }
         }else{
             qtdMeses.setVisible(false);
+            valorParcela.setVisible(false);
             ajuda.setVisible(false);
         }
         checkAgendar.setOnAction(e -> {
@@ -239,6 +254,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         tabela.getChildren().remove(botaoController.getStackPane());
         if(checkAgendar.isSelected()){
             qtdMeses.setVisible(true);
+            valorParcela.setVisible(true);
             ajuda.setVisible(true);
             listaCartaoCredito.setVisible(false);
             botaoListaCartaoCredito.setVisible(false);
@@ -247,6 +263,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
             tabela.add(botaoController.getStackPane(), 1, 7);
         }else{
             qtdMeses.setVisible(false);
+            valorParcela.setVisible(false);
             ajuda.setVisible(false);
             checkCartaoCredito.setSelected(false);
             tabela.getChildren().remove(labelCartaoCredito);
@@ -272,10 +289,10 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         quantidade.setText(modelo.getQuantidade().toString());
         valor.setText(modelo.getValor().toString());
         if(modelo.getAgendada().equals("1")){
-            Button bPagar = new Button(idioma.getMensagem("pagar"));
-            botaoController.getGrupoBotao().getChildren().add(0, bPagar);
-            bPagar.setOnAction(e -> {
-                pagar = true;
+            Button bConfirmar = new Button(idioma.getMensagem("confirmar"));
+            botaoController.getGrupoBotao().getChildren().add(0, bConfirmar);
+            bConfirmar.setOnAction(e -> {
+                confirmar = true;
                 acaoFinalizar();
             });
             prepararCartaoCredito(false);
@@ -302,7 +319,11 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                         if(checkCartaoCredito.isSelected()){
                             cartaoCredito = listaCartaoCredito.getSelectionModel().getSelectedItem().getIdCategoria();
                         }
-                        Despesa item = new Despesa(null, contaController.getIdCategoria(), itemController.getIdItem(), quantidade.getText(), valor.getText(), dataCadastro, Datas.getHoraAtual(), "1", cartaoCredito);
+                        String dvalor = valor.getText();
+                        if(!valorParcela.isSelected()){
+                            dvalor = new BigDecimal(dvalor).divide(new BigDecimal(j), 2, RoundingMode.HALF_UP).toString();
+                        }
+                        Despesa item = new Despesa(null, contaController.getIdCategoria(), itemController.getIdItem(), quantidade.getText(), dvalor, dataCadastro, Datas.getHoraAtual(), "1", cartaoCredito);
                         if(j>1){ item.setParcela(i+"/"+j); }
                         item.cadastrar();
                         dataCadastro = dataCadastro.plusMonths(1);
@@ -310,7 +331,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                     if(controlador!=null){
                         Kernel.controlador.acaoFiltrar(true);
                     }else{
-                        Kernel.principal.acaoDespesasAgendadas(data.getValue().getMonthValue(), data.getValue().getYear());
+                        Kernel.principal.acaoPlanejamento(data.getValue().getMonthValue(), data.getValue().getYear());
                     }
                 }else{
                     Despesa item = new Despesa(null, contaController.getIdCategoria(), itemController.getIdItem(), quantidade.getText(), valor.getText(), data.getValue(), Datas.getHoraAtual(), "0", null);
@@ -334,7 +355,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
                         new Conta().alterarSaldo(Operacao.INCREMENTAR, modelo.getIdConta(), valorDiferenca.toString());
                     }
                 }else{
-                    if(pagar){
+                    if(confirmar){
                         modelo.setAgendada("0");
                         new Conta().alterarSaldo(Operacao.DECREMENTAR, contaController.getIdCategoria(), valor.getText());
                     }
