@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.layout.StackPane?>
-
-<StackPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.modulo.cartao_credito.CartaoCreditoControlador">
-   <children>
-       <fx:include fx:id="cena" source="../../template/cena/CenaPadrao.fxml" />
-   </children>
-</StackPane>
