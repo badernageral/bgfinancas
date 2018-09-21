@@ -131,6 +131,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     private final HBox panelValores = new HBox();
     private final Label labelReceitasValor = new Label();
     private final Label labelDespesasValor = new Label();
+    private final Label labelSaldoValor = new Label();
     private final Label labelTotalValor = new Label();
                    
     @Override
@@ -188,28 +189,32 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     }
     
     public void acaoImprimir() {
-        PageLayout paisagem = Printer.getDefaultPrinter().createPageLayout(Paper.A4, PageOrientation.LANDSCAPE, Printer.MarginType.HARDWARE_MINIMUM);
-        Double largura = paisagem.getPrintableWidth()-50;
-        Double altura = paisagem.getPrintableHeight()-50;
-        PrinterJob trabalho = PrinterJob.createPrinterJob();
-        if(trabalho != null){
-            if(trabalho.showPrintDialog(Kernel.palco)){
-                Tooltip aguarde = Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("aguarde_impressao"));
-                tabela.getChildren().remove(barraSuperior);
-                trabalho.getJobSettings().setPageLayout(paisagem);
-                tabela.setMaxSize(largura, altura);
-                ObservableList itens = listaExtrato.getItems();
-                for(int i=0; i<itens.size();i+=18){
-                    int end = (i+18<itens.size()) ? i+18 : itens.size();
-                    listaExtrato.setItems(FXCollections.observableList(itens.subList(i, end)));
-                    trabalho.printPage(tabela);
+        try{
+            PageLayout paisagem = Printer.getDefaultPrinter().createPageLayout(Paper.A4, PageOrientation.LANDSCAPE, Printer.MarginType.HARDWARE_MINIMUM);
+            Double largura = paisagem.getPrintableWidth()-50;
+            Double altura = paisagem.getPrintableHeight()-50;
+            PrinterJob trabalho = PrinterJob.createPrinterJob();
+            if(trabalho != null){
+                if(trabalho.showPrintDialog(Kernel.palco)){
+                    Tooltip aguarde = Janela.showTooltip(Status.ADVERTENCIA, idioma.getMensagem("aguarde_impressao"));
+                    tabela.getChildren().remove(barraSuperior);
+                    trabalho.getJobSettings().setPageLayout(paisagem);
+                    tabela.setMaxSize(largura, altura);
+                    ObservableList itens = listaExtrato.getItems();
+                    for(int i=0; i<itens.size();i+=18){
+                        int end = (i+18<itens.size()) ? i+18 : itens.size();
+                        listaExtrato.setItems(FXCollections.observableList(itens.subList(i, end)));
+                        trabalho.printPage(tabela);
+                    }
+                    tabela.add(barraSuperior, 0, 0);
+                    tabela.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                    listaExtrato.setItems(itens);
+                    aguarde.hide();
                 }
-                tabela.add(barraSuperior, 0, 0);
-                tabela.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-                listaExtrato.setItems(itens);
-                aguarde.hide();
+                trabalho.endJob();
             }
-            trabalho.endJob();
+        }catch(Exception ex){
+            Janela.showMensagem(Status.ERRO, idioma.getMensagem("erro_imprimir"));
         }
     }
     
@@ -237,11 +242,9 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_agendadas"))){
             labelContaCartao.setText(idioma.getMensagem("cartao_credito")+":");
             new CartaoCredito().montarSelectCategoria(listaContaCartao);
-            CartaoCredito cartaoSemCartao = new CartaoCredito().setNome(idioma.getMensagem("sem_cartao_credito"));
-            CartaoCredito cartaoSomenteCartao = new CartaoCredito().setNome(idioma.getMensagem("somente_cartao_credito"));
-            CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("todos"));
-            listaContaCartao.getItems().add(cartaoSemCartao);
-            listaContaCartao.getItems().add(cartaoSomenteCartao);
+            CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("sem_filtro"));
+            listaContaCartao.getItems().add(new CartaoCredito().setNome(idioma.getMensagem("qualquer_cartao_credito")));
+            listaContaCartao.getItems().add(new CartaoCredito().setNome(idioma.getMensagem("sem_cartao_credito")));
             listaContaCartao.getItems().add(cartaoTodos);
             listaContaCartao.getSelectionModel().select(cartaoTodos);
         }else{
@@ -264,6 +267,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
         panelValores.getChildren().add(labelDespesasValor);
         labelReceitasValor.getStyleClass().add("labelValorReceita");
         labelDespesasValor.getStyleClass().add("labelValorDespesa");
+        labelSaldoValor.getStyleClass().add("labelValorSaldo");
     }
     
     public void carregarRelatorio(){
@@ -322,7 +326,7 @@ public final class RelatoriosControlador implements Initializable, Controlador {
     
     private Integer getTipoCategoria(){
         if(relatorio.getSelectionModel().getSelectedItem().equals(idioma.getMensagem("despesas_agendadas"))){
-            if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("somente_cartao_credito"))){
+            if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("qualquer_cartao_credito"))){
                 return 4;
             }else if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("sem_cartao_credito"))){
                 return 3;
@@ -361,8 +365,14 @@ public final class RelatoriosControlador implements Initializable, Controlador {
             return a.getDataHora().compareTo(b.getDataHora());
         });
         labelReceitasValor.setText(idioma.getMensagem("receitas")+": "+Numeros.arredondar(totalReceitas));
-        labelDespesasValor.setText(idioma.getMensagem("despesas_efetuadas")+": "+Numeros.arredondar(totalDespesas));
-        labelTotalValor.setText(idioma.getMensagem("despesas_agendadas")+": "+Numeros.arredondar(totalDespesasAgendadas));
+        labelDespesasValor.setText(idioma.getMensagem("despesas_confirmadas")+": "+Numeros.arredondar(totalDespesas));
+        labelSaldoValor.setText(idioma.getMensagem("saldo")+": "+Numeros.arredondar(totalReceitas-totalDespesas));
+        labelTotalValor.setText(idioma.getMensagem("despesas_aguardando_confirmacao")+": "+Numeros.arredondar(totalDespesasAgendadas));
+        if(listaContaCartao.getSelectionModel().getSelectedItem().getNome().equals(idioma.getMensagem("todas"))){
+            panelValores.getChildren().add(2,labelSaldoValor);
+        }else{
+            panelValores.getChildren().remove(labelSaldoValor);
+        }
     }
     
     private void relatorioGraficoBarras(Grafico objeto){

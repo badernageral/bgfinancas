@@ -274,17 +274,17 @@ public final class HomeControlador implements Initializable, Controlador {
         labelValorTotalRelatorio.setVisible(true);
         valorTotalRelatorio = BigDecimal.ZERO;
         switch(aba.intValue()){
-            case 0:
+            case 1:
                 tabelaListaRelatorioDespesas.getItems().stream().forEach(item -> {
                     valorTotalRelatorio = valorTotalRelatorio.add(item.getValor());
                 });
                 break;
-            case 1:
+            case 2:
                 tabelaListaRelatorioReceitas.getItems().stream().forEach(item -> {
                     valorTotalRelatorio = valorTotalRelatorio.add(item.getValor());
                 });
                 break;
-            case 2:
+            case 3:
                 tabelaListaRelatorioTransferencias.getItems().stream().forEach(item -> {
                     valorTotalRelatorio = valorTotalRelatorio.add(item.getValor());
                 });

@@ -57,8 +57,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
@@ -119,11 +117,11 @@ public final class PlanejamentoControlador implements Initializable, Controlador
         tabela.adicionarColunaData(tabelaLista, idioma.getMensagem("data"), "data");
         tabela.adicionarColuna(tabelaLista, idioma.getMensagem("cartao_credito"), "nomeCartaoCredito");
         new CartaoCredito().montarSelectCategoria(listaCartaoCredito);
-        CartaoCredito cartaoSemCartao = new CartaoCredito().setIdCategoria("NULL").setNome(idioma.getMensagem("sem_cartao_credito"));
-        CartaoCredito cartaoSomenteCartao = new CartaoCredito().setIdCategoria("NOTNULL").setNome(idioma.getMensagem("somente_cartao_credito"));
-        CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("todos"));
-        listaCartaoCredito.getItems().add(cartaoSemCartao);
-        listaCartaoCredito.getItems().add(cartaoSomenteCartao);
+        CartaoCredito cartaoTodos = new CartaoCredito().setNome(idioma.getMensagem("sem_filtro"));
+        listaCartaoCredito.getItems().add(new CartaoCredito().setIdCategoria("NOTNULL").setNome(idioma.getMensagem("qualquer_cartao_credito")));
+        listaCartaoCredito.getItems().add(new CartaoCredito().setIdCategoria("NOTNULLPARCELAYES").setNome(idioma.getMensagem("qualquer_cartao_credito_com_parcela")));
+        listaCartaoCredito.getItems().add(new CartaoCredito().setIdCategoria("NOTNULLPARCELANOT").setNome(idioma.getMensagem("qualquer_cartao_credito_sem_parcela")));
+        listaCartaoCredito.getItems().add(new CartaoCredito().setIdCategoria("NULL").setNome(idioma.getMensagem("sem_cartao_credito")));
         listaCartaoCredito.getItems().add(cartaoTodos);
         listaCartaoCredito.getSelectionModel().select(cartaoTodos);
         listaCartaoCredito.setOnAction(e -> {
@@ -267,7 +265,9 @@ public final class PlanejamentoControlador implements Initializable, Controlador
         ModalPagarControlador janela = Janela.abrir(Planejamento.FXML_MODAL_PAGAR, TITULO, true);
         janela.setTitulo(idioma.getMensagem("confirmar"));
         Planejamento p = tabelaLista.getSelectionModel().getSelectedItems().get(0);
-        janela.setValor(new Conta().setIdCategoria(p.getIdConta()).setNome(p.getNomeConta()), p.getData());
+        itens = tabelaLista.getSelectionModel().getSelectedItems();
+        BigDecimal total = itens.stream().map(ps -> ps.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        janela.setValor(new Conta().setIdCategoria(p.getIdConta()).setNome(p.getNomeConta()), p.getData(), total.toString());
         Kernel.palcoModal.showAndWait();
         return janela.getResultado();
     }

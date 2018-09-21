@@ -83,7 +83,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #imagemRelatorio{ -fx-image: url("../imagem/modulo/icon/relatorio.png"); }
 #imagemGrupos{ -fx-image: url("../imagem/modulo/icon/grupo.png"); }
 
-#labelPoupancaTotal, #labelSaldo, #labelPlanejamentoSaldo{
+#labelPoupancaTotal, #labelSaldo, .labelValorSaldo, #labelPlanejamentoSaldo{
     -fx-background-image: url("../imagem/outros/poupanca.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: left center;

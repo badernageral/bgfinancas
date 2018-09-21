@@ -76,7 +76,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
     private final Coluna sumValor = new Coluna(TABELA, "valor", "sum_valor", Funcao.SOMAR);
     
     private String tipo = idioma.getMensagem("receita");
-    private String status = idioma.getMensagem("efetuado");
+    private String status = idioma.getMensagem("confirmado");
     
     private Boolean somenteAgendamento = false;
     private Boolean especificarMesAno = false;
@@ -421,7 +421,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             this.and(data, ">=");
             data.setValor(Datas.toSqlData(fim));
             this.and(data, "<=");
-            if (agendada.getValor().equals("1")) {
+            if (agendada.getValor() != null && agendada.getValor().equals("1")) {
                 this.and(agendada, "=");
             } else {
                 agendada.setValor("1");
@@ -478,7 +478,7 @@ public final class Receita extends Banco<Receita> implements Modelo, Grafico {
             if (rs != null) {
                 List<Extrato> objetos = new ArrayList<>();
                 while (rs.next()) {
-                    String status = idioma.getMensagem("efetuado");
+                    String status = idioma.getMensagem("confirmado");
                     if(rs.getString(agendada.getColuna()).equals("1")){
                         status = idioma.getMensagem("agendado");
                     }

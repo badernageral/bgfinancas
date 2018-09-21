@@ -164,6 +164,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </GridPane>
             <TabPane fx:id="painelRelatorio" focusTraversable="false" side="BOTTOM" styleClass="floating" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
                <tabs>
+                  <Tab fx:id="tabRelatorioGrupos" closable="false" text="Grupos">
+                     <content>
+                        <TableView fx:id="tabelaListaRelatorioGrupos" focusTraversable="false" />
+                     </content>
+                  </Tab>
                   <Tab fx:id="tabRelatorioDespesas" closable="false" text="Despesas">
                      <content>
                         <TableView fx:id="tabelaListaRelatorioDespesas" focusTraversable="false" />
@@ -177,11 +182,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                   <Tab fx:id="tabRelatorioTransferencias" closable="false" text="Transferências">
                      <content>
                         <TableView fx:id="tabelaListaRelatorioTransferencias" focusTraversable="false" />
-                     </content>
-                  </Tab>
-                  <Tab fx:id="tabRelatorioGrupos" closable="false" text="Grupos">
-                     <content>
-                        <TableView fx:id="tabelaListaRelatorioGrupos" focusTraversable="false" />
                      </content>
                   </Tab>
                   <Tab fx:id="tabRelatorioDespesasAgendadas" closable="false" text="Despesas agendadas">

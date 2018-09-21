@@ -63,7 +63,9 @@ public final class Planejamento extends Banco<Planejamento> implements Modelo, C
     public ObservableList<Planejamento> listar(int mes, int ano, Categoria cartao){
         ObservableList<Planejamento> itens = FXCollections.observableList(new ArrayList<>());
         new Despesa().setSomenteAgendamento().setMesAno(mes, ano).setIdCartaoCredito(cartao).listar().forEach(d -> itens.add(new Planejamento(d)));
-        new Receita().setSomenteAgendamento().setMesAno(mes, ano).listar().forEach(r -> itens.add(new Planejamento(r)));
+        if (cartao==null || cartao.getNome().equals(idioma.getMensagem("sem_filtro"))) {
+            new Receita().setSomenteAgendamento().setMesAno(mes, ano).listar().forEach(r -> itens.add(new Planejamento(r)));
+        }
         itens.sort((Planejamento p1, Planejamento p2) -> p1.getData().compareTo(p2.getData()));
         return itens;
     }

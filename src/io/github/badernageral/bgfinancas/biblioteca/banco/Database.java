@@ -189,6 +189,9 @@ public final class Database {
             banco.executeUpdate("ALTER TABLE receitas ADD COLUMN parcela VARCHAR_IGNORECASE(10)");
             versao = setValorVersao("3.7");
         }
+        if(versao.equals("3.7")){
+            versao = setValorVersao("3.7.1");
+        }
     }
     
     private static String setValorVersao(String versao){
@@ -231,12 +234,12 @@ public final class Database {
                 banco.executeUpdate("INSERT INTO DESPESAS VALUES(1,1,1,1.00,100.00,'"+data+"','08:19:01',1,NULL,NULL)");
             }
             if(new Receita().listar().isEmpty()){
-                banco.executeUpdate("INSERT INTO RECEITAS VALUES(0,0,0,'"+Linguagem.getInstance().getNomeMes(LocalDate.now().getMonthValue())+" / "+LocalDate.now().getYear()+"',900.00,'"+data+"','15:28:52')");
-                banco.executeUpdate("INSERT INTO RECEITAS VALUES(1,1,1,'Repair',50.00,'"+data+"','15:29:55')");
                 banco.executeUpdate("INSERT INTO RECEITAS_CATEGORIAS VALUES(0,'Salary')");
                 banco.executeUpdate("INSERT INTO RECEITAS_CATEGORIAS VALUES(1,'Others')");
                 banco.executeUpdate("INSERT INTO RECEITAS_ITENS VALUES(0,0,'Company X')");
                 banco.executeUpdate("INSERT INTO RECEITAS_ITENS VALUES(1,1,'Services')");
+                banco.executeUpdate("INSERT INTO RECEITAS VALUES(0,0,0,'"+Linguagem.getInstance().getNomeMes(LocalDate.now().getMonthValue())+" / "+LocalDate.now().getYear()+"',900.00,'"+data+"','15:28:52',0,NULL)");
+                banco.executeUpdate("INSERT INTO RECEITAS VALUES(1,1,1,'Repair',50.00,'"+data+"','15:29:55',0,NULL)");
             }
             if(new Grupo().listar().isEmpty()){
                 banco.executeUpdate("INSERT INTO RELATORIOS_GRUPOS VALUES(0,'Food',200.00,NULL)");
@@ -286,12 +289,12 @@ public final class Database {
                 banco.executeUpdate("INSERT INTO DESPESAS VALUES(1,1,1,1.00,100.00,'"+data+"','08:19:01',1,NULL,NULL)");
             }
             if(new Receita().listar().isEmpty()){                
-                banco.executeUpdate("INSERT INTO RECEITAS VALUES(0,0,0,'"+Linguagem.getInstance().getNomeMes(LocalDate.now().getMonthValue())+" / "+LocalDate.now().getYear()+"',900.00,'"+data+"','15:28:52')");
-                banco.executeUpdate("INSERT INTO RECEITAS VALUES(1,1,1,'Conserto',50.00,'"+data+"','15:29:55')");
                 banco.executeUpdate("INSERT INTO RECEITAS_CATEGORIAS VALUES(0,'Sal\u00e1rio')");
                 banco.executeUpdate("INSERT INTO RECEITAS_CATEGORIAS VALUES(1,'Outros')");
                 banco.executeUpdate("INSERT INTO RECEITAS_ITENS VALUES(0,0,'Empresa X')");
                 banco.executeUpdate("INSERT INTO RECEITAS_ITENS VALUES(1,1,'Servi\u00e7os prestados')");
+                banco.executeUpdate("INSERT INTO RECEITAS VALUES(0,0,0,'"+Linguagem.getInstance().getNomeMes(LocalDate.now().getMonthValue())+" / "+LocalDate.now().getYear()+"',900.00,'"+data+"','15:28:52',0,NULL)");
+                banco.executeUpdate("INSERT INTO RECEITAS VALUES(1,1,1,'Conserto',50.00,'"+data+"','15:29:55',0,NULL)");
             }
             if(new Grupo().listar().isEmpty()){
                 banco.executeUpdate("INSERT INTO RELATORIOS_GRUPOS VALUES(0,'Alimenta\u00e7\u00e3o',200.00,NULL)");

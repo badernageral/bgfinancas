@@ -21,10 +21,7 @@ package io.github.badernageral.bgfinancas.biblioteca.utilitario;
 
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Categoria;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Item;
-import io.github.badernageral.bgfinancas.biblioteca.sistema.Janela;
-import io.github.badernageral.bgfinancas.biblioteca.tipo.Status;
 import io.github.badernageral.bgfinancas.idioma.Linguagem;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
@@ -49,6 +46,8 @@ public final class AutoFiltro<T extends Categoria> implements EventHandler<KeyEv
             if (!texto.equals("") && !texto.contains("(")) {
                 if (this.getItem() != null) {
                     this.comboBox.getEditor().setText(this.getItem().toString());
+                }else{
+                    this.comboBox.getSelectionModel().selectFirst();
                 }
             }
         });

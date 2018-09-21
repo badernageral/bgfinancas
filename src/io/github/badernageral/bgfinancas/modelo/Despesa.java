@@ -99,7 +99,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico, Co
     private LocalDate dataFim;
     
     private String tipo = idioma.getMensagem("despesa");
-    private String status = idioma.getMensagem("efetuado");
+    private String status = idioma.getMensagem("confirmado");
 
     public Despesa() {
     }
@@ -203,10 +203,15 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico, Co
             if (idCartaoCredito.getValor() != null) {
                 if (idCartaoCredito.getValor().equals("NULL")) {
                     this.andIsNull(idCartaoCredito);
-                } else if (idCartaoCredito.getValor().equals("NOTNULL")) {
+                } else if (idCartaoCredito.getValor().equals("NOTNULL") || idCartaoCredito.getValor().equals("NOTNULLPARCELAYES") || idCartaoCredito.getValor().equals("NOTNULLPARCELANOT")) {
                     this.andIsNotNull(idCartaoCredito);
                 } else {
                     this.and(idCartaoCredito, "=");
+                }
+                if (idCartaoCredito.getValor().equals("NOTNULLPARCELAYES")) {
+                    this.andIsNotNull(parcela);
+                }else if(idCartaoCredito.getValor().equals("NOTNULLPARCELANOT")){
+                    this.andIsNull(parcela);
                 }
             }
             agendada.setValor("1");
@@ -477,7 +482,7 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico, Co
             if (rs != null) {
                 List<Extrato> objetos = new ArrayList<>();
                 while (rs.next()) {
-                    String status = idioma.getMensagem("efetuado");
+                    String status = idioma.getMensagem("confirmado");
                     if(rs.getString(agendada.getColuna()).equals("1")){
                         status = idioma.getMensagem("agendado");
                     }

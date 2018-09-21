@@ -36,6 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
@@ -46,6 +47,7 @@ public final class ModalPagarControlador implements Initializable, ControladorFo
     @FXML private TitledPane formulario;
     @FXML private Text campo_1;
     @FXML private Text campo_2;
+    @FXML private Label valor_total;
     @FXML private ComboBox<Categoria> entrada_1;
     @FXML private DatePicker entrada_2;
     @FXML private Button ok;
@@ -67,9 +69,10 @@ public final class ModalPagarControlador implements Initializable, ControladorFo
         formulario.setText(titulo);
     }
     
-    public void setValor(Categoria valor_1, LocalDate valor_2){
+    public void setValor(Categoria valor_1, LocalDate valor_2, String valor_total){
         this.entrada_1.getSelectionModel().select(valor_1);
         this.entrada_2.setValue(valor_2);
+        this.valor_total.setText(idioma.getMensagem("valor_total")+": "+idioma.getMensagem("moeda")+" "+valor_total);
     }
     
     @FXML

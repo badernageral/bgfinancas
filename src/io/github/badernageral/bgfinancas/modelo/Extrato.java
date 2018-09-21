@@ -47,7 +47,7 @@ public class Extrato {
     }
     
     public Extrato(String tipo, String data, String hora, String nomeCategoria, String nomeItem, String valor){
-        this(tipo,data,hora,nomeCategoria,nomeItem,valor,Linguagem.getInstance().getMensagem("efetuado"));
+        this(tipo,data,hora,nomeCategoria,nomeItem,valor,Linguagem.getInstance().getMensagem("confirmado"));
     }
     
     public String getTipo() {
