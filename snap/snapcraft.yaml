@@ -1,0 +1,35 @@
+name: bgfinancas
+version: '3.7.1'
+summary: Personal Finances Manager
+description: |
+  BG Finanças is a open source software to control your financial life,
+  your focus is to use accounts to store money and launch 
+  expenses / revenues to alter the balance account. Counting with your 
+  planning module, reports and ability to track spending, BG Finanças 
+  will be a great ally in the management of your money.
+
+grade: stable
+confinement: strict
+
+apps:
+  bgfinancas:
+    environment:
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-amd64
+      PATH: $JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+    command: java -jar $SNAP/jar/bgfinancas.jar
+    plugs: [network, desktop, home]
+
+parts:
+  local:
+    plugin: ant
+    source: .
+    override-build: |
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+      cp -R jar $SNAPCRAFT_PART_INSTALL/
+    build-packages:
+      - openjdk-8-jdk
+      - openjfx
+    stage-packages:
+      - openjdk-8-jre
+      - openjfx
+    after: [desktop-glib-only]
