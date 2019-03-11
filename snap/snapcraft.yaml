@@ -11,6 +11,8 @@ description: |
 grade: stable
 confinement: strict
 
+architectures: [ amd64 ]
+
 apps:
   bgfinancas:
     environment:
