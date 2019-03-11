@@ -22,7 +22,7 @@ apps:
 parts:
   local:
     plugin: ant
-    source: .
+    source: https://github.com/badernageral/bgfinancas.git
     override-build: |
       export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
       cp -R jar $SNAPCRAFT_PART_INSTALL/
