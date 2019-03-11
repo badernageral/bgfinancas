@@ -17,7 +17,7 @@ apps:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-amd64
       PATH: $JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
     command: java -jar $SNAP/jar/bgfinancas.jar
-    plugs: [network, desktop, home]
+    plugs: [network, desktop, home, x11]
 
 parts:
   local:
