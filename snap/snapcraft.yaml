@@ -24,7 +24,7 @@ apps:
       HOME=$SNAP_USER_DATA
     command: java -jar $SNAP/jar/bgfinancas.jar
     desktop: usr/share/applications/bgfinancas.desktop
-    plugs: [network, desktop, home, x11]
+    plugs: [network, home, desktop, desktop-legacy, wayland, unity7, x11]
 
 parts:
   bgfinancas:
