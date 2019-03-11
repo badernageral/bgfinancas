@@ -33,4 +33,4 @@ parts:
     stage-packages:
       - openjdk-8-jre
       - openjfx
-    after: [desktop-glib-only]
+    after: [desktop-gtk3]
