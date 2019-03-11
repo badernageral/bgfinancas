@@ -8,7 +8,6 @@ description: |
   planning module, reports and ability to track spending, BG Finanças 
   will be a great ally in the management of your money.
 
-base: core18
 icon: icon.png
 grade: stable
 confinement: strict
