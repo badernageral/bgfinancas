@@ -8,6 +8,7 @@ description: |
   planning module, reports and ability to track spending, BG Finanças 
   will be a great ally in the management of your money.
 
+icon: icon.png
 grade: stable
 confinement: strict
 
@@ -21,7 +22,7 @@ apps:
     plugs: [network, desktop, home, x11]
 
 parts:
-  local:
+  bgfinancas:
     plugin: ant
     source: .
     override-build: |
@@ -34,4 +35,10 @@ parts:
     stage-packages:
       - openjdk-8-jre
       - openjfx
-    after: [desktop-gtk3]
+    after: [desktop-glib-only]
+  launcher:
+    plugin: dump
+    source: .
+    organize:
+      'bgfinancas.desktop': usr/share/applications/bgfinancas.desktop
+    after: [bgfinancas]

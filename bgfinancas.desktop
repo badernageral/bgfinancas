@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BG Finanças
+Comment=Personal finances manager
+Exec=java -jar ${SNAP}/jar/bgfinancas.jar
+Icon=${SNAP}/meta/gui/icon.png
+Terminal=false
+Type=Application
+Categories=Finance;
