@@ -18,7 +18,12 @@ apps:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-amd64
       JAVA_TOOL_OPTIONS: "-Duser.home=$SNAP_USER_COMMON"
       PATH: $JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+      XDG_DATA_HOME=$SNAP/usr/share
+      FONTCONFIG_PATH=$SNAP/etc/fonts/config.d
+      FONTCONFIG_FILE=$SNAP/etc/fonts/fonts.conf
+      HOME=$SNAP_USER_DATA
     command: java -jar $SNAP/jar/bgfinancas.jar
+    desktop: usr/share/applications/bgfinancas.desktop
     plugs: [network, desktop, home, x11]
 
 parts:
