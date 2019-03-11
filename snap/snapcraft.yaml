@@ -14,7 +14,7 @@ confinement: strict
 apps:
   bgfinancas:
     environment:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH_TRIPLET
       PATH: $JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
     command: java -jar $SNAP/jar/bgfinancas.jar
     plugs: [network, desktop, home, x11]
@@ -24,7 +24,7 @@ parts:
     plugin: ant
     source: .
     override-build: |
-      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH"
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH_TRIPLET"
       ant main
       cp -R jar $SNAPCRAFT_PART_INSTALL/
     build-packages:
