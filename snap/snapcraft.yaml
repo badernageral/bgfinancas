@@ -18,7 +18,7 @@ apps:
       JAVA_HOME: $SNAP/usr/lib/jvm/java-8-openjdk-amd64
       JAVA_TOOL_OPTIONS: "-Duser.home=$SNAP_USER_COMMON"
       PATH: $JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
-    command: java -jar $SNAP/jar/bgfinancas.jar
+    command: desktop-launch java -jar $SNAP/jar/bgfinancas.jar
     desktop: usr/share/applications/bgfinancas.desktop
     plugs:
       - network
@@ -49,28 +49,3 @@ parts:
     organize:
       'bgfinancas.desktop': usr/share/applications/bgfinancas.desktop
     after: [bgfinancas]
-  desktop-gtk3:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: gtk
-    plugin: make
-    make-parameters: ["FLAVOR=gtk3"]
-    build-packages:
-      - libgtk-3-dev
-    stage-packages:
-      - libxkbcommon0  # XKB_CONFIG_ROOT
-      - ttf-ubuntu-font-family
-      - dmz-cursor-theme
-      - light-themes
-      - adwaita-icon-theme
-      - gnome-themes-standard
-      - shared-mime-info
-      - libgtk-3-0
-      - libgdk-pixbuf2.0-0
-      - libglib2.0-bin
-      - libgtk-3-bin
-      - unity-gtk3-module
-      - libappindicator3-1
-      - locales-all
-      - xdg-user-dirs
-      - ibus-gtk3
-      - libibus-1.0-5
