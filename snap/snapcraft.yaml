@@ -23,7 +23,7 @@ parts:
   local:
     plugin: ant
     source: .
-    override-build: |: |
+    override-build: |
       export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
       ant compile
       cp -R jar $SNAPCRAFT_PART_INSTALL/
