@@ -10,7 +10,7 @@ description: |
 
 icon: icon.png
 grade: stable
-confinement: classic
+confinement: strict
 
 apps:
   bgfinancas:
