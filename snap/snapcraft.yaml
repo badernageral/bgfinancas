@@ -27,6 +27,7 @@ apps:
       - x11
       - wayland
       - home
+      - opengl
 
 parts:
   bgfinancas:
