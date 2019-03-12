@@ -10,7 +10,7 @@ description: |
 
 icon: icon.png
 grade: stable
-confinement: strict
+confinement: classic
 
 apps:
   bgfinancas:
@@ -28,6 +28,7 @@ apps:
       - wayland
       - home
       - opengl
+      - mount-observe
 
 parts:
   bgfinancas:
