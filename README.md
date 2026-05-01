@@ -5,7 +5,7 @@ BG Finanças is a open source software to control your financial life, your focu
 Links
 --
 
-Website: http://badernageral.github.io/
+Website: http://badernageral.github.io
 
 Issues: https://github.com/badernageral/bgfinancas/issues
 
@@ -20,17 +20,10 @@ Features
 * Scheduled expenses
 * Reminders
 
-Requirements
---
-
-Linux: openjfx & openjdk-8-jre
-
-Others: Java 8u40 or later.
-
 Installation
 --
 Compiled releases:
-* At releases page you can find installers for windows, linux and others systems.
+* At releases page you can find installers for windows and linux.
 * Releases: https://github.com/badernageral/bgfinancas/releases
 
 Source code:
@@ -42,14 +35,11 @@ user@debian:~$ git clone https://github.com/badernageral/bgfinancas.git
 ```
 user@debian:~$ cd bgfinancas
 ```
-* Use command line **ant** from the source code folder to compile it.
+* Use command line build.sh or build.bat
 ```
-user@debian:~/bgfinancas$ ant
+user@debian:~/bgfinancas$ build.sh
 ```
-* To execute just run the generated jar.
-```
-user@debian:~/bgfinancas$ java -jar jar/bgfinancas.jar
-```
+
 License
 --
 
