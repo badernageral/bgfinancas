@@ -1,0 +1,4 @@
+Instalar JDK 21
+Criar variável de ambiente JAVA_HOME
+Instalar maven e colocar no path
+Instalar WiX Toolset e colocar no path

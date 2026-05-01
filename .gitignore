@@ -1,10 +1,3 @@
-*.bz2
-*.snap
-prime/
-build/
-stage/
-jar/
-snap/.snapcraft
-parts/
-
-
+target/
+dist/
+javafx-jmods/

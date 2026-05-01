@@ -13,6 +13,40 @@ set JAVAFX_VERSION=21
 set JAVAFX_JMODS_DIR=%PROJECT_DIR%javafx-jmods
 set JAVAFX_PLATFORM=win
 
+REM Detecta/valida Java (JDK)
+if not "%JAVA_HOME%" == "" (
+    if exist "%JAVA_HOME%\bin\java.exe" goto :java_ready
+)
+
+set "JAVA_CMD="
+for /f "delims=" %%i in ('where jpackage 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+for /f "delims=" %%i in ('where java 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+
+if not defined JAVA_CMD (
+    for /f "delims=" %%i in ('where /r "%ProgramFiles%\Java" jpackage.exe 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+    for /f "delims=" %%i in ('where /r "%ProgramFiles%\Eclipse Adoptium" jpackage.exe 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+    for /f "delims=" %%i in ('where /r "%ProgramFiles%\Zulu" jpackage.exe 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+    for /f "delims=" %%i in ('where /r "%ProgramFiles%\Microsoft" jpackage.exe 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+    for /f "delims=" %%i in ('where /r "%ProgramFiles%\BellSoft" jpackage.exe 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+    for /f "delims=" %%i in ('where /r "%LOCALAPPDATA%\Programs" jpackage.exe 2^>nul') do if not defined JAVA_CMD set "JAVA_CMD=%%i"
+)
+
+if not defined JAVA_CMD (
+    echo Erro: Java/JDK nao encontrado.
+    echo Para gerar o instalador no Windows, instale um JDK - recomendado JDK 21+ - com jlink e jpackage.
+    echo Depois, defina JAVA_HOME apontando para a pasta do JDK e reabra o terminal.
+    pause
+    exit /b 1
+)
+
+for %%i in ("%JAVA_CMD%") do set "JAVA_BIN_DIR=%%~dpi"
+for %%i in ("%JAVA_BIN_DIR%..") do set "JAVA_HOME=%%~fi"
+
+:java_ready
+
+REM Garante que o java.exe do JDK encontrado seja o primeiro no PATH (evita conflito com instalacoes antigas)
+set "PATH=%JAVA_HOME%\bin;%PATH%"
+
 REM Limpa diretórios antigos (exceto o javafx-jmods)
 if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 if exist "%TARGET_DIR%" rmdir /s /q "%TARGET_DIR%"
@@ -34,8 +68,7 @@ set JAVAFX_JMODS_PATH=%JAVAFX_JMODS_DIR%\javafx-jmods-%JAVAFX_VERSION%
 if not exist "%JAVAFX_JMODS_PATH%" (
     echo Baixando JavaFX jmods...
     if not exist "%JAVAFX_JMODS_DIR%" mkdir "%JAVAFX_JMODS_DIR%"
-    set JAVAFX_JMODS_URL=https://download2.gluonhq.com/openjfx/%JAVAFX_VERSION%/openjfx-%JAVAFX_VERSION%_%JAVAFX_PLATFORM%-x64_bin-jmods.zip
-    powershell -Command "Invoke-WebRequest -Uri '%JAVAFX_JMODS_URL%' -OutFile '%JAVAFX_JMODS_DIR%\javafx-jmods.zip'"
+    powershell -Command "Invoke-WebRequest -Uri 'https://download2.gluonhq.com/openjfx/%JAVAFX_VERSION%/openjfx-%JAVAFX_VERSION%_%JAVAFX_PLATFORM%-x64_bin-jmods.zip' -OutFile '%JAVAFX_JMODS_DIR%\javafx-jmods.zip'"
 
     if errorlevel 1 (
         echo Erro ao baixar JavaFX jmods!
@@ -49,25 +82,26 @@ if not exist "%JAVAFX_JMODS_PATH%" (
     echo JavaFX jmods ja existentes, pulando download...
 )
 
-REM Encontra o diretório com os jmods
-for /d %%d in ("%JAVAFX_JMODS_DIR%\javafx-jmods-%JAVAFX_VERSION%") do (
-    set JAVAFX_JMODS_PATH=%%d
-)
-
-if "%JAVAFX_JMODS_PATH%" == "" (
+if not exist "%JAVAFX_JMODS_PATH%" (
     echo Erro ao encontrar o diretório dos jmods!
+    pause
     exit /b 1
-)
-
-REM Detecta o Java Home
-if "%JAVA_HOME%" == "" (
-    for /f "tokens=*" %%i in ('where java') do set JAVA_CMD=%%i
-    for %%i in ("%JAVA_CMD%") do set JAVA_BIN_DIR=%%~dpi
-    for %%i in ("%JAVA_BIN_DIR%..") do set JAVA_HOME=%%~fi
 )
 
 echo Usando JAVA_HOME: %JAVA_HOME%
 echo Usando JavaFX jmods em: %JAVAFX_JMODS_PATH%
+
+if not exist "%JAVA_HOME%\bin\jlink.exe" (
+    echo Erro: jlink nao encontrado em "%JAVA_HOME%\bin". Configure JAVA_HOME para um JDK, nao um JRE.
+    pause
+    exit /b 1
+)
+
+if not exist "%JAVA_HOME%\bin\jpackage.exe" (
+    echo Erro: jpackage nao encontrado em "%JAVA_HOME%\bin". Configure JAVA_HOME para um JDK, nao um JRE.
+    pause
+    exit /b 1
+)
 
 REM Lista de módulos necessários
 set MODULES=java.base,java.sql,java.logging,java.xml,javafx.base,javafx.controls,javafx.fxml,javafx.graphics
@@ -84,11 +118,26 @@ echo Criando runtime customizado...
 
 if errorlevel 1 (
     echo Erro ao criar runtime!
+    pause
     exit /b 1
 )
 
-REM Cria o instalador com jpackage
-echo Criando instalador...
+set WIX_OK=0
+where candle >nul 2>&1
+if errorlevel 1 (
+    if exist "C:\PROGRA~2\WiX Toolset v3.11\bin\candle.exe" set "PATH=%PATH%;C:\PROGRA~2\WiX Toolset v3.11\bin"
+    if exist "C:\PROGRA~2\WiX Toolset v3.14\bin\candle.exe" set "PATH=%PATH%;C:\PROGRA~2\WiX Toolset v3.14\bin"
+    if exist "%ProgramFiles%\WiX Toolset v3.11\bin\candle.exe" set "PATH=%PATH%;%ProgramFiles%\WiX Toolset v3.11\bin"
+    if exist "%ProgramFiles%\WiX Toolset v3.14\bin\candle.exe" set "PATH=%PATH%;%ProgramFiles%\WiX Toolset v3.14\bin"
+)
+
+where candle >nul 2>&1
+if not errorlevel 1 (
+    where light >nul 2>&1
+    if not errorlevel 1 set WIX_OK=1
+)
+
+echo Criando pacote app-image...
 "%JAVA_HOME%\bin\jpackage" ^
     --name "%APP_NAME%" ^
     --app-version "%APP_VERSION%" ^
@@ -101,11 +150,38 @@ echo Criando instalador...
     --dest "%OUTPUT_DIR%" ^
     --icon "%PROJECT_DIR%recursos\icone.ico" ^
     --java-options "-Dfile.encoding=UTF-8" ^
-    --type msi
+    --type app-image
 
 if errorlevel 1 (
-    echo Erro ao criar instalador!
+    echo Erro ao criar app-image!
+    pause
     exit /b 1
+)
+
+if "%WIX_OK%"=="1" (
+    echo Criando instalador MSI...
+    "%JAVA_HOME%\bin\jpackage" ^
+        --name "%APP_NAME%" ^
+        --app-version "%APP_VERSION%" ^
+        --vendor "BGFinancas" ^
+        --description "Aplicativo de Financas Pessoais" ^
+        --input "%TARGET_DIR%" ^
+        --main-jar "%MAIN_JAR%" ^
+        --main-class "%MAIN_CLASS%" ^
+        --runtime-image "%OUTPUT_DIR%\runtime" ^
+        --dest "%OUTPUT_DIR%" ^
+        --icon "%PROJECT_DIR%recursos\icone.ico" ^
+        --java-options "-Dfile.encoding=UTF-8" ^
+        --type msi
+
+    if errorlevel 1 (
+        echo Erro ao criar instalador MSI!
+        pause
+        exit /b 1
+    )
+) else (
+    echo WiX Toolset nao encontrado no PATH. Instalador MSI nao sera gerado.
+    echo Para gerar MSI, instale o WiX Toolset e garanta candle.exe e light.exe no PATH.
 )
 
 echo Build concluido com sucesso!

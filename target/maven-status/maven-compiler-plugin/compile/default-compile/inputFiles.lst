@@ -1,124 +1,124 @@
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/ajuda/Ajuda.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/ajuda/Capitulo.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/banco/Banco.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/banco/Coluna.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/banco/Conexao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/banco/Database.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/Categoria.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/Colavel.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/Controlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/ControladorFiltro.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/ControladorFormulario.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/Grafico.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/Item.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/contrato/Modelo.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/Atalho.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/Atualizacao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/Botao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/Janela.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/Kernel.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/PilhaVoltar.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/sistema/Tabela.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/tipo/Acao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/tipo/Duracao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/tipo/Funcao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/tipo/Operacao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/tipo/Posicao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/tipo/Status.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Animacao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/AreaTransferencia.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/AutoCompletarTextField.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/AutoFiltro.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Calculadora.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Datas.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Efeitos.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Erro.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Lista.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Numeros.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Outros.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Secure.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/biblioteca/utilitario/Validar.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/idioma/Linguagem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Agenda.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/AgendaTipo.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/CartaoCredito.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Configuracao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Conta.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Despesa.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/DespesaCategoria.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/DespesaItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Extrato.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Grupo.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/GrupoItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Planejamento.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Receita.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/ReceitaCategoria.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/ReceitaItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Relatorio.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Transferencia.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/TransferenciaCategoria.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/TransferenciaItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Usuario.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modelo/Utilitario.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/agenda/AgendaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/agenda/AgendaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/agenda/tipo/AgendaTipoControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/agenda/tipo/AgendaTipoFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/ajuda/SobreSistemaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/cartao_credito/CartaoCreditoControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/cartao_credito/CartaoCreditoFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/conta/ContaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/conta/ContaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/DespesaCadastroMultiploControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/DespesaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/DespesaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/ModalCupomFiscalControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/ModalDespesaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/categoria/DespesaCategoriaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/categoria/DespesaCategoriaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/item/DespesaItemControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/despesa/item/DespesaItemFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/grupo/GrupoFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/grupo/GrupoItemControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/planejamento/ModalPagarControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/planejamento/PlanejamentoControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/receita/ReceitaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/receita/ReceitaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/receita/categoria/ReceitaCategoriaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/receita/categoria/ReceitaCategoriaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/receita/item/ReceitaItemControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/receita/item/ReceitaItemFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/relatorio/RelatoriosControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/transferencia/TransferenciaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/transferencia/TransferenciaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/transferencia/categoria/TransferenciaCategoriaControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/transferencia/categoria/TransferenciaCategoriaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/transferencia/item/TransferenciaItemControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/transferencia/item/TransferenciaItemFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/usuario/UsuarioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/usuario/UsuarioFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/utilitario/Backup.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/utilitario/CalculadoraFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/utilitario/ConfiguracaoFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/modulo/utilitario/GuiaFormularioControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/principal/HomeControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/principal/LoginControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/principal/Main.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/principal/Principal.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/principal/PrincipalControlador.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/principal/Splash.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/barra/BarraItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/barra/BarraMovimento.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/barra/BarraPadrao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/barra/Filtro.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/botao/BotaoFormulario.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/botao/BotaoGerenciarCategoria.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/botao/BotaoGerenciarCategoriaItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/botao/BotaoListaCategoria.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/botao/BotaoListaItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/botao/BotaoPadrao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/cena/CenaItem.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/cena/CenaMovimento.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/cena/CenaPadrao.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/modulo/ListaConta.java
-/home/badernageral/Projetos/Financas/bgfinancas/src/main/java/io/github/badernageral/bgfinancas/template/modulo/ListaGrupo.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\ajuda\Ajuda.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\ajuda\Capitulo.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\banco\Banco.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\banco\Coluna.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\banco\Conexao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\banco\Database.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\Categoria.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\Colavel.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\Controlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\ControladorFiltro.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\ControladorFormulario.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\Grafico.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\Item.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\contrato\Modelo.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\Atalho.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\Atualizacao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\Botao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\Janela.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\Kernel.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\PilhaVoltar.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\sistema\Tabela.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\tipo\Acao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\tipo\Duracao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\tipo\Funcao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\tipo\Operacao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\tipo\Posicao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\tipo\Status.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Animacao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\AreaTransferencia.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\AutoCompletarTextField.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\AutoFiltro.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Calculadora.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Datas.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Efeitos.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Erro.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Lista.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Numeros.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Outros.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Secure.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\biblioteca\utilitario\Validar.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\idioma\Linguagem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Agenda.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\AgendaTipo.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\CartaoCredito.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Configuracao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Conta.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Despesa.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\DespesaCategoria.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\DespesaItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Extrato.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Grupo.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\GrupoItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Planejamento.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Receita.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\ReceitaCategoria.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\ReceitaItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Relatorio.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Transferencia.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\TransferenciaCategoria.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\TransferenciaItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Usuario.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modelo\Utilitario.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\agenda\AgendaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\agenda\AgendaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\agenda\tipo\AgendaTipoControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\agenda\tipo\AgendaTipoFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\ajuda\SobreSistemaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\cartao_credito\CartaoCreditoControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\cartao_credito\CartaoCreditoFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\conta\ContaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\conta\ContaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\categoria\DespesaCategoriaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\categoria\DespesaCategoriaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\DespesaCadastroMultiploControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\DespesaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\DespesaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\item\DespesaItemControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\item\DespesaItemFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\ModalCupomFiscalControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\despesa\ModalDespesaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\grupo\GrupoFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\grupo\GrupoItemControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\planejamento\ModalPagarControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\planejamento\PlanejamentoControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\receita\categoria\ReceitaCategoriaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\receita\categoria\ReceitaCategoriaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\receita\item\ReceitaItemControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\receita\item\ReceitaItemFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\receita\ReceitaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\receita\ReceitaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\relatorio\RelatoriosControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\transferencia\categoria\TransferenciaCategoriaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\transferencia\categoria\TransferenciaCategoriaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\transferencia\item\TransferenciaItemControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\transferencia\item\TransferenciaItemFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\transferencia\TransferenciaControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\transferencia\TransferenciaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\usuario\UsuarioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\usuario\UsuarioFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\utilitario\Backup.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\utilitario\CalculadoraFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\utilitario\ConfiguracaoFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\modulo\utilitario\GuiaFormularioControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\principal\HomeControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\principal\LoginControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\principal\Main.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\principal\Principal.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\principal\PrincipalControlador.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\principal\Splash.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\barra\BarraItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\barra\BarraMovimento.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\barra\BarraPadrao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\barra\Filtro.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\botao\BotaoFormulario.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\botao\BotaoGerenciarCategoria.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\botao\BotaoGerenciarCategoriaItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\botao\BotaoListaCategoria.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\botao\BotaoListaItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\botao\BotaoPadrao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\cena\CenaItem.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\cena\CenaMovimento.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\cena\CenaPadrao.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\modulo\ListaConta.java
+C:\Users\Badernageral\OneDrive\Área de Trabalho\Projetos\bgfinancas\src\main\java\io\github\badernageral\bgfinancas\template\modulo\ListaGrupo.java
