@@ -9,9 +9,11 @@ set MAIN_JAR=bgfinancas-3.8.jar
 set MAIN_CLASS=io.github.badernageral.bgfinancas.principal.Main
 set OUTPUT_DIR=%PROJECT_DIR%dist
 set TARGET_DIR=%PROJECT_DIR%target
-set JAVAFX_VERSION=21
+set JAVAFX_VERSION=26.0.1
 set JAVAFX_JMODS_DIR=%PROJECT_DIR%javafx-jmods
 set JAVAFX_PLATFORM=win
+set JAVAFX_JMODS_PLATFORM_DIR=%JAVAFX_JMODS_DIR%\%JAVAFX_PLATFORM%
+set JAVAFX_DOWNLOAD_PLATFORM=windows
 
 REM Detecta/valida Java (JDK)
 if not "%JAVA_HOME%" == "" (
@@ -33,7 +35,7 @@ if not defined JAVA_CMD (
 
 if not defined JAVA_CMD (
     echo Erro: Java/JDK nao encontrado.
-    echo Para gerar o instalador no Windows, instale um JDK - recomendado JDK 21+ - com jlink e jpackage.
+    echo Para gerar o instalador no Windows, instale um JDK - recomendado JDK 26+ - com jlink e jpackage.
     echo Depois, defina JAVA_HOME apontando para a pasta do JDK e reabra o terminal.
     pause
     exit /b 1
@@ -44,46 +46,33 @@ for %%i in ("%JAVA_BIN_DIR%..") do set "JAVA_HOME=%%~fi"
 
 :java_ready
 
-REM Garante que o java.exe do JDK encontrado seja o primeiro no PATH (evita conflito com instalacoes antigas)
 set "PATH=%JAVA_HOME%\bin;%PATH%"
+
+set "JPACKAGE_WIN_CONSOLE="
+if /i "%BG_DEBUG%"=="1" set "JPACKAGE_WIN_CONSOLE=--win-console"
 
 REM Limpa diretórios antigos (exceto o javafx-jmods)
 if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 if exist "%TARGET_DIR%" rmdir /s /q "%TARGET_DIR%"
 
 REM Compila o projeto com Maven
-set MAVEN_ATTEMPT=1
 :maven_build
-echo Compilando projeto (tentativa %MAVEN_ATTEMPT%/3)...
 call mvn clean package
-
-if errorlevel 1 (
-    if %MAVEN_ATTEMPT% GEQ 3 (
-        echo Erro na compilacao!
-        echo Se o erro for "O processo nao pode aceder ao ficheiro", feche o app em execucao e aguarde o OneDrive/antivirus liberar a pasta target.
-        pause
-        exit /b 1
-    )
-    echo Falha na compilacao. Tentando novamente...
-    timeout /t 2 /nobreak >nul
-    set /a MAVEN_ATTEMPT=%MAVEN_ATTEMPT%+1
-    goto :maven_build
-)
 
 REM Cria diretório de saída
 if not exist "%OUTPUT_DIR%" mkdir "%OUTPUT_DIR%"
 
-REM Verifica se os jmods já existem
-set JAVAFX_JMODS_PATH=%JAVAFX_JMODS_DIR%\javafx-jmods-%JAVAFX_VERSION%
+set JAVAFX_JMODS_PATH=%JAVAFX_JMODS_PLATFORM_DIR%\javafx-jmods-%JAVAFX_VERSION%
 if not exist "%JAVAFX_JMODS_PATH%" goto :jmods_download
 echo JavaFX jmods ja existentes, pulando download...
 goto :jmods_ready
 
 :jmods_download
 echo Baixando JavaFX jmods...
-if not exist "%JAVAFX_JMODS_DIR%" mkdir "%JAVAFX_JMODS_DIR%"
-set "JAVAFX_JMODS_ZIP=%JAVAFX_JMODS_DIR%\javafx-jmods.zip"
-set "JAVAFX_JMODS_URL=https://download2.gluonhq.com/openjfx/%JAVAFX_VERSION%/openjfx-%JAVAFX_VERSION%_%JAVAFX_PLATFORM%-x64_bin-jmods.zip"
+if not exist "%JAVAFX_JMODS_PLATFORM_DIR%" mkdir "%JAVAFX_JMODS_PLATFORM_DIR%"
+set "JAVAFX_JMODS_PATH=%JAVAFX_JMODS_PLATFORM_DIR%\javafx-jmods-%JAVAFX_VERSION%"
+set "JAVAFX_JMODS_ZIP=%JAVAFX_JMODS_PLATFORM_DIR%\javafx-jmods.zip"
+set "JAVAFX_JMODS_URL=https://download2.gluonhq.com/openjfx/%JAVAFX_VERSION%/openjfx-%JAVAFX_VERSION%_%JAVAFX_DOWNLOAD_PLATFORM%-x64_bin-jmods.zip"
 
 call :download_file "%JAVAFX_JMODS_URL%" "%JAVAFX_JMODS_ZIP%"
 if errorlevel 1 goto :jmods_download_error
@@ -92,7 +81,7 @@ call :verify_file_size "%JAVAFX_JMODS_ZIP%" 1000000
 if errorlevel 1 goto :jmods_download_small
 
 echo Extraindo JavaFX jmods...
-powershell -NoProfile -Command "Expand-Archive -Force -Path '%JAVAFX_JMODS_ZIP%' -DestinationPath '%JAVAFX_JMODS_DIR%'"
+powershell -NoProfile -Command "Expand-Archive -Force -Path '%JAVAFX_JMODS_ZIP%' -DestinationPath '%JAVAFX_JMODS_PLATFORM_DIR%'"
 goto :jmods_ready
 
 :jmods_download_error
@@ -165,7 +154,14 @@ if not errorlevel 1 (
     if not errorlevel 1 set WIX_OK=1
 )
 
-echo Criando pacote app-image...
+if not "%WIX_OK%"=="1" (
+    echo Erro: WiX Toolset nao encontrado no PATH. Nao e possivel gerar MSI.
+    echo Instale o WiX Toolset e garanta candle.exe e light.exe no PATH.
+    pause
+    exit /b 1
+)
+
+echo Criando instalador MSI...
 "%JAVA_HOME%\bin\jpackage" ^
     --name "%APP_NAME%" ^
     --app-version "%APP_VERSION%" ^
@@ -178,38 +174,17 @@ echo Criando pacote app-image...
     --dest "%OUTPUT_DIR%" ^
     --icon "%PROJECT_DIR%recursos\icone.ico" ^
     --java-options "-Dfile.encoding=UTF-8" ^
-    --type app-image
+    %JPACKAGE_WIN_CONSOLE% ^
+    --win-per-user-install ^
+    --win-menu ^
+    --win-shortcut ^
+    --win-menu-group "%APP_NAME%" ^
+    --type msi
 
 if errorlevel 1 (
-    echo Erro ao criar app-image!
+    echo Erro ao criar instalador MSI!
     pause
     exit /b 1
-)
-
-if "%WIX_OK%"=="1" (
-    echo Criando instalador MSI...
-    "%JAVA_HOME%\bin\jpackage" ^
-        --name "%APP_NAME%" ^
-        --app-version "%APP_VERSION%" ^
-        --vendor "BGFinancas" ^
-        --description "Aplicativo de Financas Pessoais" ^
-        --input "%TARGET_DIR%" ^
-        --main-jar "%MAIN_JAR%" ^
-        --main-class "%MAIN_CLASS%" ^
-        --runtime-image "%OUTPUT_DIR%\runtime" ^
-        --dest "%OUTPUT_DIR%" ^
-        --icon "%PROJECT_DIR%recursos\icone.ico" ^
-        --java-options "-Dfile.encoding=UTF-8" ^
-        --type msi
-
-    if errorlevel 1 (
-        echo Erro ao criar instalador MSI!
-        pause
-        exit /b 1
-    )
-) else (
-    echo WiX Toolset nao encontrado no PATH. Instalador MSI nao sera gerado.
-    echo Para gerar MSI, instale o WiX Toolset e garanta candle.exe e light.exe no PATH.
 )
 
 echo Build concluido com sucesso!

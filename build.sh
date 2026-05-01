@@ -8,7 +8,7 @@ MAIN_JAR="bgfinancas-3.8.jar"
 MAIN_CLASS="io.github.badernageral.bgfinancas.principal.Main"
 OUTPUT_DIR="$PROJECT_DIR/dist"
 TARGET_DIR="$PROJECT_DIR/target"
-JAVAFX_VERSION="21"
+JAVAFX_VERSION="26.0.1"
 JAVAFX_JMODS_DIR="$PROJECT_DIR/javafx-jmods"
 
 # Detecta o sistema operacional
@@ -38,12 +38,13 @@ fi
 mkdir -p "$OUTPUT_DIR"
 
 # Verifica se os jmods já existem
-JAVAFX_JMODS_PATH="$JAVAFX_JMODS_DIR/javafx-jmods-${JAVAFX_VERSION}"
+JAVAFX_JMODS_PLATFORM_DIR="$JAVAFX_JMODS_DIR/$JAVAFX_PLATFORM"
+JAVAFX_JMODS_PATH="$JAVAFX_JMODS_PLATFORM_DIR/javafx-jmods-${JAVAFX_VERSION}"
 if [ ! -d "$JAVAFX_JMODS_PATH" ]; then
     echo "Baixando JavaFX jmods..."
-    mkdir -p "$JAVAFX_JMODS_DIR"
+    mkdir -p "$JAVAFX_JMODS_PLATFORM_DIR"
     JAVAFX_JMODS_URL="https://download2.gluonhq.com/openjfx/${JAVAFX_VERSION}/openjfx-${JAVAFX_VERSION}_${JAVAFX_PLATFORM}-x64_bin-jmods.zip"
-    curl -L -o "$JAVAFX_JMODS_DIR/javafx-jmods.zip" "$JAVAFX_JMODS_URL"
+    curl -L -o "$JAVAFX_JMODS_PLATFORM_DIR/javafx-jmods.zip" "$JAVAFX_JMODS_URL"
 
     if [ $? -ne 0 ]; then
         echo "Erro ao baixar JavaFX jmods!"
@@ -52,7 +53,7 @@ if [ ! -d "$JAVAFX_JMODS_PATH" ]; then
 
     # Extrai os jmods
     echo "Extraindo JavaFX jmods..."
-    unzip -q "$JAVAFX_JMODS_DIR/javafx-jmods.zip" -d "$JAVAFX_JMODS_DIR"
+    unzip -q "$JAVAFX_JMODS_PLATFORM_DIR/javafx-jmods.zip" -d "$JAVAFX_JMODS_PLATFORM_DIR"
 else
     echo "JavaFX jmods já existentes, pulando download..."
 fi

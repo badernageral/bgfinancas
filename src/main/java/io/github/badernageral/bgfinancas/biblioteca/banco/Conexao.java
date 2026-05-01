@@ -56,14 +56,27 @@ public final class Conexao {
     
     public String getUrl(boolean diretorio){
         String nomeBanco = "banco";
-        String sistema_operacional = System.getProperty("os.name");
-        if(sistema_operacional.equals("Linux")){
-            String home = System.getProperty("user.home")+"/.bgfinancas/";
-            new File(home).mkdirs();
-            return (diretorio) ? home : home+nomeBanco;
+        String sistema_operacional = System.getProperty("os.name").toLowerCase();
+        File diretorioBanco;
+        if(sistema_operacional.contains("linux")){
+            diretorioBanco = new File(System.getProperty("user.home"), ".bgfinancas");
+        }else if(sistema_operacional.contains("windows")){
+            String localAppData = System.getenv("LOCALAPPDATA");
+            String appData = System.getenv("APPDATA");
+            if(localAppData != null && !localAppData.isBlank()){
+                diretorioBanco = new File(localAppData, "BGFinancas");
+            }else if(appData != null && !appData.isBlank()){
+                diretorioBanco = new File(appData, "BGFinancas");
+            }else{
+                diretorioBanco = new File(System.getProperty("user.home"), "BGFinancas");
+            }
+        }else if(sistema_operacional.contains("mac")){
+            diretorioBanco = new File(System.getProperty("user.home")+"/Library/Application Support", "BGFinancas");
         }else{
             return (diretorio) ? "." : nomeBanco;
         }
+        diretorioBanco.mkdirs();
+        return (diretorio) ? diretorioBanco.getAbsolutePath()+File.separator : new File(diretorioBanco, nomeBanco).getAbsolutePath();
     }
     
     private boolean desconectar(){
