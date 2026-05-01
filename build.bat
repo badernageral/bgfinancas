@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableExtensions
 
 REM Variáveis do projeto
 set PROJECT_DIR=%~dp0
@@ -52,12 +52,22 @@ if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 if exist "%TARGET_DIR%" rmdir /s /q "%TARGET_DIR%"
 
 REM Compila o projeto com Maven
-echo Compilando projeto...
+set MAVEN_ATTEMPT=1
+:maven_build
+echo Compilando projeto (tentativa %MAVEN_ATTEMPT%/3)...
 call mvn clean package
 
 if errorlevel 1 (
-    echo Erro na compilacao!
-    exit /b 1
+    if %MAVEN_ATTEMPT% GEQ 3 (
+        echo Erro na compilacao!
+        echo Se o erro for "O processo nao pode aceder ao ficheiro", feche o app em execucao e aguarde o OneDrive/antivirus liberar a pasta target.
+        pause
+        exit /b 1
+    )
+    echo Falha na compilacao. Tentando novamente...
+    timeout /t 2 /nobreak >nul
+    set /a MAVEN_ATTEMPT=%MAVEN_ATTEMPT%+1
+    goto :maven_build
 )
 
 REM Cria diretório de saída
@@ -65,22 +75,40 @@ if not exist "%OUTPUT_DIR%" mkdir "%OUTPUT_DIR%"
 
 REM Verifica se os jmods já existem
 set JAVAFX_JMODS_PATH=%JAVAFX_JMODS_DIR%\javafx-jmods-%JAVAFX_VERSION%
-if not exist "%JAVAFX_JMODS_PATH%" (
-    echo Baixando JavaFX jmods...
-    if not exist "%JAVAFX_JMODS_DIR%" mkdir "%JAVAFX_JMODS_DIR%"
-    powershell -Command "Invoke-WebRequest -Uri 'https://download2.gluonhq.com/openjfx/%JAVAFX_VERSION%/openjfx-%JAVAFX_VERSION%_%JAVAFX_PLATFORM%-x64_bin-jmods.zip' -OutFile '%JAVAFX_JMODS_DIR%\javafx-jmods.zip'"
+if not exist "%JAVAFX_JMODS_PATH%" goto :jmods_download
+echo JavaFX jmods ja existentes, pulando download...
+goto :jmods_ready
 
-    if errorlevel 1 (
-        echo Erro ao baixar JavaFX jmods!
-        exit /b 1
-    )
+:jmods_download
+echo Baixando JavaFX jmods...
+if not exist "%JAVAFX_JMODS_DIR%" mkdir "%JAVAFX_JMODS_DIR%"
+set "JAVAFX_JMODS_ZIP=%JAVAFX_JMODS_DIR%\javafx-jmods.zip"
+set "JAVAFX_JMODS_URL=https://download2.gluonhq.com/openjfx/%JAVAFX_VERSION%/openjfx-%JAVAFX_VERSION%_%JAVAFX_PLATFORM%-x64_bin-jmods.zip"
 
-    REM Extrai os jmods
-    echo Extraindo JavaFX jmods...
-    powershell -Command "Expand-Archive -Path '%JAVAFX_JMODS_DIR%\javafx-jmods.zip' -DestinationPath '%JAVAFX_JMODS_DIR%'"
-) else (
-    echo JavaFX jmods ja existentes, pulando download...
-)
+call :download_file "%JAVAFX_JMODS_URL%" "%JAVAFX_JMODS_ZIP%"
+if errorlevel 1 goto :jmods_download_error
+
+call :verify_file_size "%JAVAFX_JMODS_ZIP%" 1000000
+if errorlevel 1 goto :jmods_download_small
+
+echo Extraindo JavaFX jmods...
+powershell -NoProfile -Command "Expand-Archive -Force -Path '%JAVAFX_JMODS_ZIP%' -DestinationPath '%JAVAFX_JMODS_DIR%'"
+goto :jmods_ready
+
+:jmods_download_error
+echo Erro ao baixar JavaFX jmods.
+echo Dica: pode ser bloqueio de rede/proxy/antivirus. Baixe manualmente o arquivo abaixo e salve como "%JAVAFX_JMODS_ZIP%":
+echo %JAVAFX_JMODS_URL%
+exit /b 1
+
+:jmods_download_small
+del /q "%JAVAFX_JMODS_ZIP%" >nul 2>&1
+echo Erro ao baixar JavaFX jmods.
+echo O download veio muito pequeno (provavel bloqueio/proxy). Baixe manualmente:
+echo %JAVAFX_JMODS_URL%
+exit /b 1
+
+:jmods_ready
 
 if not exist "%JAVAFX_JMODS_PATH%" (
     echo Erro ao encontrar o diretório dos jmods!
@@ -188,3 +216,26 @@ echo Build concluido com sucesso!
 echo Arquivos gerados em: %OUTPUT_DIR%
 
 endlocal
+goto :eof
+
+:download_file
+set "URL=%~1"
+set "OUT=%~2"
+if exist "%OUT%" del /q "%OUT%" >nul 2>&1
+
+where curl >nul 2>&1
+if not errorlevel 1 (
+    curl -fL --ssl-no-revoke --retry 3 --retry-delay 2 -A "Mozilla/5.0" -o "%OUT%" "%URL%"
+    if not errorlevel 1 exit /b 0
+)
+
+powershell -NoProfile -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%URL%' -OutFile '%OUT%' -Headers @{ 'User-Agent'='Mozilla/5.0' }"
+exit /b %errorlevel%
+
+:verify_file_size
+set "FILE=%~1"
+set "MIN=%~2"
+if not exist "%FILE%" exit /b 1
+for %%A in ("%FILE%") do set "SIZE=%%~zA"
+if %SIZE% LSS %MIN% exit /b 1
+exit /b 0
