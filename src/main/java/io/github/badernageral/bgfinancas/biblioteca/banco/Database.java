@@ -198,6 +198,9 @@ public final class Database {
         if(versao.equals("3.7.2")){
             versao = setValorVersao("3.8");
         }
+        if(versao.equals("3.8")){
+            versao = setValorVersao("3.8.1");
+        }
     }
     
     private static String setValorVersao(String versao){
