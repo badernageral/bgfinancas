@@ -339,9 +339,11 @@ public final class Despesa extends Banco<Despesa> implements Modelo, Grafico, Co
     }
     
     public ComboBox<Item> getComboItem() {
-        comboAutoFiltro = new ComboBox();
-        itemAutoFiltro = new AutoFiltro<>(comboAutoFiltro);
-        new DespesaItem().montarSelectItem(comboAutoFiltro);
+        if (comboAutoFiltro == null) {
+            comboAutoFiltro = new ComboBox();
+            itemAutoFiltro = new AutoFiltro<>(comboAutoFiltro);
+            new DespesaItem().montarSelectItem(comboAutoFiltro);
+        }
         return comboAutoFiltro;
     }
     

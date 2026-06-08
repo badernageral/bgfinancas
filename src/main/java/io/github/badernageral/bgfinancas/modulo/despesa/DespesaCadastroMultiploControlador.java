@@ -162,7 +162,7 @@ public final class DespesaCadastroMultiploControlador implements Initializable, 
     }
     
     private void prepararBotaoCupomFiscal(){
-        cupomFiscal.setTooltip(new Tooltip(idioma.getMensagem("cupom_fiscal")));
+        cupomFiscal.setTooltip(new Tooltip(idioma.getMensagem("importar_ofx")));
         cupomFiscal.setOnAction((ActionEvent e) -> {
                 getCupomFiscal();
         });

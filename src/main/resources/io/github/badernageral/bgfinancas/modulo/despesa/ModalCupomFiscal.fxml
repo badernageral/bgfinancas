@@ -50,7 +50,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                     <Insets bottom="5.0" />
                  </padding>
                  <children>
-                  <HBox>
+                  <HBox fx:id="hboxArquivo">
                      <children>
                         <Text fx:id="mensagem_1" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensagem" textAlignment="RIGHT" textOrigin="CENTER" HBox.hgrow="ALWAYS">
                            <HBox.margin>
