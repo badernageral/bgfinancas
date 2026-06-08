@@ -229,6 +229,9 @@ echo Gerando instalador MSI...
 light.exe ^
     -ext WixUIExtension ^
     -cultures:pt-br ^
+    -sice:ICE38 ^
+    -sice:ICE64 ^
+    -sice:ICE91 ^
     -out "%OUTPUT_DIR%\%APP_NAME%-%APP_VERSION%.msi" ^
     "%WIX_TEMP%\bgfinancas.wixobj" ^
     "%WIX_TEMP%\AppFiles.wixobj"
