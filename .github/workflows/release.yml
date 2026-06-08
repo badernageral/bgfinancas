@@ -43,7 +43,7 @@ jobs:
           java-version: '24'
 
       - name: Gerar instalador Windows
-        run: build.bat
+        run: .\build.bat
 
       - name: Upload artefato Windows
         uses: actions/upload-artifact@v4
