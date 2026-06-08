@@ -175,6 +175,7 @@ echo Criando instalador MSI...
     --icon "%PROJECT_DIR%recursos\icone.ico" ^
     --java-options "-Dfile.encoding=UTF-8" ^
     %JPACKAGE_WIN_CONSOLE% ^
+    --win-upgrade-uuid "4ACD670F-C540-4980-8F21-4EEB85ACA268" ^
     --win-per-user-install ^
     --win-menu ^
     --win-shortcut ^

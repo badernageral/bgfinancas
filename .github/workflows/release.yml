@@ -42,10 +42,8 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Instalar WiX Toolset
-        run: |
-          dotnet tool install --global wix
-          echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Instalar WiX Toolset v3
+        run: choco install wixtoolset --version=3.11.2 -y
 
       - name: Gerar instalador Windows
         run: build.bat
