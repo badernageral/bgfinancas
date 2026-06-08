@@ -20,6 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package io.github.badernageral.bgfinancas.modelo;
 
 import io.github.badernageral.bgfinancas.biblioteca.banco.Coluna;
+import io.github.badernageral.bgfinancas.biblioteca.banco.Conexao;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Item;
 import io.github.badernageral.bgfinancas.biblioteca.contrato.Modelo;
 import io.github.badernageral.bgfinancas.biblioteca.sistema.Janela;
@@ -37,6 +38,7 @@ public final class DespesaItem extends Item<DespesaItem> implements Modelo {
     
     public static final String FXML = MODULO+"/DespesaItem.fxml";
     public static final String FXML_FORMULARIO = MODULO+"/DespesaItemFormulario.fxml";
+    public static final String FXML_MODAL_SUBSTITUIR = MODULO+"/ModalSubstituirItemDespesa.fxml";
     
     public static final String TABELA = "despesas_itens";
     
@@ -85,6 +87,15 @@ public final class DespesaItem extends Item<DespesaItem> implements Modelo {
         }else{
             return this.delete(idItem, "=").commit();
         }
+    }
+
+    public void substituirEExcluir(String idItemSubstituto) {
+        Conexao banco = Conexao.getInstance();
+        banco.prepararSQL("UPDATE " + Despesa.TABELA + " SET id_item = ? WHERE id_item = ?");
+        banco.setParametro(1, idItemSubstituto);
+        banco.setParametro(2, idItem.getValor());
+        banco.finalizarUpdate();
+        this.delete(idItem, "=").commit();
     }
     
     @Override

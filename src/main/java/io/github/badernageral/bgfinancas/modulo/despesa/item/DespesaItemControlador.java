@@ -95,13 +95,20 @@ public final class DespesaItemControlador implements Initializable, Controlador 
     public void acaoExcluir(int botao) {
         itens = tabelaLista.getSelectionModel().getSelectedItems();
         if(Validar.exclusao(itens, cenaController.getBotaoExcluir())){
-            try {
-                for(DespesaItem i : itens){
+            for(DespesaItem i : itens){
+                try {
                     i.excluir();
+                    Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
+                } catch (Erro ex) {
+                    ModalSubstituirItemDespesaControlador modal = Janela.abrir(DespesaItem.FXML_MODAL_SUBSTITUIR, TITULO, true);
+                    modal.prepararSubstituicao(i);
+                    Kernel.palcoModal.showAndWait();
+                    String substitutoId = modal.getSubstitutoId();
+                    if(substitutoId != null){
+                        i.substituirEExcluir(substitutoId);
+                        Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
+                    }
                 }
-                Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("operacao_sucesso"), Duracao.CURTA);
-            } catch (Erro ex) {
-                Janela.showTooltip(Status.ERRO, idioma.getMensagem("restricao_excluir"), Duracao.NORMAL);
             }
             acaoFiltrar(true);
         }
