@@ -115,6 +115,7 @@ public final class DespesaFormularioControlador implements Initializable, Contro
         labelValor.setText(idioma.getMensagem("valor")+":");
         new DespesaItem().montarSelectItem(itemController.getComboItem());
         new Conta().montarSelectCategoria(contaController.getComboCategoria());
+        contaController.getComboCategoria().getSelectionModel().selectFirst();
     }
     
     @Override
