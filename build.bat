@@ -151,17 +151,21 @@ if errorlevel 1 (
 where candle >nul 2>&1
 if not errorlevel 1 (
     where light >nul 2>&1
-    if not errorlevel 1 set WIX_OK=1
+    if not errorlevel 1 (
+        where heat >nul 2>&1
+        if not errorlevel 1 set WIX_OK=1
+    )
 )
 
 if not "%WIX_OK%"=="1" (
     echo Erro: WiX Toolset nao encontrado no PATH. Nao e possivel gerar MSI.
-    echo Instale o WiX Toolset e garanta candle.exe e light.exe no PATH.
+    echo Instale o WiX Toolset e garanta candle.exe, light.exe e heat.exe no PATH.
     pause
     exit /b 1
 )
 
-echo Criando instalador MSI...
+echo Criando imagem do aplicativo...
+if exist "%OUTPUT_DIR%\%APP_NAME%" rmdir /s /q "%OUTPUT_DIR%\%APP_NAME%"
 "%JAVA_HOME%\bin\jpackage" ^
     --name "%APP_NAME%" ^
     --app-version "%APP_VERSION%" ^
@@ -175,18 +179,67 @@ echo Criando instalador MSI...
     --icon "%PROJECT_DIR%recursos\icone.ico" ^
     --java-options "-Dfile.encoding=UTF-8" ^
     %JPACKAGE_WIN_CONSOLE% ^
-    --win-upgrade-uuid "4ACD670F-C540-4980-8F21-4EEB85ACA268" ^
-    --win-per-user-install ^
-    --win-menu ^
-    --win-shortcut ^
-    --win-menu-group "%APP_NAME%" ^
-    --type msi
+    --type app-image
 
 if errorlevel 1 (
-    echo Erro ao criar instalador MSI!
+    echo Erro ao criar imagem do aplicativo!
     pause
     exit /b 1
 )
+
+REM Remove barra final de PROJECT_DIR para evitar problema de quoting no WiX
+set "PROJECT_DIR_WIX=%PROJECT_DIR:~0,-1%"
+
+set WIX_TEMP=%OUTPUT_DIR%\wix_temp
+if exist "%WIX_TEMP%" rmdir /s /q "%WIX_TEMP%"
+mkdir "%WIX_TEMP%"
+
+echo Gerando lista de arquivos para o instalador...
+heat.exe dir "%OUTPUT_DIR%\%APP_NAME%" ^
+    -cg AppFiles ^
+    -gg -gl ^
+    -srd ^
+    -dr INSTALLDIR ^
+    -var var.SourceDir ^
+    -o "%WIX_TEMP%\AppFiles.wxs"
+
+if errorlevel 1 (
+    echo Erro ao gerar lista de arquivos!
+    pause
+    exit /b 1
+)
+
+echo Compilando fontes WiX...
+candle.exe ^
+    "-dAPP_VERSION=%APP_VERSION%" ^
+    "-dProjectDir=%PROJECT_DIR_WIX%" ^
+    "-dSourceDir=%OUTPUT_DIR%\%APP_NAME%" ^
+    -arch x64 ^
+    -o "%WIX_TEMP%\\" ^
+    "%PROJECT_DIR%recursos\wix\bgfinancas.wxs" ^
+    "%WIX_TEMP%\AppFiles.wxs"
+
+if errorlevel 1 (
+    echo Erro ao compilar WiX!
+    pause
+    exit /b 1
+)
+
+echo Gerando instalador MSI...
+light.exe ^
+    -ext WixUIExtension ^
+    -cultures:pt-br ^
+    -out "%OUTPUT_DIR%\%APP_NAME%-%APP_VERSION%.msi" ^
+    "%WIX_TEMP%\bgfinancas.wixobj" ^
+    "%WIX_TEMP%\AppFiles.wixobj"
+
+if errorlevel 1 (
+    echo Erro ao gerar MSI!
+    pause
+    exit /b 1
+)
+
+rmdir /s /q "%WIX_TEMP%"
 
 echo Build concluido com sucesso!
 echo Arquivos gerados em: %OUTPUT_DIR%

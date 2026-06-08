@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <Product Id="*"
+           Name="BGFinancas"
+           Language="1046"
+           Version="$(var.APP_VERSION)"
+           Manufacturer="BGFinancas"
+           UpgradeCode="4ACD670F-C540-4980-8F21-4EEB85ACA268">
+
+    <Package InstallerVersion="301" Compressed="yes" InstallScope="perUser" Platform="x64"/>
+
+    <MajorUpgrade Schedule="afterInstallInitialize"
+                  DowngradeErrorMessage="Uma versão mais recente do BGFinancas já está instalada." />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <Icon Id="AppIcon.ico" SourceFile="$(var.ProjectDir)\recursos\icone.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico"/>
+
+    <!-- UI: barra de progresso + tela de conclusão, sem seleção de pasta -->
+    <UI Id="BGFinancasUI">
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8"/>
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12"/>
+      <TextStyle Id="WixUI_Font_Title"  FaceName="Tahoma" Size="9" Bold="yes"/>
+      <Property Id="DefaultUIFont">WixUI_Font_Normal</Property>
+
+      <DialogRef Id="CancelDlg"/>
+      <DialogRef Id="ErrorDlg"/>
+      <DialogRef Id="FatalError"/>
+      <DialogRef Id="FilesInUse"/>
+      <DialogRef Id="MsiRMFilesInUse"/>
+      <DialogRef Id="PrepareDlg"/>
+      <DialogRef Id="ProgressDlg"/>
+      <DialogRef Id="ResumeDlg"/>
+      <DialogRef Id="UserExit"/>
+      <DialogRef Id="ExitDialog"/>
+
+      <Publish Dialog="ProgressDlg" Control="Cancel" Event="SpawnDialog" Value="CancelDlg">1</Publish>
+      <Publish Dialog="ExitDialog"  Control="Finish" Event="EndDialog"   Value="Return" Order="999">1</Publish>
+
+      <InstallUISequence>
+        <Show Dialog="PrepareDlg"  After="LaunchConditions"/>
+        <Show Dialog="ProgressDlg" After="PrepareDlg"/>
+        <Show Dialog="ExitDialog"  OnExit="success"/>
+        <Show Dialog="FatalError"  OnExit="error"/>
+        <Show Dialog="UserExit"    OnExit="cancel"/>
+      </InstallUISequence>
+    </UI>
+    <UIRef Id="WixUI_Common"/>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="INSTALLDIR" Name="BGFinancas"/>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="AppMenuFolder" Name="BGFinancas"/>
+      </Directory>
+      <Directory Id="DesktopFolder"/>
+    </Directory>
+
+    <DirectoryRef Id="AppMenuFolder">
+      <Component Id="MenuShortcut" Guid="{7E2F3B1C-9A4D-4E8F-B5C2-1A3D5E7F9B1D}">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="BGFinancas"
+                  Description="Aplicativo de Finanças Pessoais"
+                  Target="[INSTALLDIR]BGFinancas.exe"
+                  WorkingDirectory="INSTALLDIR"
+                  Icon="AppIcon.ico"/>
+        <RemoveFolder Id="RemoveAppMenuFolder" Directory="AppMenuFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU"
+                       Key="Software\BGFinancas"
+                       Name="MenuShortcut"
+                       Type="integer" Value="1"
+                       KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="{3D5E7F9B-1D2A-4C6E-8B0D-2F4A6C8E0B2D}">
+        <Shortcut Id="DesktopShortcutLink"
+                  Name="BGFinancas"
+                  Description="Aplicativo de Finanças Pessoais"
+                  Target="[INSTALLDIR]BGFinancas.exe"
+                  WorkingDirectory="INSTALLDIR"
+                  Icon="AppIcon.ico"/>
+        <RegistryValue Root="HKCU"
+                       Key="Software\BGFinancas"
+                       Name="DesktopShortcut"
+                       Type="integer" Value="1"
+                       KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="Main" Level="1">
+      <ComponentGroupRef Id="AppFiles"/>
+      <ComponentRef Id="MenuShortcut"/>
+      <ComponentRef Id="DesktopShortcut"/>
+    </Feature>
+
+  </Product>
+</Wix>
