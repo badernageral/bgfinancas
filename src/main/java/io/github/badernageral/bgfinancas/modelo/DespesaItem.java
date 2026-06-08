@@ -109,6 +109,8 @@ public final class DespesaItem extends Item<DespesaItem> implements Modelo {
                 this.where(nome, "=");
                 if(nomeCategoria.getValor() != null){
                     this.and(nomeCategoria, "=");
+                }else if(idCategoria.getValor() != null){
+                    this.and(idCategoria, "=");
                 }
             }
             ResultSet rs = this.query();
