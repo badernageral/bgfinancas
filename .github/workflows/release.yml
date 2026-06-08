@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '24'
 
       - name: Gerar instalador Linux
         run: |
@@ -40,10 +40,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
-
-      - name: Instalar WiX Toolset v3
-        run: choco install wixtoolset --version=3.11.2 -y
+          java-version: '24'
 
       - name: Gerar instalador Windows
         run: build.bat
