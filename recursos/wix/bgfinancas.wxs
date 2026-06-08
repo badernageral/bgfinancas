@@ -35,8 +35,7 @@
       <DialogRef Id="UserExit"/>
       <DialogRef Id="ExitDialog"/>
 
-      <Publish Dialog="ProgressDlg" Control="Cancel" Event="SpawnDialog" Value="CancelDlg">1</Publish>
-      <Publish Dialog="ExitDialog"  Control="Finish" Event="EndDialog"   Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
 
       <InstallUISequence>
         <Show Dialog="PrepareDlg"  After="LaunchConditions"/>
