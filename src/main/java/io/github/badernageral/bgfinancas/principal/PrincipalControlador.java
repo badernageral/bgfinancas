@@ -49,6 +49,8 @@ import io.github.badernageral.bgfinancas.modelo.Usuario;
 import io.github.badernageral.bgfinancas.modelo.Utilitario;
 import io.github.badernageral.bgfinancas.modulo.planejamento.PlanejamentoControlador;
 import io.github.badernageral.bgfinancas.modulo.utilitario.Backup;
+import io.github.badernageral.bgfinancas.modulo.utilitario.BackupOnline;
+import io.github.badernageral.bgfinancas.modulo.utilitario.SupabaseFormularioControlador;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -137,6 +139,12 @@ public final class PrincipalControlador implements Initializable {
     @FXML
     private MenuItem utilitariosImportarBackup;
     @FXML
+    private MenuItem utilitariosSupabase;
+    @FXML
+    private MenuItem utilitariosExportarSupabase;
+    @FXML
+    private MenuItem utilitariosImportarSupabase;
+    @FXML
     private MenuItem ajudaTutorial;
     @FXML
     private MenuItem ajudaSobreSistema;
@@ -207,6 +215,9 @@ public final class PrincipalControlador implements Initializable {
         utilitariosRelatorios.setText(idioma.getMensagem("relatorios"));
         utilitariosExportarBackup.setText(idioma.getMensagem("exportar_backup"));
         utilitariosImportarBackup.setText(idioma.getMensagem("importar_backup"));
+        utilitariosSupabase.setText(idioma.getMensagem("supabase_configurar"));
+        utilitariosExportarSupabase.setText(idioma.getMensagem("exportar_backup_online"));
+        utilitariosImportarSupabase.setText(idioma.getMensagem("importar_backup_online"));
         ajudaTutorial.setText(idioma.getMensagem("tutorial"));
         ajudaSobreSistema.setText(idioma.getMensagem("sobre_sistema"));
         ajudaVerificarAtualizacoes.setText(idioma.getMensagem("verificar_atualizacoes"));
@@ -302,6 +313,18 @@ public final class PrincipalControlador implements Initializable {
 
     public void acaoImportarBackup() {
         new Backup().importarBackup();
+    }
+
+    public void acaoSupabase() {
+        Janela.abrir(SupabaseFormularioControlador.FXML, idioma.getMensagem("supabase_configurar"));
+    }
+
+    public void acaoExportarSupabase() {
+        new BackupOnline().exportar();
+    }
+
+    public void acaoImportarSupabase() {
+        new BackupOnline().importar();
     }
 
     public void acaoHome() {

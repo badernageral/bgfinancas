@@ -201,6 +201,10 @@ public final class Database {
         if(versao.equals("3.8")){
             versao = setValorVersao("3.8.1");
         }
+        if(versao.equals("3.8.1")){
+            banco.executeUpdate("ALTER TABLE configuracoes ALTER COLUMN valor VARCHAR(1000)");
+            versao = setValorVersao("3.8.2");
+        }
     }
     
     private static String setValorVersao(String versao){

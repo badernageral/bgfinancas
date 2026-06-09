@@ -4,8 +4,8 @@ setlocal EnableExtensions
 REM Variáveis do projeto
 set PROJECT_DIR=%~dp0
 set APP_NAME=BGFinancas
-set APP_VERSION=3.8.1
-set MAIN_JAR=bgfinancas-3.8.1.jar
+set APP_VERSION=3.8.2
+set MAIN_JAR=bgfinancas-3.8.2.jar
 set MAIN_CLASS=io.github.badernageral.bgfinancas.principal.Main
 set OUTPUT_DIR=%PROJECT_DIR%dist
 set TARGET_DIR=%PROJECT_DIR%target

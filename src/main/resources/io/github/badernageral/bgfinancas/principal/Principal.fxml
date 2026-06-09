@@ -116,6 +116,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                         <MenuItem fx:id="utilitariosConfiguracoes" mnemonicParsing="false" onAction="#acaoConfiguracao" text="Configurações" />
                         <MenuItem fx:id="utilitariosExportarBackup" mnemonicParsing="false" onAction="#acaoExportarBackup" text="Exportar backup" />
                         <MenuItem fx:id="utilitariosImportarBackup" mnemonicParsing="false" onAction="#acaoImportarBackup" text="Importar backup" />
+                        <MenuItem fx:id="utilitariosSupabase" mnemonicParsing="false" onAction="#acaoSupabase" text="Configurar Supabase" />
+                        <MenuItem fx:id="utilitariosExportarSupabase" mnemonicParsing="false" onAction="#acaoExportarSupabase" text="Exportar para Supabase" />
+                        <MenuItem fx:id="utilitariosImportarSupabase" mnemonicParsing="false" onAction="#acaoImportarSupabase" text="Importar do Supabase" />
                     </items>
                   </Menu>
                   <Menu fx:id="menuAjuda" mnemonicParsing="false" text="Ajuda">

@@ -3,8 +3,8 @@
 # Variáveis do projeto
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_NAME="BGFinancas"
-APP_VERSION="3.8.1"
-MAIN_JAR="bgfinancas-3.8.1.jar"
+APP_VERSION="3.8.2"
+MAIN_JAR="bgfinancas-3.8.2.jar"
 MAIN_CLASS="io.github.badernageral.bgfinancas.principal.Main"
 OUTPUT_DIR="$PROJECT_DIR/dist"
 TARGET_DIR="$PROJECT_DIR/target"

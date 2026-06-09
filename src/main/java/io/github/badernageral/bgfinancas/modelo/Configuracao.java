@@ -123,7 +123,7 @@ public final class Configuracao extends Banco<Configuracao> implements Modelo {
             // Tabela de configuracao            
             banco.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE' AND (TABLE_NAME='configuracoes' OR TABLE_NAME='CONFIGURACOES')");
             if(!banco.getResultSet().next()){
-                banco.executeUpdate("CREATE TABLE configuracoes(nome VARCHAR(20) PRIMARY KEY, valor VARCHAR(50))");
+                banco.executeUpdate("CREATE TABLE configuracoes(nome VARCHAR(20) PRIMARY KEY, valor VARCHAR(1000))");
             }
             // Configuracao: idioma
             if(Configuracao.getPropriedade("idioma") == null){
@@ -148,6 +148,19 @@ public final class Configuracao extends Banco<Configuracao> implements Modelo {
             // Configuracao: data_atualizacao
             if(Configuracao.getPropriedade("data_atualizacao") == null){
                 new Configuracao("data_atualizacao", Datas.toSqlData(LocalDate.now().minusMonths(1))).cadastrar();
+            }
+            // Configuracao: supabase
+            if(Configuracao.getPropriedade("supabase_url") == null){
+                new Configuracao("supabase_url", "").cadastrar();
+            }
+            if(Configuracao.getPropriedade("supabase_key") == null){
+                new Configuracao("supabase_key", "").cadastrar();
+            }
+            if(Configuracao.getPropriedade("supabase_email") == null){
+                new Configuracao("supabase_email", "").cadastrar();
+            }
+            if(Configuracao.getPropriedade("supabase_senha") == null){
+                new Configuracao("supabase_senha", "").cadastrar();
             }
         } catch (SQLException ex) {
             Janela.showException(ex);

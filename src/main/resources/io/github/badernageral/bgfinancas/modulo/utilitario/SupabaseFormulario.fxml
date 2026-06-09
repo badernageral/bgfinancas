@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright 2012-2018 Jose Robson Mariano Alves
+
+This file is part of bgfinancas.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane fx:id="formulario" collapsible="false" text="..." xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.badernageral.bgfinancas.modulo.utilitario.SupabaseFormularioControlador">
+   <content>
+      <VBox prefWidth="560" spacing="12">
+         <padding>
+            <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+         </padding>
+         <Label fx:id="labelEtapa" />
+         <Label fx:id="labelTitulo" style="-fx-font-weight: bold;" wrapText="true" />
+         <VBox fx:id="conteudo" minHeight="150" spacing="8" />
+         <HBox fx:id="grupoBotao" alignment="CENTER_RIGHT" spacing="5" />
+      </VBox>
+   </content>
+</TitledPane>
