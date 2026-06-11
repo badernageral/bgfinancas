@@ -67,7 +67,7 @@ echo "Usando JAVA_HOME: $JAVA_HOME"
 echo "Usando JavaFX jmods em: $JAVAFX_JMODS_PATH"
 
 # Lista de módulos necessários
-MODULES="java.base,java.sql,java.logging,java.xml,javafx.base,javafx.controls,javafx.fxml,javafx.graphics"
+MODULES="java.base,java.sql,java.logging,java.xml,java.net.http,javafx.base,javafx.controls,javafx.fxml,javafx.graphics"
 
 # Cria runtime customizado com jlink
 echo "Criando runtime customizado..."
