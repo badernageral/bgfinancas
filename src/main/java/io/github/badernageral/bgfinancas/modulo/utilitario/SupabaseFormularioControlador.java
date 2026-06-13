@@ -226,9 +226,9 @@ public final class SupabaseFormularioControlador implements Initializable, Contr
         String url = campoUrl.getText().trim();
         String chave = campoChave.getText().trim();
         botaoTestar.setDisable(true);
-        Task<Boolean> task = new Task<Boolean>() {
+        Task<String> task = new Task<String>() {
             @Override
-            protected Boolean call() {
+            protected String call() {
                 try {
                     HttpClient client = HttpClient.newBuilder()
                             .connectTimeout(Duration.ofSeconds(8))
@@ -240,24 +240,29 @@ public final class SupabaseFormularioControlador implements Initializable, Contr
                             .GET()
                             .build();
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                    return response.statusCode() < 500;
+                    if (response.statusCode() < 500) {
+                        return null;
+                    }
+                    return "HTTP " + response.statusCode();
                 } catch (Exception ex) {
-                    return false;
+                    return ex.getClass().getSimpleName() + ": " + ex.getMessage();
                 }
             }
         };
         task.setOnSucceeded(ev -> {
             botaoTestar.setDisable(false);
-            boolean ok = task.getValue();
-            if (ok) {
+            String erro = task.getValue();
+            if (erro == null) {
                 Janela.showTooltip(Status.SUCESSO, idioma.getMensagem("supabase_conexao_ok"), Duracao.LONGA);
             } else {
-                Janela.showTooltip(Status.ERRO, idioma.getMensagem("supabase_conexao_erro"), Duracao.LONGA);
+                Janela.showTooltip(Status.ERRO, idioma.getMensagem("supabase_conexao_erro") + "\n" + erro, Duracao.LONGA);
             }
         });
         task.setOnFailed(ev -> {
             botaoTestar.setDisable(false);
-            Janela.showTooltip(Status.ERRO, idioma.getMensagem("supabase_conexao_erro"), Duracao.LONGA);
+            Throwable ex = task.getException();
+            String detalhe = ex != null ? "\n" + ex.getClass().getSimpleName() + ": " + ex.getMessage() : "";
+            Janela.showTooltip(Status.ERRO, idioma.getMensagem("supabase_conexao_erro") + detalhe, Duracao.LONGA);
         });
         new Thread(task).start();
     }

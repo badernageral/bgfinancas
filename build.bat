@@ -121,7 +121,7 @@ if not exist "%JAVA_HOME%\bin\jpackage.exe" (
 )
 
 REM Lista de módulos necessários
-set MODULES=java.base,java.sql,java.logging,java.xml,javafx.base,javafx.controls,javafx.fxml,javafx.graphics
+set MODULES=java.base,java.sql,java.logging,java.xml,java.net.http,jdk.crypto.ec,javafx.base,javafx.controls,javafx.fxml,javafx.graphics
 
 REM Cria runtime customizado com jlink
 echo Criando runtime customizado...
